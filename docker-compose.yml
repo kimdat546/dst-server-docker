@@ -1,0 +1,74 @@
+services:
+  master:
+    image: dst-server
+    container_name: dst-master
+    ports:
+      - "10999:10999/udp"
+      - "27017:27017/udp"
+      - "8767:8767/udp"
+    environment:
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^0W1BM9jpftFVUL+3SGYM2ijd8KBZIFuMXBtXrgm3ReM="
+      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      DST_GAMEPLAY_MAX_PLAYERS: "12"
+      DST_GAMEPLAY_GAME_MODE: "endless"
+      # Sharding
+      DST_SHARD_ENABLED: "true"
+      DST_SHARD_IS_MASTER: "true"
+      DST_SHARD_NAME: "Master"
+      DST_SHARD_BIND_IP: "0.0.0.0"
+      DST_SHARD_MASTER_PORT: "10888"
+      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
+      DST_SHARD_MASTER_IP: "master"
+      DST_NETWORK_SERVER_PORT: "10999"
+      DST_STEAM_AUTHENTICATION_PORT: "8766"
+      DST_STEAM_MASTER_SERVER_PORT: "27016"
+      DST_SERVER_MOD_SETUP: "3624411781,1530801499,1803285852,378160973,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1852257480"
+    volumes:
+      - dst-data:/var/lib/game
+      - ./config/Master:/etc/dst-config:ro
+    networks:
+      - dst-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  caves:
+    image: dst-server
+    container_name: dst-caves
+    ports:
+      - "10998:10999/udp"
+    environment:
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^0W1BM9jpftFVUL+3SGYM2ijd8KBZIFuMXBtXrgm3ReM="
+      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      # Sharding
+      DST_SHARD_ENABLED: "true"
+      DST_SHARD_IS_MASTER: "false"
+      DST_SHARD_NAME: "Caves"
+      DST_SHARD_BIND_IP: "0.0.0.0"
+      DST_SHARD_MASTER_IP: "master"
+      DST_SHARD_MASTER_PORT: "10888"
+      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
+      DST_SKIP_CLUSTER_CONFIG: "true"
+      DST_NETWORK_SERVER_PORT: "11000"
+      DST_STEAM_AUTHENTICATION_PORT: "8767"
+      DST_STEAM_MASTER_SERVER_PORT: "27017"
+      DST_SERVER_MOD_SETUP: "3624411781,1530801499,1803285852,378160973,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1852257480"
+    volumes:
+      - dst-data:/var/lib/game
+      - ./config/Caves:/etc/dst-config:ro
+    networks:
+      - dst-net
+    depends_on:
+      master:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  dst-data:
+
+networks:
+  dst-net:

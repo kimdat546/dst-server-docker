@@ -20,11 +20,8 @@ autosaver_enabled = {{ getenv "DST_NETWORK_AUTOSAVER_ENABLED" }}
 [SHARD]
 shard_enabled = {{ getenv "DST_SHARD_ENABLED" }}
 {{ if eq (getenv "DST_SHARD_ENABLED") "true" -}}
-{{ if eq (getenv "DST_SHARD_IS_MASTER") "true" -}}
 bind_ip = {{ getenv "DST_SHARD_BIND_IP" }}
-{{ else -}}
 master_ip = {{ getenv "DST_SHARD_MASTER_IP" }}
-{{ end -}}
 master_port = {{ getenv "DST_SHARD_MASTER_PORT" }}
 cluster_key = {{ getenv "DST_SHARD_CLUSTER_KEY" }}
 {{ end -}}
