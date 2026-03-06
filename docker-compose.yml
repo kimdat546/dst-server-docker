@@ -1,0 +1,52 @@
+services:
+  master:
+    image: dst-server
+    container_name: dst-test-master
+    network_mode: host
+    environment:
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
+      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      DST_GAMEPLAY_MAX_PLAYERS: "12"
+      DST_GAMEPLAY_GAME_MODE: "endless"
+      DST_NETWORK_SERVER_PORT: "11999"
+      DST_SHARD_ENABLED: "true"
+      DST_SHARD_IS_MASTER: "true"
+      DST_SHARD_NAME: "Master"
+      DST_SHARD_BIND_IP: "0.0.0.0"
+      DST_SHARD_MASTER_IP: "127.0.0.1"
+      DST_SHARD_MASTER_PORT: "11888"
+      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
+    volumes:
+      - dst-test-data:/var/lib/game
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  caves:
+    image: dst-server
+    container_name: dst-test-caves
+    network_mode: host
+    environment:
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
+      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      DST_NETWORK_SERVER_PORT: "11998"
+      DST_SHARD_ENABLED: "true"
+      DST_SHARD_IS_MASTER: "false"
+      DST_SHARD_NAME: "Caves"
+      DST_SHARD_MASTER_IP: "127.0.0.1"
+      DST_SHARD_MASTER_PORT: "11888"
+      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
+      DST_SKIP_CLUSTER_CONFIG: "true"
+    volumes:
+      - dst-test-data:/var/lib/game
+    depends_on:
+      master:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  dst-test-data:
