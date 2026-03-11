@@ -16,8 +16,11 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,1852257480,1951468597,2078243581,374550642,375850593,375859599,378160973,380423963,501385076,666155465,786556008,1111658995,1207269058"
     volumes:
-      - dst-test-data:/var/lib/game
+      - dst-master-data:/var/lib/game
+      - ./config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
+      - ./config/Master/leveldataoverride.lua:/etc/dst-config/Master/leveldataoverride.lua:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini"]
@@ -37,16 +40,20 @@ services:
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "false"
       DST_SHARD_NAME: "Caves"
+      DST_SHARD_BIND_IP: "0.0.0.0"
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SKIP_CLUSTER_CONFIG: "true"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,1852257480,1951468597,2078243581,374550642,375850593,375859599,378160973,380423963,501385076,666155465,786556008,1111658995,1207269058"
     volumes:
-      - dst-test-data:/var/lib/game
+      - dst-caves-data:/var/lib/game
+      - ./config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
+      - ./config/Caves/leveldataoverride.lua:/etc/dst-config/Caves/leveldataoverride.lua:ro
     depends_on:
       master:
         condition: service_healthy
     restart: unless-stopped
 
 volumes:
-  dst-test-data:
+  dst-master-data:
+  dst-caves-data:
