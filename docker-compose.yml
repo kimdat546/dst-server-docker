@@ -1,11 +1,13 @@
 services:
   master:
     image: dst-server
-    container_name: dst-test-master
+    container_name: dst-master-steamdeck
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
-      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - steamdeck"
+      DST_NETWORK_CLUSTER_DESCRIPTION: "Welcome to Neverland - steamdeck version"
+      DST_NETWORK_CLUSTER_PASSWORD: "haizz"
       DST_GAMEPLAY_MAX_PLAYERS: "12"
       DST_GAMEPLAY_GAME_MODE: "endless"
       DST_NETWORK_SERVER_PORT: "11999"
@@ -16,14 +18,14 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,1852257480,1951468597,2078243581,374550642,375850593,375859599,378160973,380423963,501385076,666155465,786556008,1111658995,1207269058"
+      DST_SERVER_MOD_SETUP: "3624411781,1530801499,1803285852,378160973,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1852257480"
     volumes:
       - dst-master-data:/var/lib/game
       - ./config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
       - ./config/Master/leveldataoverride.lua:/etc/dst-config/Master/leveldataoverride.lua:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini"]
+      test: [ "CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini" ]
       interval: 5s
       timeout: 5s
       retries: 30
@@ -31,11 +33,11 @@ services:
 
   caves:
     image: dst-server
-    container_name: dst-test-caves
+    container_name: dst-caves-steamdeck
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
-      DST_NETWORK_CLUSTER_NAME: "Neverlandv2"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - steamdeck"
       DST_NETWORK_SERVER_PORT: "11998"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "false"
@@ -44,7 +46,7 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,1852257480,1951468597,2078243581,374550642,375850593,375859599,378160973,380423963,501385076,666155465,786556008,1111658995,1207269058"
+      DST_SERVER_MOD_SETUP: "3624411781,1530801499,1803285852,378160973,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1852257480"
     volumes:
       - dst-caves-data:/var/lib/game
       - ./config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
