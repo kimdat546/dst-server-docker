@@ -42,17 +42,40 @@ return {
     configuration_options={ horizontal=0, info=false, position="bottom", vertical="auto" },
     enabled=true 
   },
+  ["workshop-3624411781"]={
+    configuration_options={
+      ["Bag Capacity"]=1200,
+      ["Bag Spoilrate"]=0.75,
+      Misc=0,
+      ["Slurper Bag"]=0,
+      SoulJar=false 
+    },
+    enabled=true 
+  },
   ["workshop-374550642"]={
     configuration_options={
+      FORCE_STACKSIZES=false,
       STACK_SIZE_LARGEITEM=99,
       STACK_SIZE_MEDITEM=99,
-      STACK_SIZE_PELLET=120,
+      STACK_SIZE_PELLET=250,
       STACK_SIZE_SMALLITEM=99,
-      STACK_SIZE_TINYITEM=99 
+      STACK_SIZE_TINYITEM=120 
     },
     enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
+  ["workshop-378160973"]={
+    configuration_options={
+      ENABLEPINGS=true,
+      FIREOPTIONS=2,
+      OVERRIDEMODE=false,
+      SHAREMINIMAPPROGRESS=true,
+      SHOWFIREICONS=true,
+      SHOWPLAYERICONS=true,
+      SHOWPLAYERSOPTIONS=2 
+    },
+    enabled=true 
+  },
   ["workshop-380423963"]={
     configuration_options={
       [""]=0,
@@ -117,6 +140,5 @@ return {
       show_uses=-1 
     },
     enabled=true 
-  },
-  ["workshop-378160973"]={ configuration_options={  }, enabled=true } 
+  } 
 }

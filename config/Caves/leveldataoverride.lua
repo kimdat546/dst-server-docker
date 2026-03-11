@@ -130,7 +130,7 @@ return {
     year_of_the_catcoon="default",
     year_of_the_dragonfly="default",
     year_of_the_gobbler="default",
-    year_of_the_knight="enabled",
+    year_of_the_knight="default",
     year_of_the_pig="default",
     year_of_the_snake="default",
     year_of_the_varg="default" 
