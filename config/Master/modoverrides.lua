@@ -11,6 +11,19 @@ return {
     },
     enabled=true 
   },
+  ["workshop-1595631294"]={
+    configuration_options={
+      BundleItems=false,
+      ChangeSkin=true,
+      Digornot=false,
+      DragonflyChest=false,
+      Icebox=false,
+      OnlyPlayer=false,
+      SaltBox=false 
+    },
+    enabled=true 
+  },
+  ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
     configuration_options={
       [""]=0,
@@ -22,7 +35,7 @@ return {
       AutoStackAsh=false,
       AutoStackEnabled=true,
       AutoStackMakeNewStackMainStack=false,
-      AutoStackManuallyDroppedItems=true,
+      AutoStackManuallyDroppedItems=false,
       AutoStackPoop=false,
       AutoStackRange=10,
       AutoStackSeeds=false,
@@ -64,18 +77,6 @@ return {
     enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
-  ["workshop-378160973"]={
-    configuration_options={
-      ENABLEPINGS=true,
-      FIREOPTIONS=2,
-      OVERRIDEMODE=false,
-      SHAREMINIMAPPROGRESS=true,
-      SHOWFIREICONS=true,
-      SHOWPLAYERICONS=true,
-      SHOWPLAYERSOPTIONS=2 
-    },
-    enabled=true 
-  },
   ["workshop-380423963"]={
     configuration_options={
       [""]=0,

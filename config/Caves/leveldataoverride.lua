@@ -119,7 +119,7 @@ return {
     weather="default",
     winters_feast="enabled",
     world_size="small",
-    wormattacks="rare",
+    wormattacks="default",
     wormattacks_boss="default",
     wormhole_prefab="tentacle_pillar",
     wormlights="default",
