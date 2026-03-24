@@ -4,7 +4,7 @@ services:
     container_name: dst-master-steamdeck
     network_mode: host
     environment:
-      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^BnrU1DY+WOqSNMIhMWE9yD45iN2igc16Ytcs7njtH3U="
       DST_NETWORK_CLUSTER_NAME: "Neverland - steamdeck"
       DST_NETWORK_CLUSTER_DESCRIPTION: "Welcome to Neverland - steamdeck version"
       DST_NETWORK_CLUSTER_PASSWORD: "haizz"
@@ -36,7 +36,7 @@ services:
     container_name: dst-caves-steamdeck
     network_mode: host
     environment:
-      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^RJjsCAobmlq8Qqw+jF1JthJKBAidzGdLgR06920FE+w="
+      DST_CLUSTER_TOKEN: "pds-g^KU_IcfQqCTe^BnrU1DY+WOqSNMIhMWE9yD45iN2igc16Ytcs7njtH3U="
       DST_NETWORK_CLUSTER_NAME: "Neverland - steamdeck"
       DST_NETWORK_SERVER_PORT: "11998"
       DST_SHARD_ENABLED: "true"
