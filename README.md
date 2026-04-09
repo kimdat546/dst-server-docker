@@ -1,9 +1,71 @@
-# dst
+# Don't Starve Together Dedicated Server (Docker)
 
 [![Docker Build](https://github.com/dockhippie/dst/actions/workflows/docker.yml/badge.svg)](https://github.com/dockhippie/dst/actions/workflows/docker.yml) [![GitHub Repo](https://img.shields.io/badge/github-repo-yellowgreen)](https://github.com/dockhippie/dst)
 
-These are docker images for [Don't Starve Together][upstream] running on our
-[SteamCMD image][parent].
+Docker images for running a [Don't Starve Together][upstream] dedicated server, built on top of the [SteamCMD image][parent].
+
+## Quick Setup
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed
+- A DST cluster token (get one from the [Klei Account Portal](https://accounts.klei.com/account/game/servers?game=DontStarveTogether))
+
+### 1. Build the image
+
+```bash
+docker build -f latest/Dockerfile.amd64 -t dst-server latest/
+```
+
+> **Apple Silicon (M1/M2/M3/M4):** Add `--platform linux/amd64` to build under Rosetta emulation.
+
+### 2. Configure
+
+Edit `docker-compose.yml` and set your values:
+
+- `DST_CLUSTER_TOKEN` — your server token from the Klei portal (required)
+- `DST_NETWORK_CLUSTER_NAME` — server name shown in the server browser
+- `DST_NETWORK_CLUSTER_PASSWORD` — server password (leave empty for no password)
+- `DST_GAMEPLAY_MAX_PLAYERS` — max player slots
+- `DST_SERVER_MOD_SETUP` — comma-separated Steam Workshop mod IDs to install
+
+Mod overrides and world generation settings can be customized in:
+
+```
+config/
+├── Master/
+│   ├── modoverrides.lua
+│   └── leveldataoverride.lua
+└── Caves/
+    ├── modoverrides.lua
+    └── leveldataoverride.lua
+```
+
+### 3. Start the server
+
+```bash
+docker compose up -d
+```
+
+This starts two containers:
+- **master** — the overworld shard
+- **caves** — the caves shard (waits for master to be healthy before starting)
+
+### 4. Manage the server
+
+```bash
+# View logs
+docker compose logs -f
+
+# Stop the server
+docker compose down
+
+# Stop and delete world save data
+docker compose down -v
+
+# Rebuild after updating the Dockerfile
+docker build -f latest/Dockerfile.amd64 -t dst-server latest/ && docker compose up -d
+```
 
 ## Versions
 
