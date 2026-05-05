@@ -269,6 +269,14 @@ cmd_switch() {
     fi
   fi
 
+  # Remove any leftover named DST volumes (old setup or manual docker-compose runs)
+  local volumes
+  volumes="$(docker volume ls -q | grep -E '^dst-' || true)"
+  if [ -n "$volumes" ]; then
+    echo "$volumes" | xargs docker volume rm 2>/dev/null && \
+      c_green "Removed old volumes: $(echo "$volumes" | tr '\n' ' ')" || true
+  fi
+
   c_blue "git checkout $target"
   git_q checkout "$target"
   git_q pull --ff-only origin "$target" 2>/dev/null || c_yellow "git pull skipped"
