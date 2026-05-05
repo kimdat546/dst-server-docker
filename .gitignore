@@ -11,3 +11,4 @@ dst-cli/bot/venv/
 
 # Temp files from dst pull
 .data-pull-*/
+dst-cli/bot/__pycache__/
