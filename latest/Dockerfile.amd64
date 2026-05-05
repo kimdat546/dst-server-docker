@@ -14,7 +14,7 @@ RUN apt-get update -y && \
 
 RUN mkdir -p /usr/share/game && \
   chown -R steam:steam /usr/share/game && \
-  /usr/bin/steamcmd +login anonymous +force_install_dir /usr/share/game +app_update 343050 validate +quit && \
+  /usr/bin/steamcmd +force_install_dir /usr/share/game +login anonymous +app_update 343050 validate +quit && \
   rm -rf /var/log/steam/*
 
 RUN apt-get update -y && \

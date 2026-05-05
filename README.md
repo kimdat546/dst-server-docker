@@ -1,243 +1,179 @@
-# dst
+# Don't Starve Together Dedicated Server (Docker)
 
-[![Docker Build](https://github.com/dockhippie/dst/actions/workflows/docker.yml/badge.svg)](https://github.com/dockhippie/dst/actions/workflows/docker.yml) [![GitHub Repo](https://img.shields.io/badge/github-repo-yellowgreen)](https://github.com/dockhippie/dst)
+[![Docker Build](https://github.com/dockhippie/dst/actions/workflows/docker.yml/badge.svg)](https://github.com/dockhippie/dst/actions/workflows/docker.yml)
 
-These are docker images for [Don't Starve Together][upstream] running on our
-[SteamCMD image][parent].
+Docker image for running a [Don't Starve Together][upstream] dedicated server, with a multi-world management system backed by Google Drive.
 
-## Versions
+## Concept
 
-For the available versions please look at [Docker Hub][dockerhub] or
-[Quay][quayio] or check the existing folders within the
-[GitHub repository][github].
+Each **git branch = one world** (mods, settings, world gen config). Save data lives on **Google Drive**, not on the VPS. The `dst` CLI and Discord bot let you switch worlds, start/stop the server, and manage everything without touching the terminal.
 
-## Volumes
+```
+myth-words branch  →  modoverrides.lua, docker-compose.yml (cluster name, mods, ports)
+speedrun branch    →  different mods + settings
+              ↕
+       Google Drive: dst-worlds/myth-words.tar.gz, speedrun.tar.gz ...
+              ↕
+          VPS: only holds data/ while a world is actively running (~50MB)
+```
 
-*  /var/lib/game
+## Quick Setup
 
-## Ports
+### Prerequisites
 
-*  10999
-*  27017
-*  8767
+- Docker + Docker Compose
+- A DST cluster token from the [Klei Account Portal](https://accounts.klei.com/account/game/servers?game=DontStarveTogether)
+- `rclone` configured with a Google Drive remote named `dst-storage`
+- A Discord bot (optional, for remote control)
+
+### 1. Configure rclone
+
+```bash
+apt install -y rclone
+rclone config   # add remote: name=dst-storage, type=drive
+rclone mkdir dst-storage:dst-worlds
+```
+
+### 2. Clone and pick a world branch
+
+```bash
+git clone https://github.com/kimdat546/dst-server-docker
+cd dst-server-docker
+git checkout myth-words   # or speedrun, or create your own branch
+```
+
+### 3. Edit world config
+
+- `docker-compose.yml` — cluster name, password, mods (`DST_SERVER_MOD_SETUP`), ports
+- `config/Master/modoverrides.lua` + `leveldataoverride.lua`
+- `config/Caves/modoverrides.lua` + `leveldataoverride.lua`
+
+### 4. Start
+
+```bash
+dst start
+```
+
+First run pulls the `webhippie/dst` image from Docker Hub and downloads the world save from Drive (or starts fresh if none).
+
+## Creating a new world
+
+```bash
+git checkout -b my-new-world
+# edit docker-compose.yml, config/Master/*.lua, config/Caves/*.lua
+git add -A && git commit -m "feat: my-new-world"
+git push origin my-new-world
+# on the VPS:
+dst switch my-new-world
+```
+
+## dst CLI
+
+```
+dst list                   list branches + cloud saves
+dst status                 current world, container health, Drive save size
+dst current                print active world name
+dst start  [branch]        pull save from Drive → start containers
+dst stop   [branch]        stop containers → push save to Drive → clear VPS
+dst switch <branch>        stop+push current → git checkout → pull save → start
+dst push   [branch]        compress & upload save to Drive manually
+dst pull   <branch>        download & extract save from Drive
+dst destroy                stop+push, remove all Docker containers/image/volumes
+```
+
+### How stop/start works (VPS storage)
+
+The VPS holds world data **only while the server is running**:
+- `dst stop` → compresses `data/` (~8MB), uploads to Drive, deletes `data/` from VPS
+- `dst start` → downloads from Drive, extracts, starts containers
+- `dst destroy` → same as stop + removes the Docker image (~3GB) — use when taking a long break
+
+### Safety
+
+- Push failure aborts the switch — world stays stopped, data stays local
+- Pull extracts to a temp dir and swaps atomically — failed download leaves local data untouched
+- Previous save kept as `<world>.bak.tar.gz` on Drive before each overwrite
+
+## Discord Bot
+
+A Discord bot lives in `dst-cli/bot/`. Members in `#dst-control` can manage the server without SSH access.
+
+### Bot setup
+
+```bash
+cd dst-cli/bot
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+cp .bot.env.example .bot.env
+# edit .bot.env — add DISCORD_TOKEN, DST_CONTROL_CHANNEL_ID, DST_GUILD_ID, DISCORD_WEBHOOK_URL
+systemctl enable --now dst-bot   # systemd unit at /etc/systemd/system/dst-bot.service
+```
+
+### Bot commands (in #dst-control)
+
+| Command | Description |
+|---|---|
+| `/worlds` | Dropdown menu — pick a world to switch to |
+| `/list` | All branches with running/active markers |
+| `/status` | Current world, container health, Drive save size |
+| `/start` | Start the current world |
+| `/stop` | Stop + push to Drive |
+| `/switch <branch>` | Switch worlds (with autocomplete) |
+| `/push` | Manual Drive backup |
+| `/destroy` | Stop + push + remove all Docker resources (asks for confirmation) |
+
+### Webhook notifications
+
+The bot posts to `#dst-control` automatically on: server start 🟢, server stop 🔴, world switch 🔄, destroy 💣. Set `DISCORD_WEBHOOK_URL` in `.bot.env`.
+
+## Repository layout
+
+```
+dst-server-docker/
+├── docker-compose.yml          # per-branch world config (mods, name, ports)
+├── config/
+│   ├── Master/
+│   │   ├── modoverrides.lua
+│   │   └── leveldataoverride.lua
+│   └── Caves/
+│       ├── modoverrides.lua
+│       └── leveldataoverride.lua
+├── dst-cli/
+│   ├── dst                     # CLI (symlinked to /usr/local/bin/dst)
+│   ├── compose.yml             # branch-agnostic compose (bind mounts ./data/)
+│   ├── extract-env.py          # parses DST_* vars from docker-compose.yml
+│   ├── migrate-named-volumes.sh # one-time migration from old named volumes
+│   └── bot/
+│       ├── bot.py              # Discord bot
+│       ├── requirements.txt
+│       └── .bot.env.example    # config template (copy to .bot.env)
+└── latest/
+    └── Dockerfile.amd64
+```
+
+**Gitignored (local only):** `data/`, `.world.env`, `.dst-current`, `dst-cli/bot/.bot.env`, `dst-cli/bot/venv/`
 
 ## Available environment variables
 
-```console
-DST_ACCOUNT_ENCODE_USER_PATH = true
-DST_ADMINLIST_FILE = ${DST_SERVER_DIR}/adminlist.txt
-DST_BLOCKLIST_FILE = ${DST_SERVER_DIR}/blocklist.txt
-DST_CLUSTER_CONFIG_FILE = ${DST_SERVER_DIR}/cluster.ini
-DST_CLUSTER_TOKEN =
-DST_CLUSTER_TOKEN_FILE = ${DST_SERVER_DIR}/cluster_token.txt
-DST_ENABLE_MOD_DEBUG_PRINT = false
-DST_ENABLE_MOD_ERROR = false
-DST_FORCE_ENABLE_MODS =
-DST_GAMEPLAY_GAME_MODE = endless
-DST_GAMEPLAY_MAX_PLAYERS = 6
-DST_GAMEPLAY_PAUSE_WHEN_EMPTY = true
-DST_GAMEPLAY_PVP = false
-DST_GAMEPLAY_VOTE_ENABLED = true
-DST_LEVELDATA_OVERRIDE_FILE = ${DST_SHARD_DIR}/leveldataoverride.lua
-DST_MISC_CONSOLE_ENABLED = true
-DST_MOD_OVERRIDES_FILE = ${DST_SHARD_DIR}/modoverrides.lua
-DST_MOD_OVERRIDES_RAW =
-DST_MOD_SETTINGS_FILE = /usr/share/game/mods/modsettings.lua
-DST_MOD_SETUP_FILE = /usr/share/game/mods/dedicated_server_mods_setup.lua
-DST_NETWORK_AUTOSAVER_ENABLED = true
-DST_NETWORK_CLUSTER_DESCRIPTION =
-DST_NETWORK_CLUSTER_INTENTION = cooperative
-DST_NETWORK_CLUSTER_LANGUAGE = en
-DST_NETWORK_CLUSTER_NAME = Don't Starve Together
-DST_NETWORK_CLUSTER_PASSWORD =
-DST_NETWORK_LAN_ONLY_SERVER = false
-DST_NETWORK_OFFLINE_CLUSTER = false
-DST_NETWORK_SERVER_PORT = 10999
-DST_NETWORK_TICK_RATE = 15
-DST_NETWORK_WHITELIST_SLOTS = 0
-DST_OVERRIDE_ALTERNATEHUNT =
-DST_OVERRIDE_ANGRYBEES =
-DST_OVERRIDE_ANTLIONTRIBUTE =
-DST_OVERRIDE_AUTUMN =
-DST_OVERRIDE_BACKGROUND_NODE_RANGE =
-DST_OVERRIDE_BANANA =
-DST_OVERRIDE_BATS =
-DST_OVERRIDE_BEARGER =
-DST_OVERRIDE_BEEFALO =
-DST_OVERRIDE_BEEFALOHEAT =
-DST_OVERRIDE_BEEQUEEN =
-DST_OVERRIDE_BEES =
-DST_OVERRIDE_BERRYBUSH =
-DST_OVERRIDE_BIRDS =
-DST_OVERRIDE_BOONS =
-DST_OVERRIDE_BRANCHING =
-DST_OVERRIDE_BUNNYMEN =
-DST_OVERRIDE_BUTTERFLY =
-DST_OVERRIDE_BUZZARD =
-DST_OVERRIDE_CACTUS =
-DST_OVERRIDE_CARROT =
-DST_OVERRIDE_CATCOON =
-DST_OVERRIDE_CAVE_PONDS =
-DST_OVERRIDE_CAVE_SPIDERS =
-DST_OVERRIDE_CAVELIGHT =
-DST_OVERRIDE_CHESS =
-DST_OVERRIDE_CRABKING =
-DST_OVERRIDE_DAY =
-DST_OVERRIDE_DECIDUOUSMONSTER =
-DST_OVERRIDE_DEERCLOPS =
-DST_OVERRIDE_DESC =
-DST_OVERRIDE_DISEASE_DELAY =
-DST_OVERRIDE_DRAGONFLY =
-DST_OVERRIDE_EARTHQUAKES =
-DST_OVERRIDE_EXTRASTARTINGITEMS =
-DST_OVERRIDE_EYEOFTERROR =
-DST_OVERRIDE_FERN =
-DST_OVERRIDE_FISSURE =
-DST_OVERRIDE_FLINT =
-DST_OVERRIDE_FLOWER_CAVE =
-DST_OVERRIDE_FROGRAIN =
-DST_OVERRIDE_FRUITFLY =
-DST_OVERRIDE_GOOSEMOOSE =
-DST_OVERRIDE_GRASS =
-DST_OVERRIDE_HAS_OCEAN =
-DST_OVERRIDE_HEALTHPENALTY =
-DST_OVERRIDE_HIDEMINIMAP = false
-DST_OVERRIDE_HOUNDMOUND =
-DST_OVERRIDE_HOUNDS =
-DST_OVERRIDE_HUNT =
-DST_OVERRIDE_ID =
-DST_OVERRIDE_KEEP_DISCONNECTED_TILES =
-DST_OVERRIDE_KLAUS =
-DST_OVERRIDE_KRAMPUS =
-DST_OVERRIDE_LAYOUT_MODE =
-DST_OVERRIDE_LEVEL_STRING = false
-DST_OVERRIDE_LICHEN =
-DST_OVERRIDE_LIEFS =
-DST_OVERRIDE_LIGHTNING =
-DST_OVERRIDE_LIGHTNINGGOAT =
-DST_OVERRIDE_LOCATION =
-DST_OVERRIDE_LOOP =
-DST_OVERRIDE_LUREPLANTS =
-DST_OVERRIDE_MALBATROSS =
-DST_OVERRIDE_MARSHBUSH =
-DST_OVERRIDE_MAX_PLAYER_POSITION = 999
-DST_OVERRIDE_MERM =
-DST_OVERRIDE_METEORSHOWERS =
-DST_OVERRIDE_METEORSPAWNER =
-DST_OVERRIDE_MIN_PLAYER_POSITION = 0
-DST_OVERRIDE_MOLES =
-DST_OVERRIDE_MONKEY =
-DST_OVERRIDE_MUSHROOM =
-DST_OVERRIDE_MUSHTREE =
-DST_OVERRIDE_NAME =
-DST_OVERRIDE_NO_JOINING_ISLANDS =
-DST_OVERRIDE_NO_WORMHOLES_TO_DISCONNECTED_TILES =
-DST_OVERRIDE_NUMRANDOM_SET_PIECES =
-DST_OVERRIDE_PENGUINS =
-DST_OVERRIDE_PERD =
-DST_OVERRIDE_PETRIFICATION =
-DST_OVERRIDE_PIGS =
-DST_OVERRIDE_PONDS =
-DST_OVERRIDE_PREFABSWAPS_START =
-DST_OVERRIDE_PRESET = ${DST_SHARD_NAME}
-DST_OVERRIDE_RABBITS =
-DST_OVERRIDE_RANDOM_SET_PIECES =
-DST_OVERRIDE_REEDS =
-DST_OVERRIDE_REGROWTH =
-DST_OVERRIDE_REQUIRED_PREFABS = multiplayer_portal
-DST_OVERRIDE_REQUIRED_SETPIECES =
-DST_OVERRIDE_ROADS =
-DST_OVERRIDE_ROCK =
-DST_OVERRIDE_ROCK_ICE =
-DST_OVERRIDE_ROCKY =
-DST_OVERRIDE_SAPLING =
-DST_OVERRIDE_SEASON_START =
-DST_OVERRIDE_SLURPER =
-DST_OVERRIDE_SLURTLES =
-DST_OVERRIDE_SPECIALEVENT =
-DST_OVERRIDE_SPIDERQUEEN =
-DST_OVERRIDE_SPIDERS =
-DST_OVERRIDE_SPRING =
-DST_OVERRIDE_START_LOCATION =
-DST_OVERRIDE_SUBSTITUTES =
-DST_OVERRIDE_SUMMER =
-DST_OVERRIDE_TALLBIRDS =
-DST_OVERRIDE_TASK_SET =
-DST_OVERRIDE_TENTACLES =
-DST_OVERRIDE_TOUCHSTONE =
-DST_OVERRIDE_TREES =
-DST_OVERRIDE_TUMBLEWEED =
-DST_OVERRIDE_VERSION = 4
-DST_OVERRIDE_WALRUS =
-DST_OVERRIDE_WEATHER =
-DST_OVERRIDE_WILDFIRES =
-DST_OVERRIDE_WINTER =
-DST_OVERRIDE_WORLD_SIZE =
-DST_OVERRIDE_WORMATTACKS =
-DST_OVERRIDE_WORMHOLE_PREFAB =
-DST_OVERRIDE_WORMLIGHTS =
-DST_OVERRIDE_WORMS =
-DST_SERVER_CLUSTER = general
-DST_SERVER_CONF_DIR = server
-DST_SERVER_CONFIG_FILE = ${DST_SHARD_DIR}/server.ini
-DST_SERVER_DIR = ${DST_SERVER_PERSISTENT_STORAGE_ROOT}/${DST_SERVER_CONF_DIR}/${DST_SERVER_CLUSTER}
-DST_SERVER_MOD_COLLECTION_SETUP =
-DST_SERVER_MOD_SETUP =
-DST_SERVER_PERSISTENT_STORAGE_ROOT = /var/lib/game
-DST_SERVER_REGION = EU
-DST_SHARD_BIND_IP = 0.0.0.0
-DST_SHARD_CLUSTER_KEY = default
-DST_SHARD_DIR = ${DST_SERVER_DIR}/${DST_SHARD_NAME}
-DST_SHARD_ENABLED = false
-DST_SHARD_ID =
-DST_SHARD_IS_MASTER = true
-DST_SHARD_MASTER_IP = 127.0.0.1
-DST_SHARD_MASTER_PORT = 10888
-DST_SHARD_NAME = Master
-DST_SKIP_CLUSTER_CONFIG = false
-DST_SKIP_GAME_CHOWN = false
-DST_SKIP_GAME_UPGRADE = false
-DST_SKIP_LEVELDATA_OVERRIDE = false
-DST_SKIP_MOD_OVERRIDES = false
-DST_SKIP_MOD_SETTINGS = false
-DST_SKIP_MOD_SETUP = false
-DST_SKIP_SERVER_CONFIG = false
-DST_SKIP_STATE_CHOWN = false
-DST_STEAM_AUTHENTICATION_PORT = 8767
-DST_STEAM_GROUP_ADMINS = false
-DST_STEAM_GROUP_ID = 0
-DST_STEAM_GROUP_ONLY = false
-DST_STEAM_MASTER_SERVER_PORT = 27017
-DST_WHITELIST_FILE = ${DST_SERVER_DIR}/whitelist.txt
+See `docker-compose.yml` for the variables used per branch. Full list:
+
+```
+DST_CLUSTER_TOKEN          (required) Klei server token
+DST_NETWORK_CLUSTER_NAME   server name in browser
+DST_NETWORK_CLUSTER_PASSWORD
+DST_GAMEPLAY_MAX_PLAYERS
+DST_GAMEPLAY_GAME_MODE     survival | endless | wilderness
+DST_NETWORK_SERVER_PORT    default 11999
+DST_SHARD_MASTER_PORT      default 11888
+DST_SHARD_CLUSTER_KEY
+DST_SERVER_MOD_SETUP       comma-separated Workshop IDs
 ```
 
-Extracted by the command: `grep -hE ': "\$\{(.*)\}"' latest/overlay/etc/entrypoint.d/*.sh | sed 's/: "\${//' | sed 's/:="/ = /' | sed 's/"}"$//' | sort | uniq`
-
-## Inherited environment variables
-
-*  [webhippie/steamcmd](https://github.com/dockhippie/steamcmd#available-environment-variables)
-*  [webhippie/ubuntu](https://github.com/dockhippie/ubuntu#available-environment-variables)
-
-## Contributing
-
-Fork -> Patch -> Push -> Pull Request
-
-## Authors
-
-*  [Thomas Boerger](https://github.com/tboerger)
+Full variable reference: [webhippie/dst on Docker Hub][dockerhub]
 
 ## License
 
 MIT
 
-## Copyright
-
-```console
-Copyright (c) 2015 Thomas Boerger <http://www.webhippie.de>
-```
-
 [upstream]: https://www.kleientertainment.com/games/dont-starve-together
-[parent]: https://github.com/dockhippie/steamcmd
 [dockerhub]: https://hub.docker.com/r/webhippie/dst/tags
-[quayio]: https://quay.io/repository/webhippie/dst?tab=tags
-[github]: https://github.com/dockhippie/dst

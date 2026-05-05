@@ -1,0 +1,13 @@
+# Runtime state (local only, never commit)
+.world.env
+.dst-current
+data/
+
+# Bot secrets
+dst-cli/bot/.bot.env
+
+# Python venv
+dst-cli/bot/venv/
+
+# Temp files from dst pull
+.data-pull-*/

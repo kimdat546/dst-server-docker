@@ -1,0 +1,416 @@
+#!/usr/bin/env bash
+# dst — branch-as-world manager. Switches DST worlds by checking out git branches
+# and syncing save data with Google Drive via tar.gz + rclone.
+set -euo pipefail
+
+SELF="$(readlink -f "${BASH_SOURCE[0]}")"
+ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
+LOCK_FILE="/run/lock/dst.lock"
+JSON=0
+CLI="$ROOT/dst-cli"
+COMPOSE_FILE="$CLI/compose.yml"
+EXTRACT="$CLI/extract-env.py"
+STATE_FILE="$ROOT/.dst-current"
+ENV_FILE="$ROOT/.world.env"
+REMOTE="${DST_REMOTE:-dst-storage:dst-worlds}"
+
+NON_WORLD_BRANCHES_RE='^(main|master|HEAD)$'
+
+# Discord webhook (optional) — set DISCORD_WEBHOOK_URL in .bot.env or environment
+WEBHOOK_URL="${DISCORD_WEBHOOK_URL:-}"
+_load_webhook() {
+  local env_file="$CLI/bot/.bot.env"
+  if [ -z "$WEBHOOK_URL" ] && [ -f "$env_file" ]; then
+    WEBHOOK_URL="$(grep -m1 '^DISCORD_WEBHOOK_URL=' "$env_file" 2>/dev/null | cut -d= -f2- | tr -d '"' | tr -d "'")" || true
+  fi
+}
+_load_webhook
+
+notify() {
+  # notify <color_hex> <title> [body]
+  [ -z "$WEBHOOK_URL" ] && return 0
+  local color="$1" title="$2" body="${3:-}"
+  local world; world="$(current_state 2>/dev/null || echo '')"
+  local payload
+  payload="$(printf '{"embeds":[{"title":"%s","description":"%s","color":%d,"footer":{"text":"world: %s"}}]}' \
+    "$title" "$body" "$color" "${world:-?}")"
+  curl -sfS -X POST -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL" >/dev/null 2>&1 || true
+}
+
+# Paths excluded from the tar archive (mods, backups, logs — re-downloaded on start)
+TAR_EXCLUDES=(
+  --exclude="data/Master/server/general/*/backup"
+  --exclude="data/Caves/server/general/*/backup"
+  --exclude="data/*/server/general/*/server_log.txt*"
+  --exclude="data/*/server/general/*/server_chat_log.txt*"
+  --exclude="data/*/mods"
+  --exclude="data/*/ugc_mods"
+  --exclude="data/*/Agreements"
+  --exclude="data/*/steamcmd"
+  --exclude="data/*/steamapps"
+)
+
+c_red()    { printf "\033[31m%s\033[0m\n" "$*"; }
+c_green()  { printf "\033[32m%s\033[0m\n" "$*"; }
+c_yellow() { printf "\033[33m%s\033[0m\n" "$*"; }
+c_blue()   { printf "\033[34m%s\033[0m\n" "$*"; }
+
+git_q()   { git -C "$ROOT" "$@"; }
+in_repo() { [ -d "$ROOT/.git" ] || { c_red "Not a git repo: $ROOT"; exit 1; }; }
+
+current_branch() { git_q rev-parse --abbrev-ref HEAD 2>/dev/null; }
+current_state()  { [ -f "$STATE_FILE" ] && cat "$STATE_FILE" || echo ""; }
+
+require_clean_tree() {
+  if ! git_q diff --quiet || ! git_q diff --cached --quiet; then
+    c_red "Working tree has uncommitted changes. Commit, stash, or discard first."
+    git_q status --short
+    exit 1
+  fi
+}
+
+require_rclone() {
+  command -v rclone >/dev/null 2>&1 || { c_red "rclone not installed (apt install rclone)"; exit 1; }
+  rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:" || {
+    c_red "rclone remote '${REMOTE%%:*}' not configured. Run: rclone config"; exit 1; }
+}
+
+is_running() {
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] && docker ps --format '{{.Names}}' | grep -q "^dst-master-${b}$"
+}
+
+compose() {
+  local b="$1"; shift
+  ( cd "$CLI" && DST_BRANCH="$b" docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@" )
+}
+
+remote_archive() { echo "$REMOTE/$1.tar.gz"; }  # e.g. dst-storage:dst-worlds/myth-words.tar.gz
+
+cmd_init() {
+  in_repo
+  local branch; branch="$(current_branch)"
+  [ -f "$ROOT/docker-compose.yml" ] || { c_red "No docker-compose.yml on branch $branch"; exit 1; }
+  python3 "$EXTRACT" "$ROOT/docker-compose.yml" > "$ENV_FILE"
+  echo "DST_BRANCH=$branch" >> "$ENV_FILE"
+  mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
+  c_green "Wrote $ENV_FILE for branch '$branch'."
+}
+
+cmd_list() {
+  in_repo
+  local active; active="$(current_state)"
+  local cur_branch; cur_branch="$(current_branch)"
+
+  if [ "$JSON" = 1 ]; then
+    local first=1
+    printf '{"current_branch":"%s","active_world":"%s","branches":[' "$cur_branch" "$active"
+    while read -r b; do
+      [[ "$b" =~ $NON_WORLD_BRANCHES_RE ]] && continue
+      local running=false; is_running "$b" && running=true
+      [ $first -eq 1 ] || printf ','
+      first=0
+      printf '{"name":"%s","running":%s,"checked_out":%s,"active":%s}' \
+        "$b" "$running" "$([ "$b" = "$cur_branch" ] && echo true || echo false)" \
+        "$([ "$b" = "$active" ] && echo true || echo false)"
+    done < <(git_q for-each-ref --format='%(refname:short)' refs/heads/)
+    printf '],"remote":['
+    if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+      first=1
+      while read -r r; do
+        r="${r%.tar.gz}"; [ -z "$r" ] && continue
+        [ $first -eq 1 ] || printf ','
+        first=0
+        printf '"%s"' "$r"
+      done < <(rclone lsf "$REMOTE" --include "*.tar.gz" 2>/dev/null)
+    fi
+    printf ']}\n'
+    return
+  fi
+
+  c_blue "Branches (worlds):"
+  while read -r b; do
+    [[ "$b" =~ $NON_WORLD_BRANCHES_RE ]] && continue
+    local marks=""
+    [ "$b" = "$cur_branch" ] && marks="$marks $(c_yellow '[checked-out]')"
+    [ "$b" = "$active" ]     && marks="$marks $(c_green '[active]')"
+    is_running "$b"           && marks="$marks $(c_green '[running]')"
+    printf "  - %s%s\n" "$b" "$marks"
+  done < <(git_q for-each-ref --format='%(refname:short)' refs/heads/)
+
+  if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+    c_blue "\nCloud saves ($REMOTE):"
+    rclone lsf "$REMOTE" --include "*.tar.gz" 2>/dev/null \
+      | sed 's/\.tar\.gz$//; s/^/  - /' || c_yellow "  (none)"
+  fi
+}
+
+cmd_current() { local s; s="$(current_state)"; [ -n "$s" ] && echo "$s" || c_yellow "(none)"; }
+
+cmd_push() {
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] || { c_red "no active world"; exit 1; }
+  [ -d "$ROOT/data" ] || { c_yellow "no data/ to push"; return; }
+  require_rclone
+
+  local tmp_archive; tmp_archive="$(mktemp /tmp/dst-save-XXXXXX.tar.gz)"
+  local archive; archive="$(remote_archive "$b")"
+
+  c_blue "Compressing save data…"
+  ( cd "$ROOT" && tar -czf "$tmp_archive" "${TAR_EXCLUDES[@]}" data/ )
+  local size; size="$(du -sh "$tmp_archive" | cut -f1)"
+  c_blue "Uploading $size → $archive"
+
+  # Keep previous version as .bak before overwriting
+  if rclone lsf "$REMOTE" --include "$b.tar.gz" 2>/dev/null | grep -q .; then
+    rclone moveto "$archive" "$REMOTE/$b.bak.tar.gz" 2>/dev/null || true
+  fi
+
+  rclone copyto "$tmp_archive" "$archive"
+  rm -f "$tmp_archive"
+  c_green "Pushed ($size)."
+}
+
+cmd_pull() {
+  local b="${1:?usage: dst pull <branch>}"
+  require_rclone
+
+  local archive; archive="$(remote_archive "$b")"
+  if ! rclone lsf "$REMOTE" --include "$b.tar.gz" 2>/dev/null | grep -q .; then
+    c_yellow "no cloud save for '$b' yet — starting fresh world"
+    mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
+    return
+  fi
+
+  local tmp_archive; tmp_archive="$(mktemp /tmp/dst-save-XXXXXX.tar.gz)"
+  local size; size="$(rclone size "$archive" 2>/dev/null | grep 'Total size' | awk '{print $3, $4}' || echo '?')"
+  c_blue "Downloading $size from $archive"
+  rclone copyto "$archive" "$tmp_archive"
+
+  # Extract into temp dir, swap only on success
+  local tmp_dir; tmp_dir="$(mktemp -d "$ROOT/.data-pull-XXXXXX")"
+  if tar -xzf "$tmp_archive" -C "$tmp_dir"; then
+    rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
+    mv "$tmp_dir/data/Master" "$ROOT/data/Master" 2>/dev/null || mkdir -p "$ROOT/data/Master"
+    mv "$tmp_dir/data/Caves"  "$ROOT/data/Caves"  2>/dev/null || mkdir -p "$ROOT/data/Caves"
+    rm -rf "$tmp_dir" "$tmp_archive"
+    c_green "Pulled."
+  else
+    rm -rf "$tmp_dir" "$tmp_archive"
+    c_red "Extract failed — local data untouched. Aborting."
+    exit 1
+  fi
+}
+
+cmd_start() {
+  in_repo
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] || b="$(current_branch)"
+  [ -f "$ENV_FILE" ] || cmd_init
+  # Pull image if missing (e.g. after dst destroy)
+  if ! docker image inspect dst-server >/dev/null 2>&1; then
+    c_blue "dst-server image not found — pulling webhippie/dst from Docker Hub…"
+    docker pull webhippie/dst:latest
+    docker tag webhippie/dst:latest dst-server
+    c_green "Image ready."
+  fi
+  if [ ! -d "$ROOT/data/Master" ] || [ -z "$(ls -A "$ROOT/data/Master" 2>/dev/null)" ]; then
+    if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+      cmd_pull "$b"
+    else
+      mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
+    fi
+  fi
+  echo "$b" > "$STATE_FILE"
+  c_blue "Starting $b"
+  compose "$b" up -d
+  c_green "Started."
+  notify 3066993 "🟢 Server started" "World: \`$b\` is now online."
+}
+
+cmd_stop() {
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] || { c_yellow "nothing to stop"; return; }
+  c_blue "Stopping $b"
+  compose "$b" down
+  if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+    cmd_push "$b"
+    rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
+    c_green "Save pushed and cleared from VPS."
+  else
+    c_yellow "rclone not configured — data left in ./data/"
+  fi
+  notify 15158332 "🔴 Server stopped" "World: \`$b\` is offline. Save uploaded to Drive."
+}
+
+cmd_switch() {
+  local target="${1:?usage: dst switch <branch>}"
+  in_repo
+  require_clean_tree
+
+  git_q fetch --quiet origin || c_yellow "git fetch failed (continuing)"
+
+  if ! git_q rev-parse --verify --quiet "$target" >/dev/null; then
+    if git_q rev-parse --verify --quiet "origin/$target" >/dev/null; then
+      git_q checkout -t "origin/$target"
+    else
+      c_red "branch '$target' not found locally or on origin"; exit 1
+    fi
+  fi
+
+  local cur; cur="$(current_state)"
+  if [ -n "$cur" ] && is_running "$cur"; then
+    c_blue "Stopping current: $cur"
+    compose "$cur" down
+    if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+      cmd_push "$cur"
+    else
+      c_yellow "rclone not configured — skipping push"
+    fi
+  fi
+
+  c_blue "git checkout $target"
+  git_q checkout "$target"
+  git_q pull --ff-only origin "$target" 2>/dev/null || c_yellow "git pull skipped"
+
+  rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
+  if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+    cmd_pull "$target"
+  else
+    mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
+  fi
+
+  cmd_init
+  cmd_start "$target"
+  notify 3447003 "🔄 World switched" "Now running: \`$target\`"
+}
+
+cmd_status() {
+  local cb cs running=false
+  cb="$(current_branch 2>/dev/null || echo '')"
+  cs="$(current_state)"
+  [ -n "$cs" ] && is_running && running=true
+
+  if [ "$JSON" = 1 ]; then
+    local master="" caves=""
+    if [ -n "$cs" ]; then
+      master="$(docker ps --filter "name=dst-master-$cs" --format '{{.Status}}' || true)"
+      caves="$(docker ps --filter "name=dst-caves-$cs" --format '{{.Status}}' || true)"
+    fi
+    printf '{"branch":"%s","active_world":"%s","running":%s,"master_status":"%s","caves_status":"%s"}\n' \
+      "$cb" "$cs" "$running" "$master" "$caves"
+    return
+  fi
+
+  echo "branch (checked-out): ${cb:-?}"
+  echo "world (active):       ${cs:-(none)}"
+  if $running; then
+    c_green "containers: running"
+    docker ps --filter "name=dst-master-$cs" --format '  {{.Names}}\t{{.Status}}'
+    docker ps --filter "name=dst-caves-$cs" --format '  {{.Names}}\t{{.Status}}'
+  else
+    c_yellow "containers: not running"
+  fi
+}
+
+cmd_destroy() {
+  in_repo
+  local b; b="$(current_state)"
+
+  # Stop and push if running
+  if [ -n "$b" ] && is_running "$b"; then
+    c_blue "Stopping $b before destroy"
+    compose "$b" down
+    if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+      cmd_push "$b"
+    fi
+  fi
+
+  # Clear local save data
+  rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
+  c_green "Cleared ./data/"
+
+  # Remove DST containers (any leftover stopped ones)
+  local containers
+  containers="$(docker ps -a --format '{{.Names}}' | grep -E '^dst-(master|caves)-' || true)"
+  if [ -n "$containers" ]; then
+    echo "$containers" | xargs docker rm -f 2>/dev/null || true
+    c_green "Removed containers: $(echo "$containers" | tr '\n' ' ')"
+  fi
+
+  # Remove dst-server image
+  if docker image inspect dst-server >/dev/null 2>&1; then
+    docker rmi dst-server 2>&1 && c_green "Removed image: dst-server"
+  fi
+
+  # Remove leftover named DST volumes
+  local volumes
+  volumes="$(docker volume ls -q | grep -E '^dst-server-docker_dst-(master|caves)-' || true)"
+  if [ -n "$volumes" ]; then
+    echo "$volumes" | xargs docker volume rm 2>/dev/null || true
+    c_green "Removed volumes: $(echo "$volumes" | tr '\n' ' ')"
+  fi
+
+  # Clear state files
+  rm -f "$STATE_FILE" "$ENV_FILE"
+
+  notify 10038562 "💣 Server destroyed" "All DST containers, images and local data removed. Drive save intact."
+  c_green "Done. Run 'dst start' to rebuild and run again."
+}
+
+cmd_help() {
+  cat <<'EOF'
+dst — branch-as-world manager (git + Google Drive)
+
+Commands:
+  dst list                   list branches + cloud saves
+  dst status                 current branch / world / container state
+  dst current                print active world name
+  dst init                   regenerate .world.env from current branch's compose
+  dst start  [branch]        pull save from Drive → start containers
+  dst stop   [branch]        stop containers → push save to Drive → clear VPS
+  dst switch <branch>        stop+push current → checkout → pull → start
+  dst push   [branch]        compress & upload save to Drive
+  dst pull   <branch>        download & extract save from Drive
+  dst destroy                stop+push, remove containers/image/volumes, clear VPS
+
+Env:
+  DST_REMOTE   rclone target  (default: dst-storage:dst-worlds)
+EOF
+}
+
+# Parse global flags
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --json) JSON=1; shift ;;
+    --) shift; break ;;
+    -*) break ;;
+    *)  break ;;
+  esac
+done
+
+LOCKED_CMDS_RE='^(start|stop|switch|push|pull|init|destroy)$'
+cmd="${1:-help}"; shift || true
+
+if [[ "$cmd" =~ $LOCKED_CMDS_RE ]]; then
+  exec 9>"$LOCK_FILE"
+  if ! flock -n 9; then
+    c_red "another dst command is running (lock: $LOCK_FILE). Try again shortly."
+    exit 1
+  fi
+fi
+
+case "$cmd" in
+  list)    cmd_list ;;
+  status)  cmd_status ;;
+  current) cmd_current ;;
+  init)    cmd_init ;;
+  start)   cmd_start "$@" ;;
+  stop)    cmd_stop "$@" ;;
+  switch)  cmd_switch "$@" ;;
+  push)    cmd_push "$@" ;;
+  pull)    cmd_pull "$@" ;;
+  destroy) cmd_destroy ;;
+  help|-h|--help) cmd_help ;;
+  *) c_red "unknown: $cmd"; cmd_help; exit 1 ;;
+esac
