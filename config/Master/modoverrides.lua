@@ -1,6 +1,4 @@
 return {
-  ["workshop-1111658995"]={ configuration_options={  }, enabled=true },
-  ["workshop-1207269058"]={ configuration_options={  }, enabled=true },
   ["workshop-1530801499"]={
     configuration_options={
       ArrowsignEnable=false,
@@ -11,19 +9,6 @@ return {
     },
     enabled=true 
   },
-  ["workshop-1595631294"]={
-    configuration_options={
-      BundleItems=false,
-      ChangeSkin=true,
-      Digornot=false,
-      DragonflyChest=false,
-      Icebox=false,
-      OnlyPlayer=false,
-      SaltBox=false 
-    },
-    enabled=true 
-  },
-  ["workshop-1699194522"]={ configuration_options={  }, enabled=true },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
     configuration_options={
@@ -52,61 +37,24 @@ return {
     },
     enabled=true 
   },
-  ["workshop-1852257480"]={
-    configuration_options={ horizontal=0, info=false, position="bottom", vertical="auto" },
-    enabled=true 
-  },
-  ["workshop-1991746508"]={ configuration_options={ Language="VI", ShowBuff=true }, enabled=true },
-  ["workshop-3625940357"]={
+  ["workshop-3235319974"]={
     configuration_options={
-      BOSS_RESPAWN_BLACKBEAR=false,
-      BOSS_RESPAWN_FROG=false,
-      BOSS_RESPAWN_RHINO=false,
-      BOSS_TIPS_ENABLE=true,
-      BUILD_GRANARY_FRUIT=true,
-      BUILD_GRANARY_INFINITE=true,
-      BUILD_GRANARY_ROT=true,
-      BUILD_GRANARY_SIGN=false,
-      CHAR_MK_NODROP=true,
-      CHAR_PIGSY_SCALING=true,
-      CHAR_SOUL_LIMIT=false,
-      CHAR_SOUL_NO_RIOT=false,
-      CHAR_SX_NO_WONKEY=true,
-      CHAR_WB_SLOTS=true,
-      CHAR_WEB_SILK_LIMIT=false,
-      CHAR_YANGJIAN_MAGIC=true,
-      CHAR_YANGJIAN_TRUE_SIGHT=false,
-      GAME_BAMBOO_MODE="original",
-      GAME_BATCH_ALCHEMY=true,
-      GAME_CULTIVATION_SYSTEM=true,
-      GAME_LAOZI_LIMIT=2,
-      GAME_SHOP_ADAPTER=true,
-      GAME_UPGRADE_COMMISSIONER=false,
-      GAME_UPGRADE_LIMIT_ARMOR=3,
-      GAME_UPGRADE_LIMIT_WEAPON=3,
-      GAME_UPGRADE_SYSTEM=true,
-      ITEM_MOONCAKE_STACK=40,
-      QOL_BBN_DURATION=false,
-      QOL_BBN_RATE=false,
-      QOL_FIX_BBN_DRAG=true,
-      QOL_FIX_FLY_LAG=false,
-      QOL_FIX_PROTECTOR=true,
-      QOL_INFANTREE_PROTECT=true,
-      QOL_INFANTREE_TIME=false,
-      QOL_INFANTREE_TREASURE=false,
-      t_boss=0,
-      t_char=0,
-      t_fix=0,
-      t_game=0,
-      t_patch_notes_1=0,
-      t_patch_notes_2=0,
-      t_qol=0,
-      t_weapon=0,
-      WEAPON_BONE_WHIP_DMG=false,
-      WEAPON_NZ_AUTOCATCH=false,
-      WEAPON_NZ_RING_DMG=false,
-      WEAPON_WHIP_RANGE_UPGRADE=false,
-      WEAPON_WHIP_SPEED_FIX=false 
+      key_v=118,
+      key_x=120,
+      key_z=122,
+      set00=0,
+      set1=true,
+      set10=5,
+      set11=true,
+      set12=1,
+      set13=false,
+      set2=true,
+      set3=true,
+      set4=false,
+      set5=true,
+      set6=true,
+      set7=true,
+      wukongkey=114 
     },
     enabled=true 
   },
@@ -169,21 +117,6 @@ return {
       quick_harvest=true,
       quick_pick_cactus=true,
       quick_pick_plant_normal_ground=true 
-    },
-    enabled=true 
-  },
-  ["workshop-666155465"]={
-    configuration_options={
-      chestB=-1,
-      chestG=-1,
-      chestR=-1,
-      display_hp=-1,
-      food_estimation=-1,
-      food_order=0,
-      food_style=0,
-      lang="auto",
-      show_food_units=-1,
-      show_uses=-1 
     },
     enabled=true 
   } 
