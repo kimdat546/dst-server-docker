@@ -5,9 +5,9 @@ return {
       CountdownEnable=false,
       HungerCost=1,
       Ownership=true,
-      SanityCost=1 
+      SanityCost=1
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
@@ -33,9 +33,9 @@ return {
       ManualStackSeeds=true,
       PlayerMustHaveOneOfItemToAutoPickup=false,
       SmokePuffOnStacking=true,
-      StackDuringPopulation=false 
+      StackDuringPopulation=false
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-3235319974"]={
     configuration_options={
@@ -54,9 +54,9 @@ return {
       set5=true,
       set6=true,
       set7=true,
-      wukongkey=114 
+      wukongkey=114
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-374550642"]={
     configuration_options={
@@ -65,9 +65,9 @@ return {
       STACK_SIZE_MEDITEM=99,
       STACK_SIZE_PELLET=250,
       STACK_SIZE_SMALLITEM=99,
-      STACK_SIZE_TINYITEM=120 
+      STACK_SIZE_TINYITEM=120
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
@@ -107,17 +107,17 @@ return {
       uncommon_loot_goldnugget=0.2,
       uncommon_loot_mole=0.2,
       uncommon_loot_nitre=0.2,
-      uncommon_loot_rabbit=0.2 
+      uncommon_loot_rabbit=0.2
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-501385076"]={
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
       quick_pick_cactus=true,
-      quick_pick_plant_normal_ground=true 
+      quick_pick_plant_normal_ground=true
     },
-    enabled=true 
-  } 
+    enabled=true
+  }
 }
