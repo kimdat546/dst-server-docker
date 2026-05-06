@@ -156,11 +156,16 @@ dst-server-docker/
 
 ## Image publishing
 
-The image is built by `.github/workflows/docker.yml` and pushed to Docker Hub as `kimdat546/dst-server`. The workflow runs on pushes to `master` or `dang-tien` that touch `image/**`. Tags published:
+The image is built by `.github/workflows/docker.yml` and pushed to Docker Hub as `kimdat546/dst-server`. The workflow runs on pushes to `main` that touch `image/**` (or `.github/workflows/docker.yml`), and on PRs against `main` (build-only, no push). Tags published:
 
-- `:latest` — only from `master`
-- `:<branch>` — e.g. `:dang-tien` for branch builds
-- `:sha-<short>` — every build, for reproducibility
+- `:latest` — from `main` (default branch)
+- `:main` — same content as `:latest`
+- `:sha-<short>` — every build, immutable, for pinning a specific version
+
+To rebuild without a code change (e.g. refresh the DST baseline), trigger it manually:
+```
+gh workflow run docker.yml --ref main
+```
 
 **Required GitHub repo secrets** (Settings → Secrets and variables → Actions):
 - `DOCKERHUB_USERNAME` — your Docker Hub username (`kimdat546`)

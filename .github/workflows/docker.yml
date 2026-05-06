@@ -10,8 +10,7 @@ concurrency:
   workflow_dispatch:
   push:
     branches:
-      - master
-      - dang-tien
+      - main
     paths:
       - image/**
       - .github/workflows/docker.yml
@@ -41,7 +40,6 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/dang-tien' }}
             type=ref,event=branch
             type=sha,format=short
           labels: |
