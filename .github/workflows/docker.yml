@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
-name: latest
+name: image
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -10,28 +10,24 @@ concurrency:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
     paths:
-      - latest/*
+      - image/**
       - .github/workflows/docker.yml
   pull_request:
-    branches:
-      - master
+    paths:
+      - image/**
+      - .github/workflows/docker.yml
+
+env:
+  IMAGE: kimdat546/dst-server
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        variant:
-          - arch: amd64
-            platform: linux/amd64
 
     steps:
       - name: Checkout source
@@ -41,101 +37,36 @@ jobs:
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          images: |
-            webhippie/dst
-            quay.io/webhippie/dst
-            ghcr.io/dockhippie/dst
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=sha,format=short
           labels: |
-            org.opencontainers.image.vendor=Webhippie
-            maintainer=Thomas Boerger <thomas@webhippie.de>
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.title=dst-server
+            org.opencontainers.image.description=Don't Starve Together dedicated server
 
       - name: Setup Buildx
-        id: buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
-      - name: Hub login
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+      - name: Docker Hub login
         if: github.event_name != 'pull_request'
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Quay login
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
-        if: github.event_name != 'pull_request'
         with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Ghcr login
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
-        if: github.event_name != 'pull_request'
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build image
+      - name: Build and push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: latest/
+          context: image/
+          file: image/Dockerfile.amd64
+          platforms: linux/amd64
           provenance: false
-          file: latest/Dockerfile.${{ matrix.variant.arch }}
-          platforms: ${{ matrix.variant.platform }}
           push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: |
-            webhippie/dst:latest-${{ matrix.variant.arch }}
-            quay.io/webhippie/dst:latest-${{ matrix.variant.arch }}
-            ghcr.io/dockhippie/dst:latest-${{ matrix.variant.arch }}
-
-  manifest:
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
-
-    needs:
-      - docker
-
-    steps:
-      - name: Wait something
-        run: sleep 60
-
-      - name: Hub manifest
-        uses: actionhippie/manifest@bf97de23bfb02868fb55f0e83953ff57021e3e06 # v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          platforms: linux/amd64
-          template: webhippie/dst:latest-ARCH
-          target: webhippie/dst:latest
-          ignore_missing: true
-
-      - name: Quay manifest
-        uses: actionhippie/manifest@bf97de23bfb02868fb55f0e83953ff57021e3e06 # v1
-        with:
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_PASSWORD }}
-          platforms: linux/amd64
-          template: quay.io/webhippie/dst:latest-ARCH
-          target: quay.io/webhippie/dst:latest
-          ignore_missing: true
-
-      - name: Ghcr manifest
-        uses: actionhippie/manifest@bf97de23bfb02868fb55f0e83953ff57021e3e06 # v1
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          platforms: linux/amd64
-          template: ghcr.io/dockhippie/dst:latest-ARCH
-          target: ghcr.io/dockhippie/dst:latest
-          ignore_missing: true
-
 ...
