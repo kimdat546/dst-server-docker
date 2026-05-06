@@ -87,6 +87,18 @@ compose() {
 
 remote_archive() { echo "$REMOTE/$1.tar.gz"; }  # e.g. dst-storage:dst-worlds/myth-words.tar.gz
 
+# Drop orphan named volumes from old/manual setups. Safe whenever save data is on Drive,
+# since current containers use bind mounts to ./data/, not these volumes.
+clear_orphan_volumes() {
+  local volumes
+  volumes="$(docker volume ls -q 2>/dev/null | grep -E '^(dst-server-docker_)?dst-(master|caves)-data-' || true)"
+  if [ -n "$volumes" ]; then
+    local removed
+    removed="$(echo "$volumes" | xargs docker volume rm 2>/dev/null || true)"
+    [ -n "$removed" ] && c_green "Cleared orphan volumes: $(echo "$removed" | tr '\n' ' ')"
+  fi
+}
+
 cmd_init() {
   in_repo
   local branch; branch="$(current_branch)"
@@ -237,6 +249,7 @@ cmd_stop() {
     cmd_push "$b"
     rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
     c_green "Save pushed and cleared from VPS."
+    clear_orphan_volumes
   else
     c_yellow "rclone not configured — data left in ./data/"
   fi
@@ -269,13 +282,7 @@ cmd_switch() {
     fi
   fi
 
-  # Remove any leftover named DST volumes (old setup or manual docker-compose runs)
-  local volumes
-  volumes="$(docker volume ls -q | grep -E '^dst-' || true)"
-  if [ -n "$volumes" ]; then
-    echo "$volumes" | xargs docker volume rm 2>/dev/null && \
-      c_green "Removed old volumes: $(echo "$volumes" | tr '\n' ' ')" || true
-  fi
+  clear_orphan_volumes
 
   c_blue "git checkout $target"
   git_q checkout "$target"
@@ -319,6 +326,58 @@ cmd_status() {
   else
     c_yellow "containers: not running"
   fi
+}
+
+cmd_restart() {
+  in_repo
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] || { c_red "no active world to restart"; exit 1; }
+  [ -f "$ENV_FILE" ] || { c_red ".world.env missing — run 'dst init' first"; exit 1; }
+  c_blue "Restarting $b (game will auto-update via steamcmd on container start)"
+  compose "$b" down
+  compose "$b" up -d
+  c_green "Restarted."
+  notify 16776960 "🔄 Server restarted" "World: \`$b\` restarted — steamcmd will pull any game updates."
+}
+
+cmd_reset() {
+  in_repo
+  local b="${1:-$(current_state)}"
+  [ -n "$b" ] || b="$(current_branch)"
+  [ -n "$b" ] || { c_red "no world to reset"; exit 1; }
+  [ -f "$ENV_FILE" ] || cmd_init
+
+  c_yellow "Resetting world '$b' — current save will be archived to Drive as ${b}.pre-reset.tar.gz"
+
+  if is_running "$b"; then
+    c_blue "Stopping $b"
+    compose "$b" down
+  fi
+
+  if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
+    if [ -d "$ROOT/data/Master" ] && [ -n "$(ls -A "$ROOT/data/Master" 2>/dev/null)" ]; then
+      c_blue "Archiving current save as ${b}.pre-reset.tar.gz…"
+      local tmp; tmp="$(mktemp /tmp/dst-pre-reset-XXXXXX.tar.gz)"
+      ( cd "$ROOT" && tar -czf "$tmp" "${TAR_EXCLUDES[@]}" data/ )
+      rclone copyto "$tmp" "$REMOTE/$b.pre-reset.tar.gz"
+      rm -f "$tmp"
+      c_green "Archived."
+    fi
+    if rclone lsf "$REMOTE" --include "$b.tar.gz" 2>/dev/null | grep -q .; then
+      rclone delete "$REMOTE/$b.tar.gz"
+      c_green "Removed live Drive save: $b.tar.gz"
+    fi
+  else
+    c_yellow "rclone not configured — skipping Drive backup/cleanup"
+  fi
+
+  rm -rf "$ROOT/data/Master" "$ROOT/data/Caves"
+  mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
+  c_green "Cleared local save data — fresh world will generate on start"
+  clear_orphan_volumes
+
+  cmd_start "$b"
+  notify 16753920 "🌍 World reset" "World: \`$b\` reset. Old save archived as \`$b.pre-reset.tar.gz\` on Drive (recoverable)."
 }
 
 cmd_destroy() {
@@ -377,6 +436,8 @@ Commands:
   dst init                   regenerate .world.env from current branch's compose
   dst start  [branch]        pull save from Drive → start containers
   dst stop   [branch]        stop containers → push save to Drive → clear VPS
+  dst restart [branch]       restart containers in place (applies game updates via steamcmd)
+  dst reset  [branch]        archive current save → wipe → start fresh world (recoverable)
   dst switch <branch>        stop+push current → checkout → pull → start
   dst push   [branch]        compress & upload save to Drive
   dst pull   <branch>        download & extract save from Drive
@@ -397,7 +458,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-LOCKED_CMDS_RE='^(start|stop|switch|push|pull|init|destroy)$'
+LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy)$'
 cmd="${1:-help}"; shift || true
 
 if [[ "$cmd" =~ $LOCKED_CMDS_RE ]]; then
@@ -415,6 +476,8 @@ case "$cmd" in
   init)    cmd_init ;;
   start)   cmd_start "$@" ;;
   stop)    cmd_stop "$@" ;;
+  restart) cmd_restart "$@" ;;
+  reset)   cmd_reset "$@" ;;
   switch)  cmd_switch "$@" ;;
   push)    cmd_push "$@" ;;
   pull)    cmd_pull "$@" ;;

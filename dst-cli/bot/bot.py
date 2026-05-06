@@ -365,9 +365,92 @@ async def start(interaction: discord.Interaction):
 async def stop(interaction: discord.Interaction):
     await _simple(interaction, "stop", "🔴 Stopping server…")
 
+@tree.command(description="Restart the current world (applies DST game updates via steamcmd)")
+async def restart(interaction: discord.Interaction):
+    await _simple(interaction, "restart", "🔄 Restarting server (applying game updates)…")
+
+# --- /reset ------------------------------------------------------------------
+class ResetConfirmView(discord.ui.View):
+    def __init__(self, user: discord.User | discord.Member, world: str):
+        super().__init__(timeout=30)
+        self.user = user
+        self.world = world
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id != self.user.id:
+            await interaction.response.send_message("Only the person who ran this can confirm.", ephemeral=True)
+            return False
+        return True
+
+    @discord.ui.button(label="Yes, reset world", style=discord.ButtonStyle.danger)
+    async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        self.stop()
+        await do_action_stream(interaction, "reset", f"🌍 Resetting world `{self.world}`…")
+
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.secondary)
+    async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.edit_message(content="Cancelled.", view=None)
+        self.stop()
+
+    async def on_timeout(self):
+        pass
+
+@tree.command(description="Reset the current world to a fresh map (archives old save on Drive)")
+async def reset(interaction: discord.Interaction):
+    if not in_allowed_channel(interaction):
+        return await deny_wrong_channel(interaction)
+    await interaction.response.defer(thinking=True)
+    rc, out, _ = run_dst(["status"], json_mode=True)
+    world = "(unknown)"
+    if rc == 0:
+        try:
+            d = json.loads(out)
+            world = d.get("active_world") or d.get("branch") or "(unknown)"
+        except json.JSONDecodeError:
+            pass
+    view = ResetConfirmView(interaction.user, world)
+    await interaction.edit_original_response(
+        content=(
+            f"⚠️ **Reset world `{world}`?**\n\n"
+            "This will:\n"
+            f"• Archive current save to Drive as `{world}.pre-reset.tar.gz` (recoverable)\n"
+            f"• Delete the live Drive save `{world}.tar.gz`\n"
+            "• Wipe local `./data/` and start a fresh world (same mods/config)\n\n"
+            "Players will lose all in-world progress on this world."
+        ),
+        view=view,
+    )
+
 @tree.command(description="Push current world's save to Google Drive")
 async def push(interaction: discord.Interaction):
     await _simple(interaction, "push", "☁️ Pushing save to Drive…")
+
+# --- /help -------------------------------------------------------------------
+@tree.command(description="Show all bot commands and what they do")
+async def help(interaction: discord.Interaction):
+    if not in_allowed_channel(interaction):
+        return await deny_wrong_channel(interaction)
+    msg = (
+        "**🎮 DST control bot — commands**\n\n"
+        "**World info**\n"
+        "• `/worlds` — dropdown menu to pick & switch worlds\n"
+        "• `/list` — list all branches with running/active markers\n"
+        "• `/status` — current world, container health, Drive save size\n\n"
+        "**Server control**\n"
+        "• `/start` — start the current world (pulls save from Drive first)\n"
+        "• `/stop` — stop the current world (pushes save to Drive, clears VPS)\n"
+        "• `/restart` — restart in place (applies DST game updates via steamcmd)\n"
+        "• `/switch <branch>` — stop+push current → checkout → pull → start\n\n"
+        "**Saves**\n"
+        "• `/push` — manually push current save to Drive\n"
+        "• `/reset` — wipe world to a fresh map, archive old save (asks to confirm)\n\n"
+        "**Maintenance**\n"
+        "• `/destroy` — stop+push, remove containers/image/volumes (asks to confirm)\n\n"
+        "**Help**\n"
+        "• `/help` — this message"
+    )
+    await interaction.response.send_message(msg, ephemeral=True)
 
 # --- main --------------------------------------------------------------------
 if __name__ == "__main__":
