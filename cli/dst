@@ -457,14 +457,26 @@ while [ $# -gt 0 ]; do
 done
 
 LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy)$'
+LOCK_INFO="${LOCK_FILE}.info"
 cmd="${1:-help}"; shift || true
 
 if [[ "$cmd" =~ $LOCKED_CMDS_RE ]]; then
   exec 9>"$LOCK_FILE"
   if ! flock -n 9; then
-    c_red "another dst command is running (lock: $LOCK_FILE). Try again shortly."
+    if [ -f "$LOCK_INFO" ]; then
+      local_info="$(cat "$LOCK_INFO" 2>/dev/null || true)"
+      c_red "another dst command is running:"
+      c_yellow "  $local_info"
+      c_red "Try again when it finishes."
+    else
+      c_red "another dst command is running (lock: $LOCK_FILE). Try again shortly."
+    fi
     exit 1
   fi
+  # Write metadata while we hold the lock; cleanup on exit.
+  printf 'cmd=%s args=%s pid=%s caller=%s started=%s\n' \
+    "$cmd" "${*:-}" "$$" "${DST_CALLER:-cli}" "$(date -Iseconds)" > "$LOCK_INFO"
+  trap 'rm -f "$LOCK_INFO"' EXIT
 fi
 
 case "$cmd" in
@@ -480,6 +492,7 @@ case "$cmd" in
   push)    cmd_push "$@" ;;
   pull)    cmd_pull "$@" ;;
   destroy) cmd_destroy ;;
+  lock-info) [ -f "$LOCK_INFO" ] && cat "$LOCK_INFO" || echo "no lock held"; exit 0 ;;
   help|-h|--help) cmd_help ;;
   *) c_red "unknown: $cmd"; cmd_help; exit 1 ;;
 esac
