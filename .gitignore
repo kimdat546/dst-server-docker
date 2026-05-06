@@ -4,11 +4,11 @@
 data/
 
 # Bot secrets
-dst-cli/bot/.bot.env
+bot/.bot.env
 
 # Python venv
-dst-cli/bot/venv/
+bot/venv/
 
 # Temp files from dst pull
 .data-pull-*/
-dst-cli/bot/__pycache__/
+__pycache__/

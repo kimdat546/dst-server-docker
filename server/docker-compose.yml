@@ -1,6 +1,6 @@
 services:
   master:
-    image: dst-server
+    image: kimdat546/dst-server:latest
     container_name: dst-master-dang-tien
     network_mode: host
     environment:
@@ -32,7 +32,7 @@ services:
       start_period: 30s
 
   caves:
-    image: dst-server
+    image: kimdat546/dst-server:latest
     container_name: dst-caves-dang-tien
     network_mode: host
     environment:

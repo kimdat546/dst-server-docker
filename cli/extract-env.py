@@ -48,7 +48,7 @@ def extract(path):
     return out
 
 if __name__ == "__main__":
-    path = sys.argv[1] if len(sys.argv) > 1 else "docker-compose.yml"
+    path = sys.argv[1] if len(sys.argv) > 1 else "server/docker-compose.yml"
     for k, v in extract(path).items():
         # Quote values that contain whitespace or special chars
         if re.search(r'[\s#"\'$`]', v):

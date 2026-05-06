@@ -14,7 +14,7 @@ Images are published to:
 ## Building
 
 ```bash
-docker build -f latest/Dockerfile.amd64 latest/
+docker build -f image/Dockerfile.amd64 image/
 ```
 
 CI builds are triggered by pushes to `master` via `.github/workflows/docker.yml`.

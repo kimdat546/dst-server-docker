@@ -19,7 +19,7 @@ from discord import app_commands
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("dst-bot")
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 DST_BIN = "/usr/local/bin/dst"
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 NON_WORLD_BRANCHES = {"main", "master", "HEAD"}

@@ -9,7 +9,7 @@ Docker image for running a [Don't Starve Together][upstream] dedicated server, w
 Each **git branch = one world** (mods, settings, world gen config). Save data lives on **Google Drive**, not on the VPS. The `dst` CLI and Discord bot let you switch worlds, start/stop the server, and manage everything without touching the terminal.
 
 ```
-myth-words branch  →  modoverrides.lua, docker-compose.yml (cluster name, mods, ports)
+myth-words branch  →  server/config/*.lua, server/docker-compose.yml (cluster name, mods, ports)
 speedrun branch    →  different mods + settings
               ↕
        Google Drive: dst-worlds/myth-words.tar.gz, speedrun.tar.gz ...
@@ -44,9 +44,9 @@ git checkout myth-words   # or speedrun, or create your own branch
 
 ### 3. Edit world config
 
-- `docker-compose.yml` — cluster name, password, mods (`DST_SERVER_MOD_SETUP`), ports
-- `config/Master/modoverrides.lua` + `leveldataoverride.lua`
-- `config/Caves/modoverrides.lua` + `leveldataoverride.lua`
+- `server/docker-compose.yml` — cluster name, password, mods (`DST_SERVER_MOD_SETUP`), ports
+- `server/config/Master/modoverrides.lua` + `leveldataoverride.lua`
+- `server/config/Caves/modoverrides.lua` + `leveldataoverride.lua`
 
 ### 4. Start
 
@@ -54,13 +54,13 @@ git checkout myth-words   # or speedrun, or create your own branch
 dst start
 ```
 
-First run pulls the `webhippie/dst` image from Docker Hub and downloads the world save from Drive (or starts fresh if none).
+First run pulls the `kimdat546/dst-server` image from Docker Hub and downloads the world save from Drive (or starts fresh if none).
 
 ## Creating a new world
 
 ```bash
 git checkout -b my-new-world
-# edit docker-compose.yml, config/Master/*.lua, config/Caves/*.lua
+# edit server/docker-compose.yml, server/config/Master/*.lua, server/config/Caves/*.lua
 git add -A && git commit -m "feat: my-new-world"
 git push origin my-new-world
 # on the VPS:
@@ -96,12 +96,12 @@ The VPS holds world data **only while the server is running**:
 
 ## Discord Bot
 
-A Discord bot lives in `dst-cli/bot/`. Members in `#dst-control` can manage the server without SSH access.
+A Discord bot lives in `bot/`. Members in `#dst-control` can manage the server without SSH access.
 
 ### Bot setup
 
 ```bash
-cd dst-cli/bot
+cd bot
 python3 -m venv venv
 venv/bin/pip install -r requirements.txt
 cp .bot.env.example .bot.env
@@ -128,34 +128,52 @@ The bot posts to `#dst-control` automatically on: server start 🟢, server stop
 
 ## Repository layout
 
+The repo is split into four top-level concerns that change at different rates:
+
 ```
 dst-server-docker/
-├── docker-compose.yml          # per-branch world config (mods, name, ports)
-├── config/
-│   ├── Master/
-│   │   ├── modoverrides.lua
-│   │   └── leveldataoverride.lua
-│   └── Caves/
-│       ├── modoverrides.lua
-│       └── leveldataoverride.lua
-├── dst-cli/
+├── image/                      # Docker image build (rarely changes)
+│   ├── Dockerfile.amd64
+│   └── overlay/                # entrypoint scripts, config templates
+├── server/                     # per-branch world config (changes per world)
+│   ├── docker-compose.yml      # cluster name, mods, ports
+│   └── config/
+│       ├── Master/{modoverrides,leveldataoverride}.lua
+│       └── Caves/{modoverrides,leveldataoverride}.lua
+├── cli/                        # branch-as-world manager
 │   ├── dst                     # CLI (symlinked to /usr/local/bin/dst)
 │   ├── compose.yml             # branch-agnostic compose (bind mounts ./data/)
-│   ├── extract-env.py          # parses DST_* vars from docker-compose.yml
-│   ├── migrate-named-volumes.sh # one-time migration from old named volumes
-│   └── bot/
-│       ├── bot.py              # Discord bot
-│       ├── requirements.txt
-│       └── .bot.env.example    # config template (copy to .bot.env)
-└── latest/
-    └── Dockerfile.amd64
+│   ├── extract-env.py          # parses DST_* vars from server/docker-compose.yml
+│   └── migrate-named-volumes.sh
+├── bot/                        # Discord bot
+│   ├── bot.py
+│   ├── requirements.txt
+│   └── .bot.env.example
+└── .github/workflows/docker.yml  # builds + publishes the image on image/** changes
 ```
 
-**Gitignored (local only):** `data/`, `.world.env`, `.dst-current`, `dst-cli/bot/.bot.env`, `dst-cli/bot/venv/`
+**Gitignored (local only):** `data/`, `.world.env`, `.dst-current`, `bot/.bot.env`, `bot/venv/`
+
+## Image publishing
+
+The image is built by `.github/workflows/docker.yml` and pushed to Docker Hub as `kimdat546/dst-server`. The workflow runs on pushes to `master` or `dang-tien` that touch `image/**`. Tags published:
+
+- `:latest` — only from `master`
+- `:<branch>` — e.g. `:dang-tien` for branch builds
+- `:sha-<short>` — every build, for reproducibility
+
+**Required GitHub repo secrets** (Settings → Secrets and variables → Actions):
+- `DOCKERHUB_USERNAME` — your Docker Hub username (`kimdat546`)
+- `DOCKERHUB_TOKEN` — a Docker Hub access token (Account Settings → Security → New Access Token, scope: Read & Write)
+
+To pin the runtime to a specific image tag (e.g. while debugging), override per-shell:
+```
+DST_IMAGE=kimdat546/dst-server:sha-abc1234 dst start
+```
 
 ## Available environment variables
 
-See `docker-compose.yml` for the variables used per branch. Full list:
+See `server/docker-compose.yml` for the variables used per branch. Full list:
 
 ```
 DST_CLUSTER_TOKEN          (required) Klei server token

@@ -2,7 +2,7 @@
 # One-shot migration: copies an existing world's named Docker volumes
 # into ./data/{Master,Caves} (bind mounts) used by the new compose.
 # Run once per world that was set up before this tooling existed.
-# Usage: git checkout <branch> && ./dst-cli/migrate-named-volumes.sh
+# Usage: git checkout <branch> && ./cli/migrate-named-volumes.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -14,7 +14,7 @@ BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD)"
 
 if docker ps --format '{{.Names}}' | grep -qE '^dst-(master|caves)-myth-words$'; then
   echo "Old containers running. Stop them first:"
-  echo "  cd $ROOT && docker compose -f docker-compose.yml down"
+  echo "  cd $ROOT/server && docker compose down"
   exit 1
 fi
 
@@ -33,11 +33,11 @@ docker run --rm \
   alpine:3 sh -c 'cp -a /src/. /dst/'
 
 echo "==> Initialising .world.env"
-"$ROOT/dst-cli/dst" init
+"$ROOT/cli/dst" init
 
 echo "myth-words" > "$ROOT/.dst-current"
 
 echo
-echo "Done. Verify with:  $ROOT/dst-cli/dst start"
+echo "Done. Verify with:  $ROOT/cli/dst start"
 echo "After confirming the world boots, you can drop the old volumes:"
 echo "  docker volume rm $OLD_MASTER_VOL $OLD_CAVES_VOL"
