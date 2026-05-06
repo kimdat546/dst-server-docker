@@ -89,6 +89,36 @@ compose() {
 
 remote_archive() { echo "$REMOTE/$1.tar.gz"; }  # e.g. dst-storage:dst-worlds/myth-words.tar.gz
 
+# Wait for the master container to log [SyncWorldSettings], which only fires
+# after the caves shard has connected and world generation is past the
+# cross-shard sync — i.e. the game is actually accepting players.
+# Falls back gracefully if the marker doesn't appear within timeout.
+wait_for_ready() {
+  local b="$1"
+  local container="dst-master-${b}"
+  local started_at
+  started_at="$(docker inspect -f '{{.State.StartedAt}}' "$container" 2>/dev/null || true)"
+  if [ -z "$started_at" ]; then
+    c_yellow "Cannot detect ready: $container not running"
+    return 1
+  fi
+
+  local timeout="${DST_READY_TIMEOUT:-180}"
+  local interval=3
+  local elapsed=0
+  c_blue "Waiting for cross-shard sync (timeout ${timeout}s)…"
+  while [ "$elapsed" -lt "$timeout" ]; do
+    if docker logs --since "$started_at" "$container" 2>&1 | grep -q '\[SyncWorldSettings\]'; then
+      c_green "Game is ready (${elapsed}s)."
+      return 0
+    fi
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+  done
+  c_yellow "Timeout (${timeout}s) — server may still be initializing. Check 'docker logs $container'."
+  return 1
+}
+
 # Drop orphan named volumes from old/manual setups. Safe whenever save data is on Drive,
 # since current containers use bind mounts to ./data/, not these volumes.
 clear_orphan_volumes() {
@@ -231,8 +261,12 @@ cmd_start() {
   echo "$b" > "$STATE_FILE"
   c_blue "Starting $b"
   compose "$b" up -d
-  c_green "Started."
-  notify 3066993 "🟢 Server started" "World: \`$b\` is now online."
+  c_green "Containers up — waiting for game to be playable…"
+  if wait_for_ready "$b"; then
+    notify 3066993 "🟢 Server ready" "World: \`$b\` is online and accepting players."
+  else
+    notify 16776960 "⏳ Containers up — ready check timed out" "World: \`$b\` containers are running but cross-shard sync didn't complete within timeout. Server may finish loading on its own; check \`docker logs dst-master-$b\` if it doesn't."
+  fi
 }
 
 cmd_stop() {
@@ -331,8 +365,12 @@ cmd_restart() {
   c_blue "Restarting $b (game will auto-update via steamcmd on container start)"
   compose "$b" down
   compose "$b" up -d
-  c_green "Restarted."
-  notify 16776960 "🔄 Server restarted" "World: \`$b\` restarted — steamcmd will pull any game updates."
+  c_green "Containers up — waiting for game to be playable…"
+  if wait_for_ready "$b"; then
+    notify 16776960 "🔄 Server restarted" "World: \`$b\` is back online and accepting players."
+  else
+    notify 16776960 "⏳ Restart: ready check timed out" "World: \`$b\` containers restarted but cross-shard sync didn't complete within timeout. Check \`docker logs dst-master-$b\`."
+  fi
 }
 
 cmd_reset() {
