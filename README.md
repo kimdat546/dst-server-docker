@@ -54,7 +54,7 @@ git checkout myth-words   # or speedrun, or create your own branch
 dst start
 ```
 
-First run pulls the `webhippie/dst` image from Docker Hub and downloads the world save from Drive (or starts fresh if none).
+First run pulls the `kimdat546/dst-server` image from Docker Hub and downloads the world save from Drive (or starts fresh if none).
 
 ## Creating a new world
 
@@ -153,6 +153,23 @@ dst-server-docker/
 ```
 
 **Gitignored (local only):** `data/`, `.world.env`, `.dst-current`, `bot/.bot.env`, `bot/venv/`
+
+## Image publishing
+
+The image is built by `.github/workflows/docker.yml` and pushed to Docker Hub as `kimdat546/dst-server`. The workflow runs on pushes to `master` or `dang-tien` that touch `image/**`. Tags published:
+
+- `:latest` — only from `master`
+- `:<branch>` — e.g. `:dang-tien` for branch builds
+- `:sha-<short>` — every build, for reproducibility
+
+**Required GitHub repo secrets** (Settings → Secrets and variables → Actions):
+- `DOCKERHUB_USERNAME` — your Docker Hub username (`kimdat546`)
+- `DOCKERHUB_TOKEN` — a Docker Hub access token (Account Settings → Security → New Access Token, scope: Read & Write)
+
+To pin the runtime to a specific image tag (e.g. while debugging), override per-shell:
+```
+DST_IMAGE=kimdat546/dst-server:sha-abc1234 dst start
+```
 
 ## Available environment variables
 
