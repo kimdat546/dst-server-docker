@@ -6,13 +6,14 @@ Each git branch defines a world (mods, configs, server settings). Save state liv
 
 ```
 dst-server-docker/
-├── docker-compose.yml      # branch's existing per-world compose (read for env values)
-├── config/{Master,Caves}/  # per-shard mod + level overrides (committed)
-├── dst-cli/                # untracked (.git/info/exclude)
+├── server/
+│   ├── docker-compose.yml  # branch's per-world compose (read for env values)
+│   └── config/{Master,Caves}/  # per-shard mod + level overrides (committed)
+├── cli/
 │   ├── dst                 # the CLI
-│   ├── compose.yml         # branch-agnostic compose, mounts ./data/
-│   ├── extract-env.py      # parses DST_* env from a docker-compose.yml
-│   └── migrate-myth-words.sh
+│   ├── compose.yml         # branch-agnostic compose, mounts ../data/
+│   ├── extract-env.py      # parses DST_* env from server/docker-compose.yml
+│   └── migrate-named-volumes.sh
 ├── data/                   # untracked, bind-mounted save state
 │   ├── Master/             # cluster.ini, save/, etc.
 │   └── Caves/
@@ -20,7 +21,7 @@ dst-server-docker/
 └── .dst-current            # untracked, name of active world
 ```
 
-`dst-cli/`, `data/`, `.world.env`, `.dst-current` are listed in `.git/info/exclude` (local, not committed). They survive `git checkout` between branches.
+`data/`, `.world.env`, `.dst-current` are gitignored (local-only, survive `git checkout` between branches).
 
 ## One-time setup
 
@@ -38,9 +39,9 @@ The CLI is symlinked at `/usr/local/bin/dst`.
 
 ```bash
 cd /root/dst-server-docker
-docker compose -f docker-compose.yml down       # stop the old setup
-git checkout myth-words                         # already there but be sure
-./dst-cli/migrate-myth-words.sh                 # named volumes → ./data/
+docker compose -f server/docker-compose.yml down  # stop the old setup
+git checkout myth-words                           # already there but be sure
+./cli/migrate-named-volumes.sh                    # named volumes → ./data/
 dst start                                       # boot via the new compose
 dst push                                        # first cloud backup
 ```
@@ -72,12 +73,12 @@ dst start                 # start the active world
 4. `git checkout <target> && git pull --ff-only`
 5. Wipes `data/Master`, `data/Caves`.
 6. `rclone sync gdrive:dst-worlds/<target>/ data/` (pull save; empty if new).
-7. Regenerates `.world.env` from the new branch's `docker-compose.yml`.
+7. Regenerates `.world.env` from the new branch's `server/docker-compose.yml`.
 8. `docker compose up -d`.
 
 ## Creating a new world
 
-Use the existing repo workflow — branch off `main`, edit `docker-compose.yml` (cluster name, password, mods, ports), edit `config/Master/*.lua` and `config/Caves/*.lua`, push the branch. Then on the VPS:
+Use the existing repo workflow — branch off `main`, edit `server/docker-compose.yml` (cluster name, password, mods, ports), edit `server/config/Master/*.lua` and `server/config/Caves/*.lua`, push the branch. Then on the VPS:
 
 ```bash
 dst switch <new-branch>

@@ -12,7 +12,7 @@ concurrency:
     branches:
       - master
     paths:
-      - latest/*
+      - image/**
       - .github/workflows/docker.yml
   pull_request:
     branches:
@@ -84,9 +84,9 @@ jobs:
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
-          context: latest/
+          context: image/
           provenance: false
-          file: latest/Dockerfile.${{ matrix.variant.arch }}
+          file: image/Dockerfile.${{ matrix.variant.arch }}
           platforms: ${{ matrix.variant.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           labels: ${{ steps.meta.outputs.labels }}

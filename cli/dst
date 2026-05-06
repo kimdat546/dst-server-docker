@@ -7,9 +7,11 @@ SELF="$(readlink -f "${BASH_SOURCE[0]}")"
 ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
 LOCK_FILE="/run/lock/dst.lock"
 JSON=0
-CLI="$ROOT/dst-cli"
+CLI="$ROOT/cli"
 COMPOSE_FILE="$CLI/compose.yml"
 EXTRACT="$CLI/extract-env.py"
+SERVER_COMPOSE="$ROOT/server/docker-compose.yml"
+BOT_DIR="$ROOT/bot"
 STATE_FILE="$ROOT/.dst-current"
 ENV_FILE="$ROOT/.world.env"
 REMOTE="${DST_REMOTE:-dst-storage:dst-worlds}"
@@ -19,7 +21,7 @@ NON_WORLD_BRANCHES_RE='^(main|master|HEAD)$'
 # Discord webhook (optional) — set DISCORD_WEBHOOK_URL in .bot.env or environment
 WEBHOOK_URL="${DISCORD_WEBHOOK_URL:-}"
 _load_webhook() {
-  local env_file="$CLI/bot/.bot.env"
+  local env_file="$BOT_DIR/.bot.env"
   if [ -z "$WEBHOOK_URL" ] && [ -f "$env_file" ]; then
     WEBHOOK_URL="$(grep -m1 '^DISCORD_WEBHOOK_URL=' "$env_file" 2>/dev/null | cut -d= -f2- | tr -d '"' | tr -d "'")" || true
   fi
@@ -102,8 +104,8 @@ clear_orphan_volumes() {
 cmd_init() {
   in_repo
   local branch; branch="$(current_branch)"
-  [ -f "$ROOT/docker-compose.yml" ] || { c_red "No docker-compose.yml on branch $branch"; exit 1; }
-  python3 "$EXTRACT" "$ROOT/docker-compose.yml" > "$ENV_FILE"
+  [ -f "$SERVER_COMPOSE" ] || { c_red "No server/docker-compose.yml on branch $branch"; exit 1; }
+  python3 "$EXTRACT" "$SERVER_COMPOSE" > "$ENV_FILE"
   echo "DST_BRANCH=$branch" >> "$ENV_FILE"
   mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
   c_green "Wrote $ENV_FILE for branch '$branch'."
