@@ -221,13 +221,6 @@ cmd_start() {
   local b="${1:-$(current_state)}"
   [ -n "$b" ] || b="$(current_branch)"
   [ -f "$ENV_FILE" ] || cmd_init
-  # Pull image if missing (e.g. after dst destroy)
-  if ! docker image inspect dst-server >/dev/null 2>&1; then
-    c_blue "dst-server image not found — pulling webhippie/dst from Docker Hub…"
-    docker pull webhippie/dst:latest
-    docker tag webhippie/dst:latest dst-server
-    c_green "Image ready."
-  fi
   if [ ! -d "$ROOT/data/Master" ] || [ -z "$(ls -A "$ROOT/data/Master" 2>/dev/null)" ]; then
     if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
       cmd_pull "$b"
@@ -407,9 +400,12 @@ cmd_destroy() {
     c_green "Removed containers: $(echo "$containers" | tr '\n' ' ')"
   fi
 
-  # Remove dst-server image
-  if docker image inspect dst-server >/dev/null 2>&1; then
-    docker rmi dst-server 2>&1 && c_green "Removed image: dst-server"
+  # Remove DST images (locally-built dst-server, plus published kimdat546/dst-server tags)
+  local images
+  images="$(docker images --format '{{.Repository}}:{{.Tag}}' | grep -E '^(dst-server|kimdat546/dst-server):' || true)"
+  if [ -n "$images" ]; then
+    echo "$images" | xargs docker rmi -f 2>/dev/null || true
+    c_green "Removed images: $(echo "$images" | tr '\n' ' ')"
   fi
 
   # Remove leftover named DST volumes

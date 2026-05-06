@@ -342,7 +342,7 @@ async def destroy(interaction: discord.Interaction):
     await interaction.response.send_message(
         "⚠️ **This will:**\n"
         "• Stop the running world and push save to Google Drive\n"
-        "• Remove all DST containers, the `dst-server` image, and leftover volumes\n"
+        "• Remove all DST containers, images, and leftover volumes\n"
         "• Clear `./data/` from the VPS\n\n"
         "Drive saves are kept. You can `dst start` again later to rebuild.\n\n"
         "**Are you sure?**",
