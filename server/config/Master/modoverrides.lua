@@ -3,9 +3,9 @@ return {
     configuration_options={
       ArrowsignEnable=false,
       CountdownEnable=false,
-      HungerCost=1,
+      HungerCost=0,
       Ownership=true,
-      SanityCost=1
+      SanityCost=0
     },
     enabled=true
   },
