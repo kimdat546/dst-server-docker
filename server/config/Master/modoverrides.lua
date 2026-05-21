@@ -119,5 +119,19 @@ return {
       quick_pick_plant_normal_ground=true
     },
     enabled=true
+  },
+  ["workshop-2847908822"]={
+    configuration_options={
+      [""]=false,
+      ai1_switch=2,
+      clean_day=25,
+      compatible_switch=false,
+      new_player_join_switch=false,
+      perf_switch=true,
+      performance_switch=true,
+      performance_tips_switch=true,
+      stack_dis=false 
+    },
+    enabled=true 
   }
 }
