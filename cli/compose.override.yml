@@ -3,8 +3,12 @@
 
 services:
   master:
+    restart: "no"
     volumes:
-      - /Users/kimdat546/Desktop/pham-nhan-tu-tien-mod:/home/steam/dst/mods/pntt_mod:ro
+      - /Users/kimdat546/Desktop/pham-nhan-tu-tien-mod:/usr/share/game/mods/pntt_mod:ro
     environment:
       DST_FORCE_ENABLE_MODS: "pntt_mod"
       DEBUG_PNTT: "true"
+      # Skip steamcmd update on startup — steamcmd segfaults under Rosetta/QEMU
+      # on Apple Silicon hosts. Game binary is already baked into the image.
+      DST_SKIP_GAME_UPGRADE: "true"
