@@ -1,0 +1,10 @@
+# Override for local development — mounts the pntt_mod folder into the container.
+# Use via: docker compose -f cli/compose.yml -f cli/compose.override.yml up -d
+
+services:
+  master:
+    volumes:
+      - /Users/kimdat546/Desktop/pham-nhan-tu-tien-mod:/home/steam/dst/mods/pntt_mod:ro
+    environment:
+      DST_FORCE_ENABLE_MODS: "pntt_mod"
+      DEBUG_PNTT: "true"
