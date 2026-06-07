@@ -1,14 +1,4 @@
 return {
-  ["workshop-1530801499"]={
-    configuration_options={
-      ArrowsignEnable=false,
-      CountdownEnable=false,
-      HungerCost=0,
-      Ownership=true,
-      SanityCost=0
-    },
-    enabled=true
-  },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
     configuration_options={
@@ -35,7 +25,21 @@ return {
       SmokePuffOnStacking=true,
       StackDuringPopulation=false
     },
-    enabled=true
+    enabled=true 
+  },
+  ["workshop-2847908822"]={
+    configuration_options={
+      [""]=false,
+      ai1_switch=2,
+      clean_day=25,
+      compatible_switch=false,
+      new_player_join_switch=false,
+      perf_switch=true,
+      performance_switch=true,
+      performance_tips_switch=true,
+      stack_dis=false 
+    },
+    enabled=true 
   },
   ["workshop-3235319974"]={
     configuration_options={
@@ -54,9 +58,155 @@ return {
       set5=true,
       set6=true,
       set7=true,
-      wukongkey=114
+      wukongkey=114 
     },
-    enabled=true
+    enabled=true 
+  },
+  ["workshop-3402670530"]={
+    configuration_options={
+      cdamage=0.7,
+      eatfood=3,
+      frog=false,
+      hammer=true,
+      hidebody=false,
+      level=50,
+      mode=false,
+      recipemode=2,
+      skill_c=114,
+      skill_x=120,
+      skill_z=122,
+      spiderqueen=2,
+      startergift=false,
+      touchi=true,
+      tuhouse=true,
+      tunogohome=false,
+      zdamage=0.4,
+      zhuanshu=true 
+    },
+    enabled=true 
+  },
+  ["workshop-3490732007"]={
+    configuration_options={
+      ["< Basic Settings >"]=false,
+      ["< Item Settings >"]=false,
+      ["< Language >"]=false,
+      ["< Skill Settings > "]=false,
+      ["< UI Settings >"]=false,
+      ["< Volume Settings > "]=false,
+      dst_avator_suzulan_lang="en",
+      SUZULAN_ENERGY_ADDVAL=3,
+      SUZULAN_FLOWERSTAFF_AOETARGET=4,
+      SUZULAN_FLOWERSTAFF_DMGMULT=60,
+      SUZULAN_FLOWERSTAFF_PLANARDMG=45,
+      SUZULAN_FLOWERSTAFF_SPELLDMG=0.1,
+      SUZULAN_LEVELUI_POS=3,
+      SUZULAN_LEVELUI_POS_RESET=1,
+      SUZULAN_LEVELUI_SCL=0.8,
+      SUZULAN_LIGHT=1,
+      SUZULAN_LVLUP_ADD=5,
+      SUZULAN_LVLUP_EXP=1,
+      SUZULAN_QUICK_PICK=1,
+      SUZULAN_SKILL_POS=1,
+      SUZULAN_SKILL_SCL=0.48,
+      SUZULAN_SKILL_SOUND=0.2,
+      SUZULAN_SKILL1_DMGBOOST=1,
+      SUZULAN_SKILL1_KEY="KEY_Z",
+      SUZULAN_SKILL2_FASTCOLLECT=1,
+      SUZULAN_SKILL2_HEAL=5,
+      SUZULAN_SKILL2_ITEM=0,
+      SUZULAN_SKILL2_KEY="KEY_X",
+      SUZULAN_SKILL2_SANITY=5,
+      SUZULAN_SKILL2_TRUEDMG=0.01,
+      SUZULAN_STAFF_SOUND=0.6 
+    },
+    enabled=true 
+  },
+  ["workshop-3660903728"]={
+    configuration_options={
+      ["< Base / Options > "]=false,
+      ["< Items >"]=false,
+      ["< Language >"]=false,
+      ["< Skills > "]=false,
+      ["< UI >      "]=false,
+      ["< Volume >   "]=false,
+      avatar_setsuro_lang="en",
+      SETSURO_BASE_SOUND=0.2,
+      SETSURO_BOUNCE_SOUND=0.8,
+      SETSURO_CUSTOM_SKILL_POINTS=24,
+      SETSURO_ENERGY_SEC=2,
+      SETSURO_KITANA_DMG=0.5,
+      SETSURO_LVLUP_ADD=2,
+      SETSURO_PACK_SIDE=1,
+      SETSURO_PAS_SHIELD_DURA=10,
+      SETSURO_SKILL_POS=1,
+      SETSURO_SKILL_SCL=0.31,
+      SETSURO_SKILL_SOUND=0.6,
+      SETSURO_SKILL1_ATKSPEED=0.7,
+      SETSURO_SKILL1_DMGBOOST=1,
+      SETSURO_SKILL1_KEY="KEY_Z",
+      SETSURO_SKILL2_KEY="KEY_X",
+      SETSURO_SKILL4_KEY="KEY_R",
+      SETSURO_SNOWSWORD_DMG=86,
+      SETSURO_SNOWSWORD_TRUEDMG=0.02 
+    },
+    enabled=true 
+  },
+  ["workshop-3670669065"]={
+    configuration_options={ damage_mult=1, grow_days=5, health_mult=1, hunger_rate_mult=1 },
+    enabled=true 
+  },
+  ["workshop-3675508496"]={ configuration_options={  }, enabled=true },
+  ["workshop-3730126500"]={
+    configuration_options={
+      AAAA=0,
+      ANIMAL_PHYSICS_REMOVE=false,
+      atbook_numrecipepage=5,
+      BLUE_PRINT_LOOT_MODE="hard",
+      BUTTERFLY_WARPPING_PAPAER=1,
+      CHERRY_BLOSSOM_RABBIT_SEARCH_RADIUS=999,
+      DEBUGGING=false,
+      EFBCC_ALLOW_DECONSTRUCT=true,
+      EQ_JUMBO_ICE_CREAM_TUB_HUNGER_MULT=50,
+      EQ_WORLD_SKIPPER=true,
+      LANGUAGE="ch",
+      LAVENDER_KITTY_WORKING_AREA="5x5",
+      LITTLE_CRANE_SEARCH_RADIUS=999,
+      MAIN_TREE_PROTECT_RADIUS=40,
+      PEAR_CAT_SEARCH_RADIUS=999,
+      SPECIAL_CONTAINER_MAP_SEARCH=true,
+      SPECIAL_CONTAINER_MAP_SEARCH_CYCLE=30,
+      TBAT_BUFF_DISPLAY=false 
+    },
+    enabled=true 
+  },
+  ["workshop-3731336839"]={
+    configuration_options={
+      ALCOHOLICDRINKS=true,
+      AUTORETROFIT=false,
+      COFFEEDROPRATE=4,
+      COFFEEDURATION=480,
+      COFFEESPEED=true,
+      EXPERIMENTAL=false,
+      EXTRAS=false,
+      FERTILIZERTWEAK=false,
+      FULLMOONTRANS=false,
+      GENERAL=false,
+      GIANTSPAWNING=true,
+      HUMANMEAT=true,
+      ICEBOXSTACKSIZE=false,
+      KEEPFOOD=false,
+      MEADOW_CC=0,
+      MODTRADES=true,
+      RETROCOMPAT=false,
+      SCRAPBOOK=true,
+      SCRAPBOOK2=false,
+      SEASONALFOOD=false,
+      SERENITY_CC=0,
+      WARLYMEALGRINDER=false,
+      WARLYRECIPES=true,
+      WARLYSPICES=false 
+    },
+    enabled=true 
   },
   ["workshop-374550642"]={
     configuration_options={
@@ -67,7 +217,7 @@ return {
       STACK_SIZE_SMALLITEM=99,
       STACK_SIZE_TINYITEM=120
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
@@ -107,31 +257,17 @@ return {
       uncommon_loot_goldnugget=0.2,
       uncommon_loot_mole=0.2,
       uncommon_loot_nitre=0.2,
-      uncommon_loot_rabbit=0.2
+      uncommon_loot_rabbit=0.2 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-501385076"]={
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
       quick_pick_cactus=true,
-      quick_pick_plant_normal_ground=true
-    },
-    enabled=true
-  },
-  ["workshop-2847908822"]={
-    configuration_options={
-      [""]=false,
-      ai1_switch=2,
-      clean_day=25,
-      compatible_switch=false,
-      new_player_join_switch=false,
-      perf_switch=true,
-      performance_switch=true,
-      performance_tips_switch=true,
-      stack_dis=false 
+      quick_pick_plant_normal_ground=true 
     },
     enabled=true 
-  }
+  } 
 }
