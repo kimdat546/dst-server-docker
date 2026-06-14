@@ -5,7 +5,7 @@ services:
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_6FZh9CMJ^LbZ7Uf6J62OeOpGA2lY1A6qmzFcSbVeLkzXqyLyz77c="
-      DST_NETWORK_CLUSTER_NAME: "Neverland - Dang Tien"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - Uncompromising mode"
       DST_NETWORK_CLUSTER_DESCRIPTION: "Welcome to Neverland - Dang Tien"
       DST_NETWORK_CLUSTER_PASSWORD: "haizz"
       DST_GAMEPLAY_MAX_PLAYERS: "12"
@@ -18,7 +18,7 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,1207269058,1595631294,2039181790,3675508496"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,1207269058,1595631294,2039181790,3675508496,666155465"
     volumes:
       - dst-master-data-dang-tien:/var/lib/game
       - ./config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
@@ -37,7 +37,7 @@ services:
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_6FZh9CMJ^LbZ7Uf6J62OeOpGA2lY1A6qmzFcSbVeLkzXqyLyz77c="
-      DST_NETWORK_CLUSTER_NAME: "Neverland - Dang Tien"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - Uncompromising mode"
       DST_NETWORK_SERVER_PORT: "11998"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "false"
@@ -46,7 +46,7 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,1207269058,1595631294,2039181790,3675508496"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,1207269058,1595631294,2039181790,3675508496,666155465"
     volumes:
       - dst-caves-data-dang-tien:/var/lib/game
       - ./config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
