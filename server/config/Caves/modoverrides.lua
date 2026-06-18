@@ -1,15 +1,6 @@
 return {
+  ["workshop-1111658995"]={ configuration_options={  }, enabled=true },
   ["workshop-1207269058"]={ configuration_options={  }, enabled=true },
-  ["workshop-1530801499"]={
-    configuration_options={
-      ArrowsignEnable=false,
-      CountdownEnable=false,
-      HungerCost=0,
-      Ownership=true,
-      SanityCost=0 
-    },
-    enabled=true 
-  },
   ["workshop-1595631294"]={
     configuration_options={
       BundleItems=false,
@@ -18,9 +9,9 @@ return {
       DragonflyChest=false,
       Icebox=false,
       OnlyPlayer=false,
-      SaltBox=false 
+      SaltBox=false
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
@@ -39,16 +30,118 @@ return {
       AutoStackRange=10,
       AutoStackSeeds=true,
       AutoStackTwiggyTreeTwigs=true,
-      ManualDropStackRange=10,
-      ManualStackAsh=true,
-      ManualStackMakeNewStackMainStack=true,
-      ManualStackPoop=true,
-      ManualStackSeeds=true,
+      ManualDropStackRange=5,
+      ManualStackAsh=false,
+      ManualStackMakeNewStackMainStack=false,
+      ManualStackPoop=false,
+      ManualStackSeeds=false,
       PlayerMustHaveOneOfItemToAutoPickup=false,
       SmokePuffOnStacking=true,
-      StackDuringPopulation=false 
+      StackDuringPopulation=false
     },
-    enabled=true 
+    enabled=true
+  },
+  ["workshop-1982562290"]={
+    configuration_options={
+      creature_chance=90,
+      deadly_disease=true,
+      enable_creatures=true,
+      enable_land=true,
+      enable_plants=true,
+      harbinger_spawnrate=1,
+      plant_chance=90,
+      Title=""
+    },
+    enabled=true
+  },
+  ["workshop-2010472942"]={
+    configuration_options={
+      All=0,
+      Bearger=0,
+      Deerclops=0,
+      Dragonfly=0,
+      enable_groundpcancel_v2=true,
+      enable_monstertag=true,
+      enable_nesting=true,
+      enable_noeggeater=true,
+      enable_unintelligible=false,
+      enable_wearger=true,
+      enable_wearger_skills=true,
+      enable_wearger_stumps=true,
+      enable_weerclops=true,
+      enable_weerclops_skills=true,
+      enable_woose=true,
+      enable_woose_skills=true,
+      enable_woose_speen=true,
+      enable_wragonfly=true,
+      enable_wragonfly_skills=true,
+      ["Moose/Goose"]=0,
+      wearg_gp_iframes=1,
+      wearg_gpdmg_v2=25,
+      wearg_honey=10,
+      wearg_hungerd=1.2,
+      wearger_attackstyle=2,
+      wearger_beeresist=0.5,
+      wearger_furtuftchance=0.2,
+      wearger_gp_cd=3,
+      wearger_gp_pick=true,
+      wearger_gp_range_v2=5,
+      wearger_health=175,
+      wearger_hibasorp=0.2,
+      wearger_hunger=230,
+      wearger_sanity=150,
+      wearger_yawn=0.2,
+      weer_freezekill=216,
+      weer_freezepower=0.25,
+      weer_hotkill=84,
+      weer_sanitybonus=5,
+      weer_sanitydrainstart=2,
+      weerclops_attackstyle=1,
+      weerclops_fx=1,
+      weerclops_health=150,
+      weerclops_hunger=150,
+      weerclops_ice_range=4,
+      weerclops_oheattemp=45,
+      weerclops_sanity=120,
+      weerclops_temp=true,
+      wfly_ashes=8,
+      wfly_atk_mult=1.1,
+      wfly_enraged_burstdmg=10,
+      wfly_enraged_cd=30,
+      wfly_enraged_fire=false,
+      wfly_enraged_maxhp=70,
+      wfly_enraged_timer=60,
+      wfly_fireimmune=0,
+      wfly_lavaedmg=50,
+      wfly_lavaehp=500,
+      wfly_lavaemax=9,
+      wfly_oheattemp=90,
+      wfly_spd_mult=1.2,
+      wfly_summondmg=20,
+      woose_drownmax=100,
+      woose_grog=1,
+      woose_health=175,
+      woose_honkchance=0.1,
+      woose_honkrange=5,
+      woose_hunger=150,
+      woose_iframes=true,
+      woose_lightn=0,
+      woose_lightning=0.9,
+      woose_nestbuff=0.25,
+      woose_nesttime=7,
+      woose_sanity=200,
+      woose_speen_v2=1.33,
+      woose_spin_move=true,
+      woose_spin_time=5,
+      woose_spindmg_v2=21,
+      woose_spinhammer=false,
+      woose_wetdrain=false,
+      woose_wetness=1.6,
+      wragonfly_health=200,
+      wragonfly_hunger=170,
+      wragonfly_sanity=100
+    },
+    enabled=true
   },
   ["workshop-2039181790"]={
     configuration_options={
@@ -271,21 +364,215 @@ return {
       wormwood_plants=true,
       wormwood_trapbuffs=true,
       wortox=true,
-      wx78=true 
+      wx78=true
     },
-    enabled=true 
+    enabled=true
+  },
+  ["workshop-2496686961"]={
+    configuration_options={
+      [""]="",
+      SpellCastControllerHotkey="CONTROL_MENU_MISC_3",
+      SpellCastHotkey="KEY_X",
+      SpellExamineModifierKey="KEY_LALT",
+      SpellSwapHotkey=""
+    },
+    enabled=true
+  },
+  ["workshop-2847908822"]={
+    configuration_options={
+      [""]=false,
+      ai1_switch=2,
+      clean_day=25,
+      compatible_switch=false,
+      new_player_join_switch=false,
+      perf_switch=true,
+      performance_switch=true,
+      performance_tips_switch=true,
+      stack_dis=false
+    },
+    enabled=true
+  },
+  ["workshop-3004639365"]={
+    configuration_options={
+      [""]=0,
+      ["Alcohol Drinks Brewing"]=0,
+      alcohol_time=0.5,
+      beer_wait=0.75,
+      ["Brewery options"]=0,
+      butterhunter_time=0.25,
+      caffein_speed=1.25,
+      caffein_time=1,
+      capacity_time=0.5,
+      child_safety=true,
+      ["Coffee Speed Boost"]=0,
+      ["Drink Alcohol Capacity"]=0,
+      ["Drink Alcohol Effect"]=0,
+      ["Drink Butterhunter Effect"]=0,
+      ["Drink O.B.E. Effect"]=0,
+      ["Drink Sleep Effect"]=0,
+      drunkard_time=0.5,
+      ["Effect options"]=0,
+      enable_thirst=true,
+      enable_waterborne=true,
+      gen_caffeinberry=1.2,
+      gen_ruincacao_tree=1.2,
+      gen_tea_tree=1.2,
+      ghost_time=0.25,
+      immune_time=0.5,
+      locale=false,
+      max_capacity=5,
+      re_retrofit=0,
+      resistance_time=0.5,
+      ["Select Language"]=0,
+      sleeping_time=15,
+      ["Soda Brewing"]=0,
+      soda_wait=0.75,
+      ["Thirst options"]=0,
+      thirst_decrease_speed=0.6,
+      thirst_max=150,
+      useinsight=true,
+      useshowme=true,
+      waterborne_time=0.5,
+      ["WorldGen options"]=0
+    },
+    enabled=true
+  },
+  ["workshop-3353852416"]={
+    configuration_options={
+      CH_LANG=false,
+      CountdownEnable=false,
+      HomesignEnable=true,
+      HungerCost=0,
+      LightEnable=true,
+      ResurrectEnable=true,
+      SanityCost=0,
+      TextEnable=false
+    },
+    enabled=true
+  },
+  ["workshop-3360553731"]={
+    configuration_options={
+      ANCIENTWORMHEALTH=2400,
+      ["Artificial Wormhole"]=0,
+      BABY_WORMBATTLE=false,
+      BWB_ARMORSLURPER=true,
+      BWB_BLUEAMULET=true,
+      BWB_COLOURCUBES=true,
+      BWB_MUSHFARM=true,
+      CAVEPLANT_GROWTYPE=true,
+      CRAFTING_STATION=6,
+      DESTRUCTIBLE=true,
+      FINITEUSES=10,
+      FOLLOWERMIGRATE=true,
+      ["Function Options"]=0,
+      FUNGUSPROOF_FILTER=true,
+      HIDE_PENBLUEPRINT=false,
+      IgnoreCollisionCrash=false,
+      INGREDIENTS=3,
+      INVINCIBILITY=true,
+      ["Item Tweaks"]=0,
+      locale="en",
+      Mobs=0,
+      NEWCSBOSSRUSH=true,
+      RETROFIT=false,
+      RIFTMEGAFLARE=true,
+      SANITY=15,
+      STARWORMHEALTH=600,
+      STEALWORMHEALTH=600,
+      VINEWORMHEALTH=600,
+      ["World Generation"]=0,
+      WORM_MEGABOSS_MULTIPLAYBOOST=true,
+      WORMHHOLEBLUEPRINTLOOTDROPPER=2,
+      WORMMEGABOSSHEALTH=25000,
+      WORMMEGABOSSLASTPHASE=1,
+      WORMMEGABOSSLASTPHASEHEALTH1=0.1
+    },
+    enabled=true
+  },
+  ["workshop-3390560378"]={
+    configuration_options={ pyro_footsteps=true, pyro_vision=false, pyro_voice=false, ["The Pyro"]=0 },
+    enabled=true
+  },
+  ["workshop-3670669065"]={
+    configuration_options={ damage_mult=1, grow_days=5, health_mult=1, hunger_rate_mult=1 },
+    enabled=true
   },
   ["workshop-3675508496"]={ configuration_options={  }, enabled=true },
+  ["workshop-3688913682"]={
+    configuration_options={
+      ["[Dragon Subduer Saddle]"]=0,
+      ["[Njord Saddle]"]=0,
+      ["[Ornery Tendency Grass Gator]"]=0,
+      ["[Pirate Saddle]"]=0,
+      ["[Pudgy Tendency Grass Gator]"]=0,
+      ["[Rider Tendency Grass Gator]"]=0,
+      ["Bootleg & Whirlportal"]=0,
+      ELASTISPACE_GRASSGATOR_BELL_DIFF=1,
+      ["Friendly Grass Gator"]=0,
+      GATORBEEF_BOOTLEG_DOMESTICATION_COST=0.03,
+      GATORBEEF_BRAMBLE_DMG=25.5,
+      GATORBEEF_BRAMBLE_HUNGER_MIN=80,
+      GATORBEEF_CAN_EAT_FISH=1,
+      GATORBEEF_CAN_EAT_LEAFYMEATS=1,
+      GATORBEEF_CAN_EAT_ROUGH=1,
+      GATORBEEF_CAN_EAT_VEGGIE=1,
+      GATORBEEF_DAMAGE_BASE=42.5,
+      GATORBEEF_DOUBLE_CLICK_DISMOUNT=0,
+      GATORBEEF_FERTILIZER_RECOVERY=4,
+      GATORBEEF_FERTILIZER_SAUCE=1,
+      GATORBEEF_GROWTH_SPEED_MULT=1.15,
+      GATORBEEF_GROWTH_SPEED_MULT_RIDER=0.1,
+      GATORBEEF_HEALTH_BASE=1000,
+      GATORBEEF_HUNGER_SALVAGE=100,
+      GATORBEEF_OCEAN_DEPTH_LIMIT=1,
+      GATORBEEF_ORNERY_RIDEABLE_FOREVER=0.45,
+      GATORBEEF_PLANT_TRAITS=1,
+      GATORBEEF_PUDGY_ABSORPTION=0.2,
+      GATORBEEF_PUDGY_ATTENDED_TO_CROP=0,
+      GATORBEEF_PUDGY_FERTILIZE_NUTRIENT=25,
+      GATORBEEF_RETRIEVE_BOOTLEG=1,
+      GATORBEEF_ROUGH_HUNGER_MULT=0.8,
+      GATORBEEF_RUN_SPEED_BASE=6.5,
+      GATORBEEF_RUN_SPEED_WATER_MULT=0.65,
+      GATORBEEF_RUN_SPEED_WATER_MULT_RIDER=0.15,
+      GATORBEEF_SOUND_ENABLE=1,
+      GLOOMGATOR_CHIME_DIFF=2,
+      ["Grass Gator bell"]=0,
+      GRASS_GATOR_BELL_LIMIT=1,
+      GRASS_GATOR_BELL_STORE=1,
+      GRASS_GATOR_BELL_STORE_MODE=0,
+      ["Great Tree Map"]=0,
+      ["Knight Armor Set"]=0,
+      KNIGHT_ARMOR_HELMET_SET_ANTI_KNOCKBACK=1,
+      KNIGHT_ARMOR_HELMET_SET_ENABLE=1,
+      LANGUAGE=0,
+      ["New Saddle"]=0,
+      RGG_LANCE_RIDE_JOUST_ENABLE=1,
+      RGG_MESSAGEBOTTLE_SPAWN_ENABLE=1,
+      RGG_NEW_SADDLE_ANTI_KNOCKBACK=1,
+      RGG_NEW_SADDLE_ENABLE=1,
+      RGG_PIRATE_RAID_SPAWN_ENABLE=1,
+      SADDLE_DRAGONSLAYER_FIRE_DAMAGE_MULT=0.5,
+      SADDLE_DRAGONSLAYER_TEMP_RESET_IN_WATER=1,
+      SADDLE_NJORD_WATERSPOUT_DMG=85,
+      SADDLE_PIRATE_DRAIN=6.8,
+      TEST=0,
+      ["Thermal Balm"]=0,
+      THERMAL_BALM_FIREIMMUNE_MODE=2,
+      WATERLOGGED_MAP_ENABLE=3
+    },
+    enabled=true
+  },
   ["workshop-374550642"]={
     configuration_options={
       FORCE_STACKSIZES=false,
       STACK_SIZE_LARGEITEM=99,
       STACK_SIZE_MEDITEM=99,
-      STACK_SIZE_PELLET=250,
+      STACK_SIZE_PELLET=120,
       STACK_SIZE_SMALLITEM=99,
-      STACK_SIZE_TINYITEM=120
+      STACK_SIZE_TINYITEM=99
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
@@ -325,18 +612,18 @@ return {
       uncommon_loot_goldnugget=0.2,
       uncommon_loot_mole=0.2,
       uncommon_loot_nitre=0.2,
-      uncommon_loot_rabbit=0.2 
+      uncommon_loot_rabbit=0.2
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-501385076"]={
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
       quick_pick_cactus=true,
-      quick_pick_plant_normal_ground=true 
+      quick_pick_plant_normal_ground=true
     },
-    enabled=true 
+    enabled=true
   },
   ["workshop-666155465"]={
     configuration_options={
@@ -349,8 +636,8 @@ return {
       food_style=0,
       lang="auto",
       show_food_units=-1,
-      show_uses=-1 
+      show_uses=-1
     },
-    enabled=true 
-  } 
+    enabled=true
+  }
 }
