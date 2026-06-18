@@ -130,17 +130,16 @@ return {
     },
     enabled=true 
   },
-  ["workshop-3337737173"]={ configuration_options={  }, enabled=true },
   ["workshop-3353852416"]={
     configuration_options={
-      CH_LANG=true,
+      CH_LANG=false,
       CountdownEnable=false,
-      HomesignEnable=false,
-      HungerCost=1,
+      HomesignEnable=true,
+      HungerCost=0,
       LightEnable=true,
       ResurrectEnable=true,
-      SanityCost=1,
-      TextEnable=false 
+      SanityCost=0,
+      TextEnable=false
     },
     enabled=true 
   },
