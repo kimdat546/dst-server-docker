@@ -41,19 +41,6 @@ return {
     },
     enabled=true
   },
-  ["workshop-1982562290"]={
-    configuration_options={
-      creature_chance=90,
-      deadly_disease=true,
-      enable_creatures=true,
-      enable_land=true,
-      enable_plants=true,
-      harbinger_spawnrate=1,
-      plant_chance=90,
-      Title=""
-    },
-    enabled=true
-  },
   ["workshop-2010472942"]={
     configuration_options={
       All=0,
