@@ -5,8 +5,8 @@ services:
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_6FZh9CMJ^LbZ7Uf6J62OeOpGA2lY1A6qmzFcSbVeLkzXqyLyz77c="
-      DST_NETWORK_CLUSTER_NAME: "uncompromising"
-      DST_NETWORK_CLUSTER_DESCRIPTION: "uncompromising"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - uncompromising"
+      DST_NETWORK_CLUSTER_DESCRIPTION: "Neverland - uncompromising"
       DST_NETWORK_CLUSTER_PASSWORD: "haizz"
       DST_GAMEPLAY_MAX_PLAYERS: "12"
       DST_GAMEPLAY_GAME_MODE: "endless"
@@ -37,7 +37,7 @@ services:
     network_mode: host
     environment:
       DST_CLUSTER_TOKEN: "pds-g^KU_6FZh9CMJ^LbZ7Uf6J62OeOpGA2lY1A6qmzFcSbVeLkzXqyLyz77c="
-      DST_NETWORK_CLUSTER_NAME: "uncompromising"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - uncompromising"
       DST_NETWORK_SERVER_PORT: "11998"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "false"
