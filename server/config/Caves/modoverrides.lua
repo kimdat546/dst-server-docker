@@ -111,7 +111,7 @@ return {
       firebitehounds=true,
       fireloot=3,
       flingo_setting="Waterballs",
-      foodregen=true,
+      foodregen=false,
       frostbitehounds=true,
       ["funny rat"]=true,
       generalcrockblocker=true,
