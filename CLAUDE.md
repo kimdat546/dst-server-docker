@@ -74,6 +74,27 @@ For caves/multi-shard setups, run two containers with shared storage:
 - Master shard: `DST_SHARD_ENABLED=true`, `DST_SHARD_IS_MASTER=true`
 - Cave shard: `DST_SHARD_ENABLED=true`, `DST_SHARD_IS_MASTER=false`, `DST_SHARD_NAME=Caves`, `DST_SHARD_MASTER_IP=<master-ip>`
 
+## Running a live server (the `dst` CLI)
+
+This repo also operates a live VPS server (master + caves shards, branch = world). Manage it with the **`dst` CLI** (`cli/dst`, symlinked at `/usr/local/bin/dst`) — never hand-roll `docker compose` for routine ops. Run `dst help`.
+
+Common operations:
+- `dst restart` — fast in-place restart; reuses containers so only **changed** mods re-download (the image's `22-mods.sh` is incremental). Covers both "just restart" and "update outdated mods". Use `dst restart --fresh` only after editing `.world.env`/compose env (mod list, cluster name).
+- `dst reset` — fresh world (backs up to Drive first; keeps mod cache → fast).
+- `dst rollback [N]` — roll back N autosaves (~N days); recoverable.
+- `dst mod add|remove|list` + `dst sync-mods` — `modoverrides.lua` (both shards, identical) is the single source of truth for enabled mods; `DST_SERVER_MOD_SETUP` is derived.
+- `dst push` / `dst pull` — Google Drive backup/restore.
+
+Hard-won operational rules (see `.claude/skills/dst-*` and the project memory dir):
+- **Never auto-stop a running server** to "protect" it — players may be online; verify startup then stop watching.
+- **Restart both shards together** — recreating only master while caves runs causes a shard-slot conflict (caves can't reconnect).
+- **Lag = single-thread CPU / mod overhead, NOT RAM** — adding swap does not fix lag (this VPS is 3.8GB + 4GB swap; OOM is a separate issue).
+- **Removing a world-content mod from a live world deletes its items/buildings** — only safe on a fresh world.
+- **`c_rollback` can't be sent from the host** (stdin = /dev/null) — use `dst rollback` (file-level snapshot rollback).
+- A character with **>63 net tags** (e.g. Wurt + heavy mods) triggers `Error serializing tags … exceeds maximum size of 63` → disconnects.
+
+Agent skills in `.claude/skills/`: `dst-restart`, `dst-reset-world`, `dst-rollback`, `dst-edit-mods`, `dst-player-reset`, `dst-backup-restore`, `dst-diagnose`.
+
 ## Commit Convention
 
 Commits must follow semantic format: `type: message`
