@@ -284,6 +284,36 @@ return {
     },
     enabled=true
   },
+  ["workshop-2334209327"]={
+    configuration_options={
+      ALCOHOLICDRINKS=true,
+      AUTORETROFIT=false,
+      COFFEEDROPRATE=4,
+      COFFEEDURATION=480,
+      COFFEESPEED=true,
+      EXPERIMENTAL=false,
+      EXTRAS=false,
+      FERTILIZERTWEAK=false,
+      FULLMOONTRANS=false,
+      GENERAL=false,
+      GIANTSPAWNING=true,
+      HUMANMEAT=true,
+      ICEBOXSTACKSIZE=false,
+      KEEPFOOD=false,
+      LANGUAGE="vi",
+      MEADOW_CC=0,
+      MODTRADES=true,
+      RETROCOMPAT=false,
+      SCRAPBOOK=true,
+      SCRAPBOOK2=false,
+      SEASONALFOOD=false,
+      SERENITY_CC=0,
+      WARLYMEALGRINDER=false,
+      WARLYRECIPES=true,
+      WARLYSPICES=false
+    },
+    enabled=true
+  },
   ["workshop-2496686961"]={
     configuration_options={
       [""]="",
