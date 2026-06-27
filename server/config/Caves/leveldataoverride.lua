@@ -130,7 +130,7 @@ return {
     vineworms="default",
     weather="default",
     winters_feast="enabled",
-    world_size="small",
+    world_size="default",
     worm_ancient="default",
     worm_boss_setting="default",
     worm_megaboss_setting="default",
