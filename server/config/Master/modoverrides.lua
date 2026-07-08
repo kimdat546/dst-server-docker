@@ -1,18 +1,4 @@
 return {
-  ["workshop-3288149713"]={
-    configuration_options={
-      fairycollide=true,
-      ft_clean=false,
-      ft_refresh_crystal=3,
-      ft_refresh_flower=5,
-      ft_refresh_fruit=9,
-      ft_refresh_fungi=8,
-      ft_refresh_wheat=3,
-      ft_refresh_zhaozi=3,
-      oversized=false
-    },
-    enabled=true
-  },
   ["workshop-1111658995"]={ configuration_options={  }, enabled=true },
   ["workshop-1207269058"]={ configuration_options={  }, enabled=true },
   ["workshop-1595631294"]={
@@ -23,9 +9,9 @@ return {
       DragonflyChest=false,
       Icebox=false,
       OnlyPlayer=false,
-      SaltBox=false
+      SaltBox=false 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
@@ -53,7 +39,7 @@ return {
       SmokePuffOnStacking=true,
       StackDuringPopulation=true
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-2334209327"]={
     configuration_options={
@@ -81,19 +67,9 @@ return {
       SERENITY_CC=0,
       WARLYMEALGRINDER=false,
       WARLYRECIPES=true,
-      WARLYSPICES=false
+      WARLYSPICES=false 
     },
-    enabled=true
-  },
-  ["workshop-2496686961"]={
-    configuration_options={
-      [""]="",
-      SpellCastControllerHotkey="CONTROL_MENU_MISC_3",
-      SpellCastHotkey="KEY_X",
-      SpellExamineModifierKey="KEY_LALT",
-      SpellSwapHotkey=""
-    },
-    enabled=true
+    enabled=true 
   },
   ["workshop-3353852416"]={
     configuration_options={
@@ -104,9 +80,10 @@ return {
       LightEnable=true,
       ResurrectEnable=true,
       SanityCost=0,
-      TextEnable=false
+      TeleportEnable=true,
+      TextEnable=false 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-374550642"]={
     configuration_options={
@@ -115,9 +92,9 @@ return {
       STACK_SIZE_MEDITEM=99,
       STACK_SIZE_PELLET=120,
       STACK_SIZE_SMALLITEM=99,
-      STACK_SIZE_TINYITEM=99
+      STACK_SIZE_TINYITEM=99 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
@@ -157,18 +134,18 @@ return {
       uncommon_loot_goldnugget=0.2,
       uncommon_loot_mole=0.2,
       uncommon_loot_nitre=0.2,
-      uncommon_loot_rabbit=0.2
+      uncommon_loot_rabbit=0.2 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-501385076"]={
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
       quick_pick_cactus=true,
-      quick_pick_plant_normal_ground=true
+      quick_pick_plant_normal_ground=true 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-666155465"]={
     configuration_options={
@@ -181,8 +158,8 @@ return {
       food_style=0,
       lang="auto",
       show_food_units=-1,
-      show_uses=-1
+      show_uses=-1 
     },
-    enabled=true
-  }
+    enabled=true 
+  } 
 }
