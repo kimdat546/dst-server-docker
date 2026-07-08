@@ -1,0 +1,11 @@
+name = "dumpstrings (temp ops)"
+description = "Temporary server-side tool: dump CJK STRINGS to the server log for translation harvesting."
+author = "ops"
+version = "1.0.0"
+api_version = 10
+dst_compatible = true
+all_clients_require_mod = false
+client_only_mod = false
+server_filter_tags = {}
+priority = -100
+configuration_options = {}

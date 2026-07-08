@@ -1,0 +1,597 @@
+NAMES.BREEDINGBOX_NC	Hộp hạt giống
+NAMES.BREEDINGBOX_NC_BUILT	Bản thiết kế hộp hạt giống
+NAMES.CANARY2	Vật nuôi - Chim hoàng yến
+NAMES.CATCOON2	Vật nuôi - Mèo gấu trúc
+NAMES.COMMAND_STAFF	Gậy chỉ huy
+NAMES.FARM_PLANT_FT_AVOCADO	Cây bơ
+NAMES.FARM_PLANT_FT_CHERRY	Cây anh đào
+NAMES.FARM_PLANT_FT_LICHEE	Cây vải
+NAMES.FARM_PLANT_FT_MANGO	Cây xoài
+NAMES.FARM_PLANT_FT_MANGOSTEEN	Cây măng cụt
+NAMES.FARM_PLANT_FT_PINEAPPLE	Cây dứa
+NAMES.FARM_PLANT_FT_STRAWBERRY	Cây dâu tây
+NAMES.FENCE_NC	Hàng rào
+NAMES.FENCE_NC_BUILT	Bản thiết kế hàng rào
+NAMES.FT_ALTAR	Bàn thờ Sùng Tử
+NAMES.FT_ARTCRAFT	Vật trang trí nhỏ
+NAMES.FT_AUTUMNHAT	Mũ Thu Ảnh
+NAMES.FT_AVOCADO	Bơ
+NAMES.FT_AVOCADO_COOKED	Bơ nướng
+NAMES.FT_AVOCADO_FAIRY	Tinh linh bơ
+NAMES.FT_AVOCADO_OVERSIZED	Bơ khổng lồ
+NAMES.FT_AVOCADO_OVERSIZED_ROTTEN	Bơ khổng lồ thối
+NAMES.FT_AVOCADO_OVERSIZED_WAXED	Bơ khổng lồ phủ sáp
+NAMES.FT_AVOCADO_SEEDS	Hạt bơ
+NAMES.FT_BEACHUMBRELLA	Dù che nắng bãi biển
+NAMES.FT_BEARGER	Bé Bearger
+NAMES.FT_BEARGER_EGG	Trứng Bearger
+NAMES.FT_BEARGER_FACTORY	Xưởng gỗ Bearger
+NAMES.FT_BEARGER_FACTORY_BROKEN	Xưởng gỗ Bearger
+NAMES.FT_BED	Giường
+NAMES.FT_BOOKCASE	Tủ sách ma thuật
+NAMES.FT_BOTTLELAMP	Đèn chai
+NAMES.FT_BREAD	Bánh mì
+NAMES.FT_BREAD_DRY	Bánh mì khô
+NAMES.FT_BUCKET	Thùng gỗ rỗng
+NAMES.FT_BUCKET_FULL	Thùng gỗ
+NAMES.FT_BUILDSTAFF	Gậy phép xây nhà
+NAMES.FT_BUNDLEWRAP	Lọ gói đồ ma thuật
+NAMES.FT_CANDLEFLOWER	Hoa nến
+NAMES.FT_CANDLEFLOWER_ITEM	Cánh hoa nến
+NAMES.FT_CARAMBOLA	Khế
+NAMES.FT_CARAMBOLA_COOKED	Khế nướng
+NAMES.FT_CARAMBOLA_SEEDS	Hạt khế
+NAMES.FT_CARAMBOLA_SEEDS_COOKED	Hạt khế nướng
+NAMES.FT_CARAMBOLA_TREE	Cây khế
+NAMES.FT_CARAMBOLA_TREE_EMPTY	Cây khế
+NAMES.FT_CARAMBOLA_TREE_FULL	Cây khế
+NAMES.FT_CARAMBOLA_TREE_LARGE	Cây khế
+NAMES.FT_CARAMBOLA_TREE_SMALL	Cây khế
+NAMES.FT_CARPET	Thảm phong cách rừng
+NAMES.FT_CHARCOAL	Than củi
+NAMES.FT_CHERRY	Anh đào
+NAMES.FT_CHERRY_COOKED	Anh đào nướng
+NAMES.FT_CHERRY_FAIRY	Tinh linh anh đào
+NAMES.FT_CHERRY_OVERSIZED	Anh đào khổng lồ
+NAMES.FT_CHERRY_OVERSIZED_ROTTEN	Anh đào khổng lồ thối
+NAMES.FT_CHERRY_OVERSIZED_WAXED	Anh đào khổng lồ phủ sáp
+NAMES.FT_CHERRY_SEEDS	Hạt anh đào
+NAMES.FT_CITYHALL	Nhà thị trưởng
+NAMES.FT_CLOCK	Đồng hồ ma thuật
+NAMES.FT_COFFEETABLE	Bàn trà có đèn
+NAMES.FT_COIN	Đồng xu cổ tích
+NAMES.FT_CRYSTAL	Đá tinh thể
+NAMES.FT_CRYSTALGRAIN	Hạt tinh thể
+NAMES.FT_CRYSTALORE	Quặng tinh thể
+NAMES.FT_DEERCLOPS	Bé Deerclops
+NAMES.FT_DEERCLOPS_EGG	Trứng Deerclops
+NAMES.FT_DEERCLOPS_ICEBOX_1	Tủ lạnh Deerclops
+NAMES.FT_DEERCLOPS_ICEBOX_2	Tủ lạnh Deerclops
+NAMES.FT_DEERCLOPS_ICEBOX_BROKEN	Tủ lạnh Deerclops
+NAMES.FT_DISPLAYCASE	Tủ trưng bày cổ tích
+NAMES.FT_DOODLINGCARPET	Thảm vẽ nguệch ngoạc
+NAMES.FT_DRAGONFLY	Bé Dragonfly
+NAMES.FT_DRAGONFLY_FACTORY_1	Lò luyện Dragonfly
+NAMES.FT_DRAGONFLY_FACTORY_2	Lò luyện Dragonfly
+NAMES.FT_DRAGONFLY_FACTORY_BROKEN	Lò luyện Dragonfly
+NAMES.FT_ELEPHANTSPRINKLER	Voi con nghịch nước
+NAMES.FT_FESTIVALHAT	Mũ lễ hội
+NAMES.FT_FIREPLACE	Lò sưởi
+NAMES.FT_FLOWERRACK	Kệ chậu hoa
+NAMES.FT_FOUNTAIN	Đài phun nước ước nguyện
+NAMES.FT_FOXBAG	Ba lô màu anh đào
+NAMES.FT_FOXMASK_MALE	Mặt nạ cáo
+NAMES.FT_FUNGI	Áo nấm
+NAMES.FT_FUNGITREE	Cây nấm
+NAMES.FT_GRAPEFRUIT	Bưởi
+NAMES.FT_GRAPEFRUIT_COOKED	Bưởi nướng
+NAMES.FT_GRAPEFRUIT_SEEDS	Hạt bưởi
+NAMES.FT_GRAPEFRUIT_SEEDS_COOKED	Hạt bưởi nướng
+NAMES.FT_GRAPEFRUIT_TREE	Cây bưởi
+NAMES.FT_GRAPEFRUIT_TREE_EMPTY	Cây bưởi
+NAMES.FT_GRAPEFRUIT_TREE_FULL	Cây bưởi
+NAMES.FT_GRAPEFRUIT_TREE_LARGE	Cây bưởi
+NAMES.FT_GRAPEFRUIT_TREE_SMALL	Cây bưởi
+NAMES.FT_GREATLOG	Gỗ tinh
+NAMES.FT_HEXSTICK	Đũa phép của phù thủy
+NAMES.FT_HJMHAMMER	Búa Meo Meo
+NAMES.FT_HJMHOUSE	Nhà Mèo
+NAMES.FT_HJMWELL	Giếng Meo Meo
+NAMES.FT_HOMESIGN	Bảng gỗ mèo
+NAMES.FT_HOTPOT	Lẩu tiệc tùng
+NAMES.FT_HOTPOT_ITEM	Lẩu tiệc tùng
+NAMES.FT_LANTERN	Đèn lồng
+NAMES.FT_LICHEE	Vải
+NAMES.FT_LICHEE_COOKED	Vải nướng
+NAMES.FT_LICHEE_FAIRY	Tinh linh vải
+NAMES.FT_LICHEE_OVERSIZED	Vải khổng lồ
+NAMES.FT_LICHEE_OVERSIZED_ROTTEN	Vải khổng lồ thối
+NAMES.FT_LICHEE_OVERSIZED_WAXED	Vải khổng lồ phủ sáp
+NAMES.FT_LICHEE_SEEDS	Hạt vải
+NAMES.FT_LOTUSLEAF	Lá sen
+NAMES.FT_LOTUSLEAF_ITEM	Lá sen
+NAMES.FT_LOTUSSTATUE	Sùng Tử
+NAMES.FT_MAGICHOUSE	Cửa hàng ma thuật
+NAMES.FT_MAGICSTAFF	Gậy phép đa năng
+NAMES.FT_MAGICSTONE	Đá ma thuật
+NAMES.FT_MANGO	Xoài
+NAMES.FT_MANGOSTEEN	Măng cụt
+NAMES.FT_MANGOSTEEN_COOKED	Măng cụt nướng
+NAMES.FT_MANGOSTEEN_FAIRY	Tinh linh măng cụt
+NAMES.FT_MANGOSTEEN_OVERSIZED	Măng cụt khổng lồ
+NAMES.FT_MANGOSTEEN_OVERSIZED_ROTTEN	Măng cụt khổng lồ thối
+NAMES.FT_MANGOSTEEN_OVERSIZED_WAXED	Măng cụt khổng lồ phủ sáp
+NAMES.FT_MANGOSTEEN_SEEDS	Hạt măng cụt
+NAMES.FT_MANGO_COOKED	Xoài nướng
+NAMES.FT_MANGO_DRIED	Xoài sấy
+NAMES.FT_MANGO_FAIRY	Tinh linh xoài
+NAMES.FT_MANGO_OVERSIZED	Xoài khổng lồ
+NAMES.FT_MANGO_OVERSIZED_ROTTEN	Xoài khổng lồ thối
+NAMES.FT_MANGO_OVERSIZED_WAXED	Xoài khổng lồ phủ sáp
+NAMES.FT_MANGO_SEEDS	Hạt xoài
+NAMES.FT_MEDICINE_HAPPY	Thuốc hạnh phúc
+NAMES.FT_MEDICINE_HEALTH	Thuốc hồi máu
+NAMES.FT_MEDICINE_STRONG	Thuốc sức mạnh
+NAMES.FT_MUD	Bùn đất
+NAMES.FT_NAVIGATION	Quầy hướng dẫn
+NAMES.FT_PEBBLE	Sỏi
+NAMES.FT_PEBBLE_ITEM	Sỏi
+NAMES.FT_PIANO	Đàn piano
+NAMES.FT_PILLAR_1	Cột đèn hoa
+NAMES.FT_PINEAPPLE	Dứa
+NAMES.FT_PINEAPPLE_COOKED	Dứa nướng
+NAMES.FT_PINEAPPLE_FAIRY	Tinh linh dứa
+NAMES.FT_PINEAPPLE_OVERSIZED	Dứa khổng lồ
+NAMES.FT_PINEAPPLE_OVERSIZED_ROTTEN	Dứa khổng lồ thối
+NAMES.FT_PINEAPPLE_OVERSIZED_WAXED	Dứa khổng lồ phủ sáp
+NAMES.FT_PINEAPPLE_SEEDS	Hạt dứa
+NAMES.FT_PISTACHIO	Cây hạt dẻ cười
+NAMES.FT_PISTACHIOSEEDS	Hạt dẻ cười sống
+NAMES.FT_PISTACHIOSEEDS_DRY	Hạt dẻ cười chín
+NAMES.FT_PISTACHIO_DUG	Cây hạt dẻ cười đã đào
+NAMES.FT_PLANTMA	Bà Liễu
+NAMES.FT_PLANTMA_CART	Xe đẩy
+NAMES.FT_POTION_BLUE	Thuốc tăng tốc
+NAMES.FT_POTION_GREEN	Thuốc hiệu suất
+NAMES.FT_POTION_RED	Thuốc tấn công
+NAMES.FT_POTTEDPLANT	Chậu cây cảnh
+NAMES.FT_PUZZLE	Thảm ghép hình
+NAMES.FT_ROASTER	Máy nướng
+NAMES.FT_ROSELIGHT	Đèn đường
+NAMES.FT_SEASONING_DISHES	Món ăn nêm nếm
+NAMES.FT_SHOWER	Vòi sen
+NAMES.FT_SINK	Bồn rửa tay
+NAMES.FT_STONECONTAINER	Rương tượng đá
+NAMES.FT_STONESWORD	Thanh kiếm trong đá
+NAMES.FT_STONESWORD2	Kiếm trong đá nâng cấp
+NAMES.FT_STRAWBERRY	Dâu tây
+NAMES.FT_STRAWBERRY_COOKED	Dâu tây nướng
+NAMES.FT_STRAWBERRY_FAIRY	Tinh linh dâu tây
+NAMES.FT_STRAWBERRY_OVERSIZED	Dâu tây khổng lồ
+NAMES.FT_STRAWBERRY_OVERSIZED_ROTTEN	Dâu tây khổng lồ thối
+NAMES.FT_STRAWBERRY_OVERSIZED_WAXED	Dâu tây khổng lồ phủ sáp
+NAMES.FT_STRAWBERRY_SEEDS	Hạt dâu tây
+NAMES.FT_SUNFLOWER	Hoa hướng dương
+NAMES.FT_SUNFLOWERSEEDS	Hạt hướng dương sống
+NAMES.FT_SUNFLOWERSEEDS_DRY	Hạt hướng dương rang
+NAMES.FT_SUNFLOWER_DUG	Hoa hướng dương đã đào
+NAMES.FT_SWING	Xích đu đơn
+NAMES.FT_SWING_DOUBLE	Xích đu đôi
+NAMES.FT_TASK_MAIL	Hòm thư công hội
+NAMES.FT_TASK_STRUCTURE	Công trình nhiệm vụ
+NAMES.FT_TELEGATE_BLUE	Cổng dịch chuyển thị trấn cổ tích
+NAMES.FT_TELEGATE_GREEN	Cổng dịch chuyển sân ga
+NAMES.FT_TENT	Lều trại
+NAMES.FT_TENTACLE_UMBRELLA	Dù xúc tu
+NAMES.FT_TRADINGBANK	Quầy đổi tiền tệ
+NAMES.FT_TREELAMP	Đèn cây
+NAMES.FT_VICIOUSHAT	Mũ Mồm Thối
+NAMES.FT_VICIOUSHAT2	Mũ Mồm Thối (tỉnh táo)
+NAMES.FT_WANXIANGBAG	Ba lô Vạn Tượng
+NAMES.FT_WHEAT	Lúa mì
+NAMES.FT_WHEAT_PLANT	Cây lúa mì
+NAMES.FT_WHEAT_SEED	Hạt lúa mì
+NAMES.FT_WISHSTICK	Quẻ thượng thượng
+NAMES.FT_WORK_ROBOT	A Đa
+NAMES.FT_YELLOWPEACH	Đào vàng
+NAMES.FT_YELLOWPEACH_COOKED	Đào vàng nướng
+NAMES.FT_YELLOWPEACH_SEEDS	Hạt đào vàng
+NAMES.FT_YELLOWPEACH_SEEDS_COOKED	Hạt đào vàng nướng
+NAMES.FT_YELLOWPEACH_TREE	Cây đào vàng
+NAMES.FT_YELLOWPEACH_TREE_EMPTY	Cây đào vàng
+NAMES.FT_YELLOWPEACH_TREE_FULL	Cây đào vàng
+NAMES.FT_YELLOWPEACH_TREE_LARGE	Cây đào vàng
+NAMES.FT_YELLOWPEACH_TREE_SMALL	Cây đào vàng
+NAMES.FT_YOLII	Yolii
+NAMES.FT_ZHAOZI	Chiếu Tử
+NAMES.GRANARY_NC	Kho lương
+NAMES.GRANARY_NC_BUILT	Bản thiết kế kho lương
+NAMES.MONKEY2	Vật nuôi - Khỉ
+NAMES.MOOSE3	Vật nuôi - Nai sừng ngỗng
+NAMES.NOCHANGXIAOWU	Nhà nông trại
+NAMES.NOCHANGXIAOWU0	Nhà nông trại
+NAMES.THSJ_BFSGGT	Trái cây hỗn hợp đóng hộp
+NAMES.THSJ_BLF	Cơm rang dứa
+NAMES.THSJ_FEILIAO	Tinh chất phân bón
+NAMES.THSJ_FMYZC	Trà bưởi mật ong
+NAMES.THSJ_PEILING	Bội Linh
+NAMES.THSJ_PTJ	Rượu vang
+NAMES.THSJ_ROCKTIPS	Đá nốt nhạc
+NAMES.THSJ_TMB	Roi dây leo
+NAMES.THSJ_WINGS	Cánh Nữ vương tinh linh
+NAMES.THSJ_YZGL	Chè dương chi cam lộ
+NAMES.TURF_FT_TURF1	Gạch ô vuông 1
+NAMES.TURF_FT_TURF10	Sàn ô vuông xám nhạt
+NAMES.TURF_FT_TURF11	Đường đá xanh
+NAMES.TURF_FT_TURF12	Bãi cát 1
+NAMES.TURF_FT_TURF13	Sàn ô vuông lớn xám đậm
+NAMES.TURF_FT_TURF14	Sàn xám đậm
+NAMES.TURF_FT_TURF15	Sàn ô vuông xám đậm
+NAMES.TURF_FT_TURF2	Gạch ô vuông 2
+NAMES.TURF_FT_TURF3	Gạch ô vuông 3
+NAMES.TURF_FT_TURF4	Sàn hoa
+NAMES.TURF_FT_TURF5	Sàn ô vuông hoa
+NAMES.TURF_FT_TURF6	Đường đá hoa
+NAMES.TURF_FT_TURF7	Gạch đá lớn màu xám
+NAMES.TURF_FT_TURF8	Sàn hình thoi
+NAMES.TURF_FT_TURF9	Sàn xám nhạt
+NAMES.WATERINGCAN_FULL	Bình tưới đầy nước
+RECIPE_DESC.COMMAND_STAFF	Có nó rồi, mình chính là bậc thầy chỉ huy hỗn loạn!
+RECIPE_DESC.FT_ARTCRAFT	Vật trang trí nhỏ
+RECIPE_DESC.FT_AUTUMNHAT	Mũ phát sáng
+RECIPE_DESC.FT_BEACHUMBRELLA	Chống mưa 100%, hồi tinh thần
+RECIPE_DESC.FT_BEARGER_FACTORY	Xưởng gỗ Bearger
+RECIPE_DESC.FT_BED	Một chiếc giường bình thường
+RECIPE_DESC.FT_BOOKCASE	Ma thuật sẽ tự sửa sách
+RECIPE_DESC.FT_BOTTLELAMP	Đèn chai phát sáng
+RECIPE_DESC.FT_BUCKET	Múc nước
+RECIPE_DESC.FT_BUILDSTAFF	Cải tạo ngôi nhà nhỏ của bạn
+RECIPE_DESC.FT_BUNDLEWRAP	Là cái lọ, hay là một chiếc vali nhỏ nhỉ?
+RECIPE_DESC.FT_CARPET	Thảm lớn lông xù
+RECIPE_DESC.FT_CLOCK	Nó sẽ giúp mình ghi lại thời gian
+RECIPE_DESC.FT_COFFEETABLE	Một chiếc bàn trà phát sáng
+RECIPE_DESC.FT_COIN	Xe đẩy đầy cây~ yeah
+RECIPE_DESC.FT_DEERCLOPS_ICEBOX_1	Tủ lạnh Deerclops
+RECIPE_DESC.FT_DISPLAYCASE	Tủ trưng bày vật phẩm, rương
+RECIPE_DESC.FT_DOODLINGCARPET	Thảm vẽ nguệch ngoạc
+RECIPE_DESC.FT_DRAGONFLY_FACTORY_1	Lò luyện Dragonfly
+RECIPE_DESC.FT_ELEPHANTSPRINKLER	Kho chứa, chống cháy chống héo
+RECIPE_DESC.FT_FESTIVALHAT	Lễ giao thừa năm 2025
+RECIPE_DESC.FT_FIREPLACE	Lò sưởi ấm áp~
+RECIPE_DESC.FT_FLOWERRACK	Kệ hoa, có 9 ô bên trong
+RECIPE_DESC.FT_FOXBAG	14 ô, có hiệu ứng giữ tươi
+RECIPE_DESC.FT_FOXMASK_MALE	Xung quanh sáng lên rồi nè
+RECIPE_DESC.FT_HEXSTICK	Gọi trăng tròn, thúc cây chín, gọi mưa gió, gọi trăng tối, gọi sấm sét
+RECIPE_DESC.FT_HJMHAMMER	Mèo con ta hung lắm đó nha~
+RECIPE_DESC.FT_HJMWELL	Ục ục ục··?! Có nguồn nước không?
+RECIPE_DESC.FT_HOTPOT_ITEM	Mọi người cùng ăn lẩu, ba chỉ số mỗi cái hồi 150 điểm~
+RECIPE_DESC.FT_LANTERN	Đèn lồng phát sáng
+RECIPE_DESC.FT_LOTUSLEAF	Lá sen có thể đứng lên trên
+RECIPE_DESC.FT_LOTUSLEAF_ITEM	Lá sen có thể đứng lên trên
+RECIPE_DESC.FT_MAGICSTAFF	Công cụ đa năng
+RECIPE_DESC.FT_MAGICSTONE	Giữa mùa hè oi ả, vật phải có để chống nóng lạnh
+RECIPE_DESC.FT_PEBBLE_ITEM	Thật nhiều viên sỏi yên tĩnh
+RECIPE_DESC.FT_PIANO	Bước đầu tiên để thành Beethoven
+RECIPE_DESC.FT_PILLAR_1	Nó? Hình như phát sáng được?
+RECIPE_DESC.FT_PLANTMA_CART	Xe đẩy đầy cây~ yeah
+RECIPE_DESC.FT_POTION_BLUE	Tăng tốc 15% vĩnh viễn, mất hiệu lực sau khi chết
+RECIPE_DESC.FT_POTION_GREEN	Tăng hiệu suất làm việc gấp 2 lần vĩnh viễn, mất hiệu lực sau khi chết
+RECIPE_DESC.FT_POTION_RED	Tăng 25% sát thương tấn công vĩnh viễn, mất hiệu lực sau khi chết
+RECIPE_DESC.FT_POTTEDPLANT	Trang trí ngôi nhà nhỏ bằng cây cối
+RECIPE_DESC.FT_PUZZLE	Thảm ghép hình
+RECIPE_DESC.FT_ROASTER	Nướng các loại thức ăn
+RECIPE_DESC.FT_ROSELIGHT	Soi sáng con đường về nhà của bạn
+RECIPE_DESC.FT_SHOWER	Rửa sạch vết bẩn trên người, tăng độ vệ sinh
+RECIPE_DESC.FT_SINK	Rửa sạch đôi tay, tăng độ vệ sinh
+RECIPE_DESC.FT_STONECONTAINER	Là một chiếc rương hình thù kỳ lạ
+RECIPE_DESC.FT_STONESWORD2	Kiếm trong đá sau nâng cấp, tăng sát thương tăng tốc độ
+RECIPE_DESC.FT_SWING	Mỗi giây hồi 5 máu và 5 tinh thần, giảm 5 độ ẩm ướt
+RECIPE_DESC.FT_SWING_DOUBLE	Mỗi giây hồi 5 máu và 5 tinh thần, giảm 5 độ ẩm ướt
+RECIPE_DESC.FT_TASK_MAIL	Hòm thư công hội
+RECIPE_DESC.FT_TASK_STRUCTURE	Công trình nhiệm vụ
+RECIPE_DESC.FT_TENT	Lều trại mọi người cùng dựng
+RECIPE_DESC.FT_TENTACLE_UMBRELLA	Hình như dùng làm vũ khí được~
+RECIPE_DESC.FT_TREELAMP	Cái cây phát sáng
+RECIPE_DESC.FT_VICIOUSHAT	Đây là một chiếc mũ bị nguyền rủa, có lẽ che mưa được
+RECIPE_DESC.FT_VICIOUSHAT2	Bộ chưa từng bị mắng à
+RECIPE_DESC.FT_WANXIANGBAG	Ba lô 14 ô, giáp 90%, không hao mòn, có thể nâng cấp chức năng xếp chồng
+RECIPE_DESC.FT_WISHSTICK	Lễ giao thừa năm 2025
+RECIPE_DESC.NOCHANGXIAOWU0	Xây cho các con vật nhỏ một mái nhà yên tâm, chúng sẽ giúp bạn chăm ruộng~
+RECIPE_DESC.THSJ_FEILIAO	Có thể thúc cây chín tới trạng thái trưởng thành
+RECIPE_DESC.THSJ_ROCKTIPS	Hòn đá nhỏ để xây nhà
+RECIPE_DESC.THSJ_TMB	Roi dây leo có sát thương khá tốt
+RECIPE_DESC.THSJ_WINGS	Độ bền 500, giáp 90%
+RECIPE_DESC.TURF_FT_TURF1	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF10	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF11	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF12	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF13	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF14	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF15	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF2	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF3	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF4	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF5	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF6	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF7	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF8	Dùng bản thiết kế để mở khóa công thức
+RECIPE_DESC.TURF_FT_TURF9	Dùng bản thiết kế để mở khóa công thức
+CHARACTERS.GENERIC.DESCRIBE.BREEDINGBOX_NC	Các con vật nhỏ sẽ trồng theo quy tắc xếp đặt hạt giống đấy
+CHARACTERS.GENERIC.DESCRIBE.BREEDINGBOX_NC_BUILT	Các con vật nhỏ sẽ trồng theo quy tắc xếp đặt hạt giống đấy
+CHARACTERS.GENERIC.DESCRIBE.CANARY2	Một chú chim vàng nhỏ, trông rất thanh lịch.
+CHARACTERS.GENERIC.DESCRIBE.CATCOON2	Một nhóc tinh nghịch, tốt nhất nên để mắt tới.
+CHARACTERS.GENERIC.DESCRIBE.COMMAND_STAFF	Có nó rồi, mình chính là bậc thầy chỉ huy hỗn loạn!
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_AVOCADO	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_CHERRY	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_LICHEE	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_MANGO	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_MANGOSTEEN	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_PINEAPPLE	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FARM_PLANT_FT_STRAWBERRY	Mong là nó sẽ nuôi lớn được một tinh linh nhỏ.
+CHARACTERS.GENERIC.DESCRIBE.FENCE_NC	Trông có vẻ chặn được một con thỏ. Chắc là được.
+CHARACTERS.GENERIC.DESCRIBE.FENCE_NC_BUILT	Trông có vẻ chặn được một con thỏ. Chắc là được.
+CHARACTERS.GENERIC.DESCRIBE.FT_ALTAR	Vật hiến tế: Khế x600, Hạt tinh thể x100, Quặng tinh thể x200
+CHARACTERS.GENERIC.DESCRIBE.FT_ARTCRAFT	Vật trang trí~
+CHARACTERS.GENERIC.DESCRIBE.FT_AUTUMNHAT	Là Sùng Tử mang về từ một không thời gian khác
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc bơ đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_AVOCADO_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_BEACHUMBRELLA	Chỗ tốt để uống trà chiều
+CHARACTERS.GENERIC.DESCRIBE.FT_BEARGER	Bé Bearger
+CHARACTERS.GENERIC.DESCRIBE.FT_BEARGER_EGG	Trứng Bearger
+CHARACTERS.GENERIC.DESCRIBE.FT_BEARGER_FACTORY	Xưởng gỗ Bearger
+CHARACTERS.GENERIC.DESCRIBE.FT_BEARGER_FACTORY_BROKEN	Xưởng gỗ Bearger
+CHARACTERS.GENERIC.DESCRIBE.FT_BED	Cuối cùng cũng có giường để ngủ rồi~
+CHARACTERS.GENERIC.DESCRIBE.FT_BOOKCASE	Ma thuật sẽ tự sửa sách
+CHARACTERS.GENERIC.DESCRIBE.FT_BOTTLELAMP	Đom đóm đang chăm chỉ làm việc~
+CHARACTERS.GENERIC.DESCRIBE.FT_BREAD	Ngoài giòn trong mềm, ổ bánh mì hoàn hảo!
+CHARACTERS.GENERIC.DESCRIBE.FT_BREAD_DRY	Cần chút nước... hoặc súp cũng được
+CHARACTERS.GENERIC.DESCRIBE.FT_BUCKET	Thùng gỗ đựng nước
+CHARACTERS.GENERIC.DESCRIBE.FT_BUCKET_FULL	Thùng gỗ đựng nước
+CHARACTERS.GENERIC.DESCRIBE.FT_BUILDSTAFF	Lại là sức mạnh của ma thuật
+CHARACTERS.GENERIC.DESCRIBE.FT_BUNDLEWRAP	Là cái lọ, hay là một chiếc vali nhỏ nhỉ?
+CHARACTERS.GENERIC.DESCRIBE.FT_CANDLEFLOWER	Bắt tinh linh nhỏ trồng xuống đất
+CHARACTERS.GENERIC.DESCRIBE.FT_CANDLEFLOWER_ITEM	Vật rơi ra từ hoa nến
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA	Quả khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_COOKED	Khế nướng~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_SEEDS	Hạt khế nướng
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_TREE	Cây khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_TREE_EMPTY	Cây khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_TREE_FULL	Cây khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_TREE_LARGE	Cây khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARAMBOLA_TREE_SMALL	Cây khế phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CARPET	Thảm lớn lông xù
+CHARACTERS.GENERIC.DESCRIBE.FT_CHARCOAL	Là do bé Dragonfly chế ra!
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc anh đào đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_CHERRY_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_CITRUS	Quả đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_CITYHALL	Nhà thị trưởng
+CHARACTERS.GENERIC.DESCRIBE.FT_CLOCK	Muốn nhắc nhở điều gì đó
+CHARACTERS.GENERIC.DESCRIBE.FT_COFFEETABLE	Một chiếc bàn trà phát sáng
+CHARACTERS.GENERIC.DESCRIBE.FT_COIN	Hình như phải lấp đầy rương mới được
+CHARACTERS.GENERIC.DESCRIBE.FT_CRYSTAL	Một khối đá tinh thể lấp lánh và huyền bí, chắc chắn sẽ có ích.
+CHARACTERS.GENERIC.DESCRIBE.FT_CRYSTALGRAIN	Những hạt nhỏ lấp lánh
+CHARACTERS.GENERIC.DESCRIBE.FT_CRYSTALORE	Vừa nặng vừa sáng, đầy tiềm năng.
+CHARACTERS.GENERIC.DESCRIBE.FT_DEERCLOPS	Bé Deerclops
+CHARACTERS.GENERIC.DESCRIBE.FT_DEERCLOPS_EGG	Trứng Deerclops
+CHARACTERS.GENERIC.DESCRIBE.FT_DEERCLOPS_ICEBOX_1	Có thể sửa chữa
+CHARACTERS.GENERIC.DESCRIBE.FT_DEERCLOPS_ICEBOX_2	Là kho lạnh nè~ thức ăn giữ tươi được rồi~
+CHARACTERS.GENERIC.DESCRIBE.FT_DISPLAYCASE	Tủ trưng bày vật phẩm, rương
+CHARACTERS.GENERIC.DESCRIBE.FT_DRAGONFLY	Bé Dragonfly
+CHARACTERS.GENERIC.DESCRIBE.FT_DRAGONFLY_FACTORY_1	Lò luyện Dragonfly
+CHARACTERS.GENERIC.DESCRIBE.FT_DRAGONFLY_FACTORY_2	Lò luyện Dragonfly
+CHARACTERS.GENERIC.DESCRIBE.FT_ELEPHANTSPRINKLER	Giúp mình được việc lớn!!
+CHARACTERS.GENERIC.DESCRIBE.FT_FESTIVALHAT	Chúc mừng phát tài, lì xì mau đem ra
+CHARACTERS.GENERIC.DESCRIBE.FT_FIREPLACE	Ấm áp~
+CHARACTERS.GENERIC.DESCRIBE.FT_FLOWERRACK	Kệ hoa~ cắm thật nhiều hoa~
+CHARACTERS.GENERIC.DESCRIBE.FT_FOUNTAIN	Mình muốn thả một đồng xu cổ tích để ước nguyện
+CHARACTERS.GENERIC.DESCRIBE.FT_FOXBAG	Sắc hồng mềm mại này khiến mình nhớ về những giấc mơ trôi nổi sâu trong ký ức... thật bình yên
+CHARACTERS.GENERIC.DESCRIBE.FT_FOXMASK_MALE	Ai làm rớt đồ chơi vậy
+CHARACTERS.GENERIC.DESCRIBE.FT_FUNGI	Một chiếc áo nấm đầy bí ẩn
+CHARACTERS.GENERIC.DESCRIBE.FT_FUNGITREE	Một cây nấm khổng lồ đầy bí ẩn
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT	Quả bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_COOKED	Bưởi nướng~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_SEEDS	Hạt bưởi
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_SEEDS_COOKED	Hạt bưởi nướng
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_TREE	Cây bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_TREE_EMPTY	Cây bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_TREE_FULL	Cây bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_TREE_LARGE	Cây bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GRAPEFRUIT_TREE_SMALL	Cây bưởi phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_GREATLOG	Là do bé Bearger chế ra!
+CHARACTERS.GENERIC.DESCRIBE.FT_HEXSTICK	Cái que này trông đáng sợ, mà thực ra cũng đáng sợ thật!
+CHARACTERS.GENERIC.DESCRIBE.FT_HJMHAMMER	Cậu không có mẹ à? Để tớ đưa cậu về nhà nhé~
+CHARACTERS.GENERIC.DESCRIBE.FT_HJMHOUSE	Nhà Mèo
+CHARACTERS.GENERIC.DESCRIBE.FT_HJMWELL	Con mèo này bị kẹt trên giếng nước à?
+CHARACTERS.GENERIC.DESCRIBE.FT_HOMESIGN	Hình như nó muốn nói với mình điều gì đó
+CHARACTERS.GENERIC.DESCRIBE.FT_HOTPOT	Lẩu ăn chung mới ngon!
+CHARACTERS.GENERIC.DESCRIBE.FT_HOTPOT_ITEM	Lẩu ăn chung mới ngon!
+CHARACTERS.GENERIC.DESCRIBE.FT_LANTERN	Hạt tinh thể đang cháy
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc vải đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_LICHEE_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_LOTUSLEAF	Lá sen nhỏ
+CHARACTERS.GENERIC.DESCRIBE.FT_LOTUSLEAF_ITEM	Lá sen nhỏ
+CHARACTERS.GENERIC.DESCRIBE.FT_LOTUSSTATUE	Ma thuật đến từ truyện cổ tích
+CHARACTERS.GENERIC.DESCRIBE.FT_MAGICHOUSE	Một cửa hàng đầy phép màu kỳ diệu. Xem thử có gì bán nào!
+CHARACTERS.GENERIC.DESCRIBE.FT_MAGICSTAFF	Trông như nó giải quyết được nhiều vấn đề...
+CHARACTERS.GENERIC.DESCRIBE.FT_MAGICSTONE	Trông đầy ma thuật
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc măng cụt đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGOSTEEN_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_DRIED	Ngọt ngọt, ăn vào sẽ vui~
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc xoài đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_MANGO_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_MEDICINE_HAPPY	Uống vào sẽ vui~
+CHARACTERS.GENERIC.DESCRIBE.FT_MEDICINE_HEALTH	Thuốc hồi máu
+CHARACTERS.GENERIC.DESCRIBE.FT_MEDICINE_STRONG	Thuốc cường tráng~
+CHARACTERS.GENERIC.DESCRIBE.FT_MUD	Bẩn thỉu, nhưng có thể dùng để bón phân
+CHARACTERS.GENERIC.DESCRIBE.FT_NAVIGATION	Ở đây có bạn sóc nhỏ hướng dẫn của thị trấn cổ tích nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_PEBBLE	Kệ hoa~ cắm thật nhiều hoa~
+CHARACTERS.GENERIC.DESCRIBE.FT_PEBBLE_ITEM	Một viên sỏi yên tĩnh
+CHARACTERS.GENERIC.DESCRIBE.FT_PIANO	Mình cũng muốn thử~
+CHARACTERS.GENERIC.DESCRIBE.FT_PILLAR_1	Là một cái cột phát sáng nè
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc dứa đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_PINEAPPLE_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_PISTACHIO	Nắng? Nước? Mọi thứ vừa vặn, sẵn sàng đón một vụ mùa bội thu nào!
+CHARACTERS.GENERIC.DESCRIBE.FT_PISTACHIOSEEDS	Hình như nướng lên sẽ thơm hơn
+CHARACTERS.GENERIC.DESCRIBE.FT_PISTACHIOSEEDS_DRY	Đồ ăn vặt phải có, coi chừng nóng trong người
+CHARACTERS.GENERIC.DESCRIBE.FT_PISTACHIO_DUG	Phải tìm chỗ trồng nó xuống thôi
+CHARACTERS.GENERIC.DESCRIBE.FT_PLANTMA	Bà ơi hôm nay bà lại trẻ ra rồi~!
+CHARACTERS.GENERIC.DESCRIBE.FT_PLANTMA_CART	Hình như phải lấp đầy rương mới được
+CHARACTERS.GENERIC.DESCRIBE.FT_POTION_BLUE	Mong là mình không chạy nhanh quá rồi ngã.
+CHARACTERS.GENERIC.DESCRIBE.FT_POTION_GREEN	Uống cái này vào, cảm giác mọi thứ đều trở nên dễ dàng!
+CHARACTERS.GENERIC.DESCRIBE.FT_POTION_RED	Nếu nó làm mình mạnh hơn, mình chẳng buồn hỏi thành phần là gì
+CHARACTERS.GENERIC.DESCRIBE.FT_POTTEDPLANT	Hoa đang nở rộ~
+CHARACTERS.GENERIC.DESCRIBE.FT_ROASTER	Nướng~~ è è è
+CHARACTERS.GENERIC.DESCRIBE.FT_ROSELIGHT	Cây đèn đường này sáng lên kiểu gì vậy? Không lửa, cũng không điện...
+CHARACTERS.GENERIC.DESCRIBE.FT_SHOWER	Tắm thơm tho~
+CHARACTERS.GENERIC.DESCRIBE.FT_SINK	Rửa tay~ diệt vi khuẩn~
+CHARACTERS.GENERIC.DESCRIBE.FT_STONECONTAINER	Là một chiếc rương hình thù kỳ lạ
+CHARACTERS.GENERIC.DESCRIBE.FT_STONESWORD	Một thanh kiếm bị kẹt trong đá... như trái tim mình bị nỗi buồn trói buộc
+CHARACTERS.GENERIC.DESCRIBE.FT_STONESWORD2	Một thanh kiếm bị kẹt trong đá... như trái tim mình bị nỗi buồn trói buộc
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY	Tươi mát, ngon miệng.
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_COOKED	Trái cây nướng à? Vị kỳ kỳ.
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_FAIRY	Trợ thủ đắc lực, cô ấy sẽ giúp mình chăm sóc dâu tây đó~!
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_OVERSIZED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_OVERSIZED_ROTTEN	Lẽ ra mình không nên bỏ mặc nó, nó sắp biến mất rồi.
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_OVERSIZED_WAXED	Dễ thương thế này, mình chẳng nỡ ăn mất.
+CHARACTERS.GENERIC.DESCRIBE.FT_STRAWBERRY_SEEDS	Trồng xuống đất sẽ có thu hoạch bất ngờ.
+CHARACTERS.GENERIC.DESCRIBE.FT_SUNFLOWER	Hoa hướng dương không chỉ là đóa hoa đẹp, mà còn có ý chí bất khuất
+CHARACTERS.GENERIC.DESCRIBE.FT_SUNFLOWERSEEDS	Hình như nướng lên sẽ thơm hơn
+CHARACTERS.GENERIC.DESCRIBE.FT_SUNFLOWERSEEDS_DRY	Cắn hạt phải có, coi chừng nóng trong người
+CHARACTERS.GENERIC.DESCRIBE.FT_SUNFLOWER_DUG	Phải tìm chỗ trồng nó xuống thôi
+CHARACTERS.GENERIC.DESCRIBE.FT_SWING	Xích đu nhỏ, đung đưa đung đưa~
+CHARACTERS.GENERIC.DESCRIBE.FT_SWING_DOUBLE	Xích đu nhỏ, đung đưa đung đưa~
+CHARACTERS.GENERIC.DESCRIBE.FT_TASK_MAIL	Hòm thư công hội
+CHARACTERS.GENERIC.DESCRIBE.FT_TASK_STRUCTURE	Công trình nhiệm vụ
+CHARACTERS.GENERIC.DESCRIBE.FT_TELEGATE_BLUE	Cổng dịch chuyển nè~
+CHARACTERS.GENERIC.DESCRIBE.FT_TELEGATE_GREEN	Cổng dịch chuyển nè~
+CHARACTERS.GENERIC.DESCRIBE.FT_TENT	Lều trại mọi người cùng dựng
+CHARACTERS.GENERIC.DESCRIBE.FT_TENTACLE_UMBRELLA	Cái... dù gì rách thế?
+CHARACTERS.GENERIC.DESCRIBE.FT_TRADINGBANK	Nơi đổi đồng xu cổ tích
+CHARACTERS.GENERIC.DESCRIBE.FT_TREELAMP	Xung quanh sáng hết lên rồi~
+CHARACTERS.GENERIC.DESCRIBE.FT_VICIOUSHAT	Chào nhóc lắm mồm
+CHARACTERS.GENERIC.DESCRIBE.FT_VICIOUSHAT2	Mình biết cậu khẩu xà tâm Phật mà
+CHARACTERS.GENERIC.DESCRIBE.FT_WANXIANGBAG	Cái túi nhỏ xài đỉnh thật~
+CHARACTERS.GENERIC.DESCRIBE.FT_WHEAT	Chắc mình có thể dùng nó nướng ít bánh mì
+CHARACTERS.GENERIC.DESCRIBE.FT_WHEAT_PLANT	Là lúa mì! Nền tảng của văn minh
+CHARACTERS.GENERIC.DESCRIBE.FT_WHEAT_SEED	Một tia sống nhỏ nhoi, ắt sẽ lụi tàn
+CHARACTERS.GENERIC.DESCRIBE.FT_WISHSTICK	Cầu chúc may mắn, quẻ thượng thượng!
+CHARACTERS.GENERIC.DESCRIBE.FT_WORK_ROBOT	A Đa
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_COOKED	Đào vàng nướng~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_SEEDS	Hạt đào vàng
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_SEEDS_COOKED	Hạt đào vàng nướng
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_TREE	Cây đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_TREE_EMPTY	Cây đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_TREE_FULL	Cây đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_TREE_LARGE	Cây đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YELLOWPEACH_TREE_SMALL	Cây đào vàng phát sáng nè~!
+CHARACTERS.GENERIC.DESCRIBE.FT_YOLII	Cô ấy là thị trưởng của thị trấn cổ tích
+CHARACTERS.GENERIC.DESCRIBE.FT_ZHAOZI	Một tinh linh nhỏ dễ thương
+CHARACTERS.GENERIC.DESCRIBE.GRANARY_NC	Cao thủ trữ lương!
+CHARACTERS.GENERIC.DESCRIBE.GRANARY_NC_BUILT	Cao thủ trữ lương!
+CHARACTERS.GENERIC.DESCRIBE.MONKEY2	Mình cá là nó thông minh hơn vẻ ngoài.
+CHARACTERS.GENERIC.DESCRIBE.MOOSE3	Đó là một con chim lớn... hay là một con nai?
+CHARACTERS.GENERIC.DESCRIBE.NOCHANGXIAOWU	Xưởng làm việc của các con vật nhỏ~
+CHARACTERS.GENERIC.DESCRIBE.NOCHANGXIAOWU0	Xưởng làm việc của các con vật nhỏ~
+CHARACTERS.GENERIC.DESCRIBE.THSJ_BFSGGT	Đồ hộp hồi máu
+CHARACTERS.GENERIC.DESCRIBE.THSJ_BLF	Một tô ăn no căng! Nhiều ơi là nhiều!
+CHARACTERS.GENERIC.DESCRIBE.THSJ_FEILIAO	Gói dinh dưỡng mà các bé cây thích nhất~
+CHARACTERS.GENERIC.DESCRIBE.THSJ_FMYZC	Trà bưởi mật ong giải nhiệt
+CHARACTERS.GENERIC.DESCRIBE.THSJ_PTJ	Nhấp một ngụm nhỏ, ngà ngà say cũng hay~
+CHARACTERS.GENERIC.DESCRIBE.THSJ_ROCKTIPS	Ký hiệu trên này có ý nghĩa đặc biệt gì không nhỉ
+CHARACTERS.GENERIC.DESCRIBE.THSJ_TMB	Chị Bội Linh rất thích cây roi này
+CHARACTERS.GENERIC.DESCRIBE.THSJ_WINGS	Đôi cánh rơi ra từ Nữ vương tinh linh
+CHARACTERS.GENERIC.DESCRIBE.THSJ_YZGL	Mệt mỏi buồn ngủ thì uống chè dương chi cam lộ~ làm việc cực hăng~
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF1	Gạch ô vuông 1
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF10	Sàn ô vuông xám nhạt
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF11	Đường đá xanh
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF12	Bãi cát 1
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF13	Sàn ô vuông lớn xám đậm
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF14	Sàn xám đậm
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF15	Sàn ô vuông xám đậm
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF2	Gạch ô vuông 2
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF3	Gạch ô vuông 3
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF4	Sàn hoa
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF5	Sàn ô vuông hoa
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF6	Đường đá hoa
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF7	Gạch đá lớn màu xám
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF8	Sàn hình thoi
+CHARACTERS.GENERIC.DESCRIBE.TURF_FT_TURF9	Sàn xám nhạt
+ACTIONS.APPLYCONSTRUCTION.NOCHANGXIAOWU	Nâng cấp
+ACTIONS.CARE_PLANT	Chăm sóc cây
+ACTIONS.FOLLOW	Đi theo
+ACTIONS.FT_BEARGER_WORK	Làm việc
+ACTIONS.FT_CHANGEMASK	Đổi
+ACTIONS.FT_COOK	Nấu ăn
+ACTIONS.FT_COOK_CLOSE	Đóng
+ACTIONS.FT_CUTFUNGI	Gọt vỏ
+ACTIONS.FT_DEERCLOPS_WORK	Làm việc
+ACTIONS.FT_DRAGONFLY_WORK	Làm việc
+ACTIONS.FT_GOTOBED	Ngủ một giấc
+ACTIONS.FT_HAMMER	Đập
+ACTIONS.FT_HEXSTICK	Thi triển phép
+ACTIONS.FT_HOMESIGN_LEFT	Manh mối đảo cổ tích
+ACTIONS.FT_HOMESIGN_RIGHT	Giới thiệu MOD
+ACTIONS.FT_HOTPOT	Ăn lẩu
+ACTIONS.FT_OPEN_TASK_UI	Mở bảng nhiệm vụ
+ACTIONS.FT_PICK	Thu hoạch
+ACTIONS.FT_PLAYPIANO	Chơi piano
+ACTIONS.FT_REPAIR	Sửa chữa
+ACTIONS.FT_RUMMAGE	Mở
+ACTIONS.FT_SHOWER	Tắm
+ACTIONS.FT_SINK	Rửa tay
+ACTIONS.FT_SITSWING	Ngồi lên
+ACTIONS.FT_THROWCOIN	Thả xu
+ACTIONS.FT_TRADE	Giao dịch
+ACTIONS.FT_UPGRADE	Nâng cấp
+ACTIONS.FT_WORK_ROBOT_HARVEST	Thu hoạch
+ACTIONS.FT_WORK_ROBOT_WORKONDEERCLOPS_START	Nhặt
+ACTIONS.FT_WORK_ROBOT_WORKONDEERCLOPS_TARGET	Đặt
+ACTIONS.GK_WORK_ROBOT_LAND	Hạ cánh
+ACTIONS.GK_WORK_ROBOT_REPAIR	Sửa
+ACTIONS.JUMPIN.FT_TELEGATE	Kích hoạt
+ACTIONS.WAIT	Chờ đã
+UI.CRAFTING_FILTERS.FAIRY_FESTIVAL	Lễ hội cổ tích
+UI.CRAFTING_FILTERS.FAIRY_FURNITURE	Nội thất cổ tích
+UI.CRAFTING_FILTERS.FAIRY_LOTUS	Sùng Tử
+UI.CRAFTING_FILTERS.FAIRY_TALES	Công cụ cổ tích
+UI.CRAFTING.NEEDSFAIRY_LOTUS	Hãy mượn sức mạnh của Sùng Tử để mở khóa nào!
+TRADINGSTORE.BLUEPRINT	Bản thiết kế
+TRADINGSTORE.FT_SEASONING_DISHES_TIPS	Chè dương chi cam lộ nêm nếm x5\nTrà bưởi mật ong nêm nếm x5\nCơm rang dứa nêm nếm x5\nTrái cây đóng hộp nêm nếm x5
+TRADINGSTORE.NO_FT_COIN	Không đủ đồng xu cổ tích
+TRADINGSTORE.NO_MATERIAL	Không đủ nguyên liệu
+TRADINGSTORE.STOCK	Tồn kho
+CHARACTER_DESCRIPTIONS.thsj_peiling	*Trạng thái trẻ con, ba chỉ số hơi thấp\n*Đầy tò mò về thế giới, lên cấp ba chỉ số bằng cách khám phá điều mới mẻ\n*Thích ở bên cây cối
+CHARACTER_NAMES.thsj_peiling	Bội Linh
+CHARACTER_QUOTES.thsj_peiling	"Mình sẽ hồi sinh tất cả tinh linh!!"
+CHARACTER_SURVIVABILITY.thsj_peiling	Mình sẽ hồi sinh tất cả tinh linh! Sinh tồn nhất định mình vượt qua được!
+CHARACTER_TITLES.thsj_peiling	Tinh Linh Thực Vật
