@@ -18,7 +18,7 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,3235319974,3004639365"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,3235319974"
     volumes:
       - dst-master-data-dang-tien:/var/lib/game
       - ./config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
@@ -46,7 +46,7 @@ services:
       DST_SHARD_MASTER_IP: "127.0.0.1"
       DST_SHARD_MASTER_PORT: "11888"
       DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,3235319974,3004639365"
+      DST_SERVER_MOD_SETUP: "1530801499,1803285852,375850593,380423963,374550642,501385076,1780476441,3235319974"
     volumes:
       - dst-caves-data-dang-tien:/var/lib/game
       - ./config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
