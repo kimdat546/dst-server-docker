@@ -33,9 +33,54 @@ return {
       ManualStackSeeds=true,
       PlayerMustHaveOneOfItemToAutoPickup=false,
       SmokePuffOnStacking=true,
-      StackDuringPopulation=false
+      StackDuringPopulation=false 
     },
-    enabled=true
+    enabled=true 
+  },
+  ["workshop-3004639365"]={
+    configuration_options={
+      [""]=0,
+      ["Alcohol Drinks Brewing"]=0,
+      alcohol_time=0.5,
+      beer_wait=0.75,
+      ["Brewery options"]=0,
+      butterhunter_time=0.25,
+      caffein_speed=1.25,
+      caffein_time=1,
+      capacity_time=0.5,
+      child_safety=true,
+      ["Coffee Speed Boost"]=0,
+      ["Drink Alcohol Capacity"]=0,
+      ["Drink Alcohol Effect"]=0,
+      ["Drink Butterhunter Effect"]=0,
+      ["Drink O.B.E. Effect"]=0,
+      ["Drink Sleep Effect"]=0,
+      drunkard_time=0.5,
+      ["Effect options"]=0,
+      enable_thirst=true,
+      enable_waterborne=true,
+      gen_caffeinberry=1.2,
+      gen_ruincacao_tree=1.2,
+      gen_tea_tree=1.2,
+      ghost_time=0.25,
+      immune_time=0.5,
+      locale="vi",
+      max_capacity=5,
+      re_retrofit=0,
+      resistance_time=0.5,
+      ["Select Language"]=0,
+      sleeping_time=15,
+      ["Soda Brewing"]=0,
+      soda_wait=0.75,
+      ["Thirst options"]=0,
+      thirst_decrease_speed=0.6,
+      thirst_max=150,
+      useinsight=true,
+      useshowme=true,
+      waterborne_time=0.5,
+      ["WorldGen options"]=0 
+    },
+    enabled=true 
   },
   ["workshop-3235319974"]={
     configuration_options={
@@ -54,9 +99,9 @@ return {
       set5=true,
       set6=true,
       set7=true,
-      wukongkey=114
+      wukongkey=114 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-374550642"]={
     configuration_options={
@@ -67,7 +112,7 @@ return {
       STACK_SIZE_SMALLITEM=99,
       STACK_SIZE_TINYITEM=120
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
@@ -107,31 +152,17 @@ return {
       uncommon_loot_goldnugget=0.2,
       uncommon_loot_mole=0.2,
       uncommon_loot_nitre=0.2,
-      uncommon_loot_rabbit=0.2
+      uncommon_loot_rabbit=0.2 
     },
-    enabled=true
+    enabled=true 
   },
   ["workshop-501385076"]={
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
       quick_pick_cactus=true,
-      quick_pick_plant_normal_ground=true
-    },
-    enabled=true
-  },
-  ["workshop-2847908822"]={
-    configuration_options={
-      [""]=false,
-      ai1_switch=2,
-      clean_day=25,
-      compatible_switch=false,
-      new_player_join_switch=false,
-      perf_switch=true,
-      performance_switch=true,
-      performance_tips_switch=true,
-      stack_dis=false 
+      quick_pick_plant_normal_ground=true 
     },
     enabled=true 
-  }
+  } 
 }
