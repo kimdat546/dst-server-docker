@@ -62,16 +62,43 @@ async def deny_wrong_channel(interaction: discord.Interaction):
         f"This bot only responds in <#{CHANNEL_ID}>.", ephemeral=True
     )
 
-def run_dst(args: list[str], json_mode: bool = False) -> tuple[int, str, str]:
-    cmd = [DST_BIN] + (["--json"] if json_mode else []) + args
-    res = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-    return res.returncode, res.stdout, res.stderr
+LOCK_INFO_PATH = Path("/run/lock/dst.lock.info")
+LOCK_BUSY_RE = re.compile(r"another dst command is running", re.IGNORECASE)
 
-async def stream_dst(args: list[str], on_line):
+def run_dst(args: list[str], json_mode: bool = False, timeout: int = 30) -> tuple[int, str, str]:
+    cmd = [DST_BIN] + (["--json"] if json_mode else []) + args
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        return res.returncode, res.stdout, res.stderr
+    except subprocess.TimeoutExpired:
+        return -1, "", f"dst {' '.join(args)} timed out after {timeout}s"
+    except FileNotFoundError as e:
+        return -1, "", f"dst CLI not found: {e}"
+
+def lock_info() -> Optional[str]:
+    """Return current lock-holder metadata, or None if no lock held."""
+    try:
+        if LOCK_INFO_PATH.exists():
+            return LOCK_INFO_PATH.read_text().strip() or None
+    except OSError:
+        pass
+    return None
+
+def caller_for(interaction: discord.Interaction) -> str:
+    """Build a DST_CALLER value for shell-out, e.g. 'discord:0xname'."""
+    name = getattr(interaction.user, "name", None) or str(interaction.user.id)
+    safe = re.sub(r"[^\w.-]", "", name)[:32] or "unknown"
+    return f"discord:{safe}"
+
+async def stream_dst(args: list[str], on_line, caller: Optional[str] = None):
+    env = os.environ.copy()
+    if caller:
+        env["DST_CALLER"] = caller
     proc = await asyncio.create_subprocess_exec(
         DST_BIN, *args,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.STDOUT,
+        env=env,
     )
     assert proc.stdout
     async for raw in proc.stdout:
@@ -146,6 +173,20 @@ async def do_switch(interaction: discord.Interaction, branch: str):
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
+
+@tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    """Last-ditch handler so a deferred interaction never gets stuck on 'thinking…'."""
+    log.exception("slash command failed", exc_info=error)
+    msg = f"⚠️ Lỗi khi xử lý lệnh: `{type(error).__name__}: {error}`"[:1900]
+    try:
+        if interaction.response.is_done():
+            await interaction.followup.send(msg, ephemeral=True)
+        else:
+            await interaction.response.send_message(msg, ephemeral=True)
+    except discord.HTTPException as e:
+        # Either the interaction expired (>15min) or something else broke.
+        log.warning("could not deliver error to user: %s", e)
 
 @client.event
 async def on_ready():
@@ -316,23 +357,82 @@ class DestroyConfirmView(discord.ui.View):
         pass
 
 async def do_action_stream(interaction: discord.Interaction, action: str, header: str):
-    log_lines: list[str] = []
-
-    async def on_line(line: str):
-        log_lines.append(line)
-        body = "\n".join(log_lines[-30:])[-MAX_CHARS:]
+    # Pre-check: another dst command already holding the lock?
+    holder = lock_info()
+    if holder and action in {"start", "stop", "restart", "reset", "switch", "push", "pull", "init", "destroy"}:
         try:
             await interaction.edit_original_response(
-                content=f"{header}\n```\n{body}\n```", view=None
+                content=(
+                    f"⏳ **Server đang busy.**\n"
+                    f"Một lệnh khác đang chạy:\n```\n{holder}\n```\n"
+                    f"Thử lại sau khi nó xong."
+                ),
+                view=None,
             )
         except discord.HTTPException:
             pass
+        return
 
-    rc = await stream_dst([action], on_line)
+    log_lines: list[str] = []
+    last_render_at = asyncio.get_event_loop().time()
+    render_lock = asyncio.Lock()
+
+    def render_body(extra: str = "") -> str:
+        body = "\n".join(log_lines[-30:])[-MAX_CHARS:] or "(starting…)"
+        return f"{header}\n```\n{body}{extra}\n```"
+
+    async def render(extra: str = ""):
+        nonlocal last_render_at
+        last_render_at = asyncio.get_event_loop().time()
+        async with render_lock:
+            try:
+                await interaction.edit_original_response(content=render_body(extra), view=None)
+            except discord.HTTPException as e:
+                log.warning("render edit failed: %s", e)
+
+    async def on_line(line: str):
+        log_lines.append(line)
+        # Throttle to avoid Discord rate-limits: only re-render every ~1.5s.
+        if asyncio.get_event_loop().time() - last_render_at > 1.5:
+            await render()
+
+    async def heartbeat():
+        # While stream_dst is running, refresh the message every ~10s of silence.
+        # Gives the user a visible signal the bot is still alive.
+        try:
+            while True:
+                await asyncio.sleep(10)
+                idle = asyncio.get_event_loop().time() - last_render_at
+                if idle >= 8:
+                    await render(extra=f"\n[still working… {int(idle)}s since last output]")
+        except asyncio.CancelledError:
+            pass
+
+    hb_task = asyncio.create_task(heartbeat())
+    try:
+        rc = await stream_dst([action], on_line, caller=caller_for(interaction))
+    finally:
+        hb_task.cancel()
+        try:
+            await hb_task
+        except (asyncio.CancelledError, Exception):
+            pass
+
+    # Final render with exit code. Detect lock-busy in output for a friendlier finish message.
     body = "\n".join(log_lines[-30:])[-MAX_CHARS:] or "(no output)"
-    await interaction.edit_original_response(
-        content=f"{header}\n```\n{body}\n[exit {rc}]\n```", view=None
-    )
+    if rc != 0 and any(LOCK_BUSY_RE.search(line) for line in log_lines):
+        holder = lock_info() or "(another command, no metadata)"
+        msg = (
+            f"⏳ **Server đang busy.**\n"
+            f"Lệnh khác đang chạy:\n```\n{holder}\n```\n"
+            f"Thử lại sau khi nó xong."
+        )
+    else:
+        msg = f"{header}\n```\n{body}\n[exit {rc}]\n```"
+    try:
+        await interaction.edit_original_response(content=msg, view=None)
+    except discord.HTTPException as e:
+        log.warning("final render failed: %s", e)
 
 @tree.command(description="Stop server, push save to Drive, remove all DST containers/image/volumes")
 async def destroy(interaction: discord.Interaction):
@@ -342,7 +442,7 @@ async def destroy(interaction: discord.Interaction):
     await interaction.response.send_message(
         "⚠️ **This will:**\n"
         "• Stop the running world and push save to Google Drive\n"
-        "• Remove all DST containers, the `dst-server` image, and leftover volumes\n"
+        "• Remove all DST containers, images, and leftover volumes\n"
         "• Clear `./data/` from the VPS\n\n"
         "Drive saves are kept. You can `dst start` again later to rebuild.\n\n"
         "**Are you sure?**",
