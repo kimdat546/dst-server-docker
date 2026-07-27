@@ -63,6 +63,25 @@ dst stop                  # stop the world (still active, can resume later)
 dst start                 # start the active world
 ```
 
+## Common operations (the three you'll do most)
+
+| You want to… | Command | What happens |
+|---|---|---|
+| **Just restart** (clear lag, bounce) — and auto-update only mods that changed | `dst restart` | In-place restart, **reuses containers** → the image's `22-mods.sh` re-downloads **only mods whose Workshop version changed** (none changed = pure bounce). ~1 min. |
+| **Apply config you edited** (`.world.env` / compose env: mod LIST, cluster name) | `dst restart --fresh` | Recreates containers (env is baked at create time). Re-downloads all mods. |
+| **Fresh world** (new map, keep mods) | `dst reset` | Backs up to Drive (`<world>.pre-reset.tar.gz`) → wipes `data/` → fresh worldgen. Keeps the container so **mods are not re-downloaded**. |
+| **Roll back time** (undo recent progress / "reset the day") | `dst rollback [N]` | Kills (no save-over) → moves the latest N autosave snapshots aside (recoverable) → restarts in place. ~N in-game days. |
+| **Add/remove/reconfigure a mod** | `dst mod add\|remove\|list [id]`, then `dst restart --fresh` | Edits both shards' `modoverrides.lua` + syncs `DST_SERVER_MOD_SETUP`. Refuses to remove a world-content mod from a live world (would delete its items/buildings). |
+| **Fix mod list drift** | `dst sync-mods` | Rewrites `DST_SERVER_MOD_SETUP` (compose + `.world.env`) from `modoverrides.lua` (the single source of truth). |
+
+Why a plain `dst restart` auto-updates mods: DST dedicated servers sync Workshop mods to latest on boot. That's desirable — it prevents the "this server is running an old version of <mod>, you can't join" error. There is no "freeze mods at an old version" restart.
+
+**Lag note:** DST simulation is ~single-thread. Lag = CPU/mod overhead, **not RAM** — adding swap does not fix lag. Diagnose with the `dst-diagnose` agent skill.
+
+## Agent skills
+
+`.claude/skills/dst-*` codify these operations for Claude Code (auto-invoked by request): `dst-restart`, `dst-reset-world`, `dst-rollback`, `dst-edit-mods`, `dst-player-reset`, `dst-backup-restore`, `dst-diagnose`. They wrap the `dst` CLI and embed the hard-won safety rules (never auto-stop a running server, restart both shards together, world-content-mod removal warning, snapshot-size recovery).
+
 ## Switch flow (what `dst switch <branch>` does)
 
 1. Refuses if the working tree is dirty.
