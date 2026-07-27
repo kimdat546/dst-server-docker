@@ -1,14 +1,4 @@
 return {
-  ["workshop-1530801499"]={
-    configuration_options={
-      ArrowsignEnable=false,
-      CountdownEnable=false,
-      HungerCost=0,
-      Ownership=true,
-      SanityCost=0
-    },
-    enabled=true
-  },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
     configuration_options={
