@@ -359,18 +359,136 @@ cmd_status() {
 
 cmd_restart() {
   in_repo
-  local b="${1:-$(current_state)}"
+  local fresh=0 b=""
+  for a in "$@"; do
+    case "$a" in
+      --fresh|--recreate) fresh=1 ;;
+      *) b="$a" ;;
+    esac
+  done
+  b="${b:-$(current_state)}"
   [ -n "$b" ] || { c_red "no active world to restart"; exit 1; }
   [ -f "$ENV_FILE" ] || { c_red ".world.env missing — run 'dst init' first"; exit 1; }
-  c_blue "Restarting $b (game will auto-update via steamcmd on container start)"
-  compose "$b" down
-  compose "$b" up -d
+  if [ "$fresh" = 1 ]; then
+    # Full recreate: needed when .world.env / compose ENV changed (mod LIST, cluster name).
+    # Re-downloads any mods missing from the workshop cache volume.
+    c_blue "Restarting $b (--fresh: recreate containers, apply env/compose changes)"
+    compose "$b" down
+    compose "$b" up -d
+  else
+    # In-place restart: reuses containers → mod cache persists, so the image's
+    # 22-mods.sh only re-downloads mods that actually changed (fast). Re-renders
+    # modoverrides.lua too. Does NOT apply .world.env/compose ENV changes — use --fresh for those.
+    c_blue "Restarting $b in place (keeps mod cache → only changed mods update; applies modoverrides changes)"
+    compose "$b" restart
+  fi
   c_green "Containers up — waiting for game to be playable…"
   if wait_for_ready "$b"; then
     notify 16776960 "🔄 Server restarted" "World: \`$b\` is back online and accepting players."
   else
     notify 16776960 "⏳ Restart: ready check timed out" "World: \`$b\` containers restarted but cross-shard sync didn't complete within timeout. Check \`docker logs dst-master-$b\`."
   fi
+}
+
+# ── mod list helpers ──────────────────────────────────────────────────────────
+# modoverrides.lua is the single source of truth for which mods are enabled.
+# DST_SERVER_MOD_SETUP (in compose + .world.env) is derived from it.
+mods_from_modoverrides() {
+  local f="$ROOT/server/config/Master/modoverrides.lua"
+  [ -f "$f" ] || return 1
+  grep -oE '"workshop-[0-9]+"' "$f" | grep -oE '[0-9]+' | sort -u | paste -sd,
+}
+
+# World-content mods: removing one from a LIVE world strips its entities
+# (items/buildings) permanently. Only safe to remove on a fresh world.
+WORLD_CONTENT_MODS="2334209327 1467214795 3435352667 3360553731 3004639365 3675508496 3353852416 1595631294 2039181790"
+
+cmd_sync_mods() {
+  in_repo
+  local mods; mods="$(mods_from_modoverrides)" || { c_red "server/config/Master/modoverrides.lua not found"; exit 1; }
+  [ -n "$mods" ] || { c_red "no mods found in modoverrides.lua"; exit 1; }
+  # Warn if the two shards' modoverrides differ (they must match)
+  if ! diff -q "$ROOT/server/config/Master/modoverrides.lua" "$ROOT/server/config/Caves/modoverrides.lua" >/dev/null 2>&1; then
+    c_yellow "WARNING: Master and Caves modoverrides.lua differ — they should be identical."
+  fi
+  [ -f "$SERVER_COMPOSE" ] && sed -i -E "s|(DST_SERVER_MOD_SETUP: )\".*\"|\1\"$mods\"|" "$SERVER_COMPOSE"
+  [ -f "$ENV_FILE" ]       && sed -i -E "s|^(DST_SERVER_MOD_SETUP=).*|\1$mods|" "$ENV_FILE"
+  c_green "Synced mod list ($(echo "$mods" | tr ',' '\n' | wc -l) mods) from modoverrides → compose + .world.env"
+}
+
+cmd_mod() {
+  in_repo
+  local action="${1:-}" id="${2:-}"
+  case "$action" in
+    list)
+      mods_from_modoverrides | tr ',' '\n' | sed 's/^/  workshop-/'
+      return ;;
+    add)
+      [ -n "$id" ] || { c_red "usage: dst mod add <workshop_id>"; exit 1; }
+      for f in Master Caves; do
+        local mo="$ROOT/server/config/$f/modoverrides.lua"
+        grep -q "\"workshop-$id\"" "$mo" && { c_yellow "$f: workshop-$id already present"; continue; }
+        # insert after the opening 'return {'
+        sed -i "0,/^return {/s//return {\n  [\"workshop-$id\"]={ configuration_options={  }, enabled=true },/" "$mo"
+        c_green "$f: added workshop-$id (empty config)"
+      done
+      cmd_sync_mods
+      c_yellow "Edit configuration_options in modoverrides if needed, then: dst restart --fresh"
+      ;;
+    remove)
+      [ -n "$id" ] || { c_red "usage: dst mod remove <workshop_id>"; exit 1; }
+      if echo "$WORLD_CONTENT_MODS" | grep -qw "$id" && is_running; then
+        c_red "REFUSED: workshop-$id is a WORLD-CONTENT mod. Removing it from a live world"
+        c_red "strips its entities (items/buildings) permanently — only safe on a fresh world."
+        c_yellow "If you really mean it: 'dst reset' (fresh world) after removing, or re-add it."
+        exit 1
+      fi
+      for f in Master Caves; do
+        local mo="$ROOT/server/config/$f/modoverrides.lua"
+        awk -v id="$id" '
+          $0 ~ "\\[\"workshop-" id "\"\\]=\\{" {skip=1}
+          skip && /^  },$/ {skip=0; next}
+          !skip {print}
+        ' "$mo" > "$mo.tmp" && mv "$mo.tmp" "$mo"
+        c_green "$f: removed workshop-$id"
+      done
+      cmd_sync_mods
+      c_yellow "Apply with: dst restart --fresh"
+      ;;
+    *) c_red "usage: dst mod <add|remove|list> [workshop_id]"; exit 1 ;;
+  esac
+}
+
+# Roll the world back N autosave snapshots (≈ N in-game days). Kills (no save) so the
+# current state isn't written over the snapshot, moves the latest N world snapshots aside
+# (recoverable under data/.rollback-aside-*), then restarts in place. Both shards stay in sync.
+cmd_rollback() {
+  in_repo
+  local n="${1:-1}" b; b="$(current_state)"
+  [ -n "$b" ] || { c_red "no active world"; exit 1; }
+  case "$n" in (*[!0-9]*|'') c_red "usage: dst rollback [N]  (N = snapshots/days back, default 1)"; exit 1 ;; esac
+  local aside="$ROOT/data/.rollback-aside-$(date +%Y%m%d-%H%M%S)"
+  mkdir -p "$aside"
+  c_yellow "Rolling back $n snapshot(s) (~$n in-game day(s)). Killing server (no save-over)…"
+  compose "$b" kill 2>/dev/null || true
+  local shard ses moved=0
+  for shard in Master Caves; do
+    ses="$(ls -d "$ROOT/data/$shard/server/general/$shard/save/session/"*/ 2>/dev/null | head -1)"
+    [ -n "$ses" ] || { c_yellow "$shard: no session found, skipping"; continue; }
+    local latest
+    for latest in $(ls -1 "$ses" 2>/dev/null | grep -E '^[0-9]+$' | sort -n | tail -n "$n"); do
+      mv "$ses/$latest" "$ses/$latest.meta" "$aside/$shard-$latest" 2>/dev/null \
+        || { for x in "$ses/$latest" "$ses/$latest.meta"; do [ -e "$x" ] && mv "$x" "$aside/$shard-$(basename "$x")"; done; }
+      moved=$((moved+1))
+    done
+    c_green "$shard now loads snapshot $(ls -1 "$ses" | grep -E '^[0-9]+$' | sort -n | tail -1)"
+  done
+  [ "$moved" -gt 0 ] || { c_red "no snapshots moved — aborting (server left stopped)"; exit 1; }
+  c_blue "Restarting in place…"
+  compose "$b" start
+  wait_for_ready "$b" || true
+  c_green "Rolled back. Recoverable from: $aside"
+  notify 16753920 "⏪ World rolled back" "World: \`$b\` rolled back ~$n day(s). Backup: $(basename "$aside")"
 }
 
 cmd_reset() {
@@ -384,7 +502,7 @@ cmd_reset() {
 
   if is_running "$b"; then
     c_blue "Stopping $b"
-    compose "$b" down
+    compose "$b" stop   # stop (not down) → keep container → mods stay cached → fast fresh world
   fi
 
   if rclone listremotes 2>/dev/null | grep -q "^${REMOTE%%:*}:"; then
@@ -472,12 +590,20 @@ Commands:
   dst init                   regenerate .world.env from current branch's compose
   dst start  [branch]        pull save from Drive → start containers
   dst stop   [branch]        stop containers → push save to Drive → clear VPS
-  dst restart [branch]       restart containers in place (applies game updates via steamcmd)
+  dst restart [branch]       fast in-place restart (only changed mods re-download)
+  dst restart --fresh        recreate containers (apply env/compose/mod-list changes)
+  dst rollback [N]           roll world back N autosave snapshots (~N days), recoverable
   dst reset  [branch]        archive current save → wipe → start fresh world (recoverable)
   dst switch <branch>        stop+push current → checkout → pull → start
+  dst mod add|remove|list [id]  edit enabled mods (both shards) + sync; guards world-content mods
+  dst sync-mods              rewrite DST_SERVER_MOD_SETUP from modoverrides (single source of truth)
   dst push   [branch]        compress & upload save to Drive
   dst pull   <branch>        download & extract save from Drive
   dst destroy                stop+push, remove containers/image/volumes, clear VPS
+
+Notes:
+  • Lag in DST = single-thread CPU (mods/entities), NOT RAM — adding swap won't fix lag.
+  • Removing a world-content mod from a live world deletes its items/buildings — fresh world only.
 
 Env:
   DST_REMOTE   rclone target  (default: dst-storage:dst-worlds)
@@ -494,7 +620,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy)$'
+LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|mod|sync-mods)$'
 LOCK_INFO="${LOCK_FILE}.info"
 cmd="${1:-help}"; shift || true
 
@@ -525,8 +651,11 @@ case "$cmd" in
   start)   cmd_start "$@" ;;
   stop)    cmd_stop "$@" ;;
   restart) cmd_restart "$@" ;;
+  rollback) cmd_rollback "$@" ;;
   reset)   cmd_reset "$@" ;;
   switch)  cmd_switch "$@" ;;
+  mod)     cmd_mod "$@" ;;
+  sync-mods) cmd_sync_mods ;;
   push)    cmd_push "$@" ;;
   pull)    cmd_pull "$@" ;;
   destroy) cmd_destroy ;;
