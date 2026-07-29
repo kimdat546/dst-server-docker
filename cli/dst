@@ -491,6 +491,39 @@ cmd_rollback() {
   notify 16753920 "⏪ World rolled back" "World: \`$b\` rolled back ~$n day(s). Backup: $(basename "$aside")"
 }
 
+# Gỡ kẹt người chơi bị ghim ở Caves sau khi restart server.
+#
+# Triệu chứng: ai đó đang ở dưới hang lúc server restart → sau đó không vào lại
+# được (kẹt ở màn kết nối, hoặc bị đá ra).
+#
+# Cơ chế: Master ghi một file 'savelocation' cho biết người chơi đang ở shard
+# nào. Restart làm hai shard lệch nhau, Master vẫn đẩy người chơi sang Caves
+# trong khi phía Caves không còn phiên tương ứng. Xoá savelocation là Master
+# quên chuyện đó và cho họ vào lại ở mặt đất.
+#
+# Đánh đổi: người chơi quay lại trên mặt đất, không phải chỗ cũ dưới hang.
+cmd_unstick() {
+  in_repo
+  local b; b="$(current_state)"
+  [ -n "$b" ] || { c_red "no active world"; exit 1; }
+  local SESS=/var/lib/game/server/general/Master/save/session
+  c_yellow "Đang tìm savelocation trong world '$b'…"
+  local found
+  found="$(compose "$b" exec -T master find "$SESS" -name savelocation 2>/dev/null || true)"
+  if [ -z "$found" ]; then
+    c_green "Không có savelocation nào — không ai bị ghim ở Caves."
+    c_yellow "Lỗi vào server lần này do nguyên nhân khác; xem 'dst status' và log."
+    exit 0
+  fi
+  echo "$found" | sed 's/^/  /'
+  compose "$b" exec -T master find "$SESS" -name savelocation -delete
+  c_blue "Đã xoá. Khởi động lại Master…"
+  compose "$b" restart master
+  wait_for_ready "$b" || true
+  c_green "Xong — người chơi kẹt dưới hang giờ vào lại được, xuất hiện trên mặt đất."
+  notify 16753920 "🔓 Gỡ kẹt shard" "World: \`$b\` — đã xoá savelocation và restart Master."
+}
+
 cmd_reset() {
   in_repo
   local b="${1:-$(current_state)}"
@@ -593,6 +626,7 @@ Commands:
   dst restart [branch]       fast in-place restart (only changed mods re-download)
   dst restart --fresh        recreate containers (apply env/compose/mod-list changes)
   dst rollback [N]           roll world back N autosave snapshots (~N days), recoverable
+  dst unstick                unstick players trapped in Caves after a restart
   dst reset  [branch]        archive current save → wipe → start fresh world (recoverable)
   dst switch <branch>        stop+push current → checkout → pull → start
   dst mod add|remove|list [id]  edit enabled mods (both shards) + sync; guards world-content mods
@@ -620,7 +654,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|mod|sync-mods)$'
+LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|unstick|mod|sync-mods)$'
 LOCK_INFO="${LOCK_FILE}.info"
 cmd="${1:-help}"; shift || true
 
@@ -652,6 +686,7 @@ case "$cmd" in
   stop)    cmd_stop "$@" ;;
   restart) cmd_restart "$@" ;;
   rollback) cmd_rollback "$@" ;;
+  unstick) cmd_unstick "$@" ;;
   reset)   cmd_reset "$@" ;;
   switch)  cmd_switch "$@" ;;
   mod)     cmd_mod "$@" ;;
