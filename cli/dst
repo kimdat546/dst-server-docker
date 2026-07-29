@@ -87,6 +87,31 @@ compose() {
   ( cd "$CLI" && DST_BRANCH="$b" docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@" )
 }
 
+# Liệt kê người chơi đang online, đọc từ log của container master.
+# Hai mốc đã kiểm chứng trong server_log:
+#   vào : "Client authenticated: (KU_xxx) <tên>"
+#   ra  : "[Shard] (KU_xxx) disconnected from Master(1)"
+# Lấy trạng thái CUỐI CÙNG của từng userid → ai còn ở trạng thái "vào" là online.
+online_players() {
+  local b="$1"
+  local container="dst-master-${b}"
+  local started_at
+  started_at="$(docker inspect -f '{{.State.StartedAt}}' "$container" 2>/dev/null || true)"
+  [ -n "$started_at" ] || return 0
+  docker logs --since "$started_at" "$container" 2>&1 | awk '
+    /Client authenticated: \(KU_/ {
+      match($0, /KU_[A-Za-z0-9_-]+/); u = substr($0, RSTART, RLENGTH)
+      n = $0; sub(/.*\) /, "", n); gsub(/[[:space:]]+$/, "", n)
+      state[u] = 1; name[u] = n
+    }
+    /\(KU_[A-Za-z0-9_-]+\) disconnected/ {
+      match($0, /KU_[A-Za-z0-9_-]+/); u = substr($0, RSTART, RLENGTH)
+      state[u] = 0
+    }
+    END { for (u in state) if (state[u]) printf "%s (%s)\n", (name[u] ? name[u] : "?"), u }
+  '
+}
+
 remote_archive() { echo "$REMOTE/$1.tar.gz"; }  # e.g. dst-storage:dst-worlds/myth-words.tar.gz
 
 # Wait for the master container to log [SyncWorldSettings], which only fires
@@ -359,16 +384,30 @@ cmd_status() {
 
 cmd_restart() {
   in_repo
-  local fresh=0 b=""
+  local fresh=0 force=0 b=""
   for a in "$@"; do
     case "$a" in
       --fresh|--recreate) fresh=1 ;;
+      --force|-y) force=1 ;;
       *) b="$a" ;;
     esac
   done
   b="${b:-$(current_state)}"
   [ -n "$b" ] || { c_red "no active world to restart"; exit 1; }
   [ -f "$ENV_FILE" ] || { c_red ".world.env missing — run 'dst init' first"; exit 1; }
+
+  # Chặn restart khi còn người đang chơi. Người ở dưới Caves lúc restart sẽ bị
+  # ghim vào shard đó và không vào lại được (phải chạy 'dst unstick' để gỡ).
+  if [ "$force" != 1 ]; then
+    local online; online="$(online_players "$b")"
+    if [ -n "$online" ]; then
+      c_red "Đang có $(echo "$online" | wc -l | tr -d ' ') người chơi online:"
+      echo "$online" | sed 's/^/    /'
+      c_yellow "Restart lúc này sẽ làm người đang ở dưới hang không vào lại được."
+      c_yellow "Bảo họ lên mặt đất và thoát ra, hoặc chạy lại với --force nếu vẫn muốn."
+      exit 1
+    fi
+  fi
   if [ "$fresh" = 1 ]; then
     # Full recreate: needed when .world.env / compose ENV changed (mod LIST, cluster name).
     # Re-downloads any mods missing from the workshop cache volume.
@@ -624,6 +663,7 @@ Commands:
   dst start  [branch]        pull save from Drive → start containers
   dst stop   [branch]        stop containers → push save to Drive → clear VPS
   dst restart [branch]       fast in-place restart (only changed mods re-download)
+  dst restart --force        restart even if players are online (skips the guard)
   dst restart --fresh        recreate containers (apply env/compose/mod-list changes)
   dst rollback [N]           roll world back N autosave snapshots (~N days), recoverable
   dst unstick                unstick players trapped in Caves after a restart
