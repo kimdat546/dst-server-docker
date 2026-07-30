@@ -19,7 +19,7 @@ return {
     beefaloheat="default",
     berrybush="default",
     boons="insane",
-    branching="most",
+    branching="default",
     brightmarecreatures="default",
     bunnymen="default",
     bunnymen_setting="default",
