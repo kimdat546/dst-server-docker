@@ -1,4 +1,5 @@
 return {
+  ["workshop-3774466732"]={ configuration_options={  }, enabled=true },
   ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
   ["workshop-1803285852"]={
     configuration_options={
