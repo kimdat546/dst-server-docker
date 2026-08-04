@@ -1,0 +1,51 @@
+# Danh sách prefab mà `dst cleanup` sẽ xoá KHI CHÚNG NẰM TRÊN MẶT ĐẤT.
+#
+# Sửa file này rồi chạy lại là xong — không cần đụng vào code.
+#   dst cleanup --list          xem danh sách đang dùng
+#   dst cleanup --both          đếm thử (KHÔNG xoá)
+#   dst cleanup --apply --both  xoá thật
+#   dst cleanup --prefabs=a,b   bỏ qua file này, dùng danh sách gõ tay
+#
+# Cú pháp: mỗi dòng một prefab. Dòng bắt đầu bằng '#' là chú thích. Dòng trống bỏ qua.
+# Muốn biết prefab nào đang có nhiều dưới đất: xem docs/ground-survey.md
+#
+# ⚠ HAI ĐIỀU PHẢI NHỚ TRƯỚC KHI THÊM DÒNG MỚI
+#
+# 1. SINH VẬT SỐNG cũng có component `inventoryitem` (vì bắt được bằng vợt),
+#    nên chúng KHỚP với bộ lọc y như vật phẩm. Thêm vào đây là giết sạch chúng:
+#       fireflies  rabbit  bee  mole  butterfly  lightflier  slurper  carrat
+#       mosquito  bird_mutant  crow  robin  canary
+#    Riêng fireflies là nguồn đèn, mất là không tự có lại nhanh.
+#
+# 2. ĐỒ TRONG RƯƠNG/TÚI/TRÊN TAY QUÁI KHÔNG BAO GIỜ BỊ ĐỤNG, kể cả khi prefab
+#    có tên trong file này — bộ lọc kiểm `IsHeld()`, `IsInLimbo()`, `parent`.
+#    Đã kiểm chứng trực tiếp trên server thật.
+
+# ── Rác thật, giá trị thấp, số lượng lớn ────────────────────────────────────
+pinecone
+spidergland
+driftwood_log
+feather_crow
+stinger
+twiggy_nut
+palmcone_scale
+acorn
+cutreeds
+beardhair
+
+# ── Do kimdat546 chọn thêm 2026-08-04 ───────────────────────────────────────
+# Ba dòng dưới đây CÓ GIÁ TRỊ. Giữ lại hay bỏ đi là quyết định của bạn; ghi ra
+# đây để lần sau nhìn là biết ngay, khỏi phải nhớ.
+poop            # phân bò — dùng làm phân bón cho luống
+spoiled_food    # đồ ăn hỏng — cũng là phân bón
+silk            # tơ nhện — làm lều, mũ cao bồi, vợt
+nightmarefuel   # nhiên liệu ác mộng — nguyên liệu đồ ma thuật cấp cao
+goldnugget      # vàng — mua đồ ở Pig King, chế tạo
+
+# ── Đã bỏ khỏi danh sách, ghi lại lý do ─────────────────────────────────────
+# rocks / flint / nitre     tài nguyên xây dựng, dùng thường xuyên
+# guano                     phân bón tốt hơn poop
+# slurtleslime              làm thuốc nổ
+# twigs / log / charcoal / cutgrass / petals / ash
+#                           đã nằm trong danh sách mặc định gốc của script;
+#                           thêm lại vào đây nếu muốn dọn tiếp

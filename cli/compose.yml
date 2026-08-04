@@ -18,6 +18,11 @@ services:
       - ../data/Master:/var/lib/game
       - ../server/config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
       - ../server/config/Master/leveldataoverride.lua:/etc/dst-config/Master/leveldataoverride.lua:ro
+    # Mở stdin để `dst console` / `dst cleanup` gửi được lệnh Lua vào server đang
+    # chạy. Không có dòng này thì stdin trỏ /dev/null và không có đường nào gửi
+    # lệnh mà không khởi động lại. Chỉ có hiệu lực sau khi TẠO LẠI container
+    # (`dst restart --fresh`), không phải sau `dst restart` thường.
+    stdin_open: true
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini" ]
@@ -43,6 +48,7 @@ services:
       - ../data/Caves:/var/lib/game
       - ../server/config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
       - ../server/config/Caves/leveldataoverride.lua:/etc/dst-config/Caves/leveldataoverride.lua:ro
+    stdin_open: true   # xem chú thích ở service master
     depends_on:
       master:
         condition: service_healthy
