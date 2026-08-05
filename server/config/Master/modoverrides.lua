@@ -1,16 +1,62 @@
+-- World: newconstant
+-- Lấy từ bộ mod của world dang-tien, BỎ 登仙 (workshop-3235319974),
+-- THÊM 3 mod NewConstant bản Việt hoá + 4 mod tiện ích.
+-- ⚠ Master và Caves phải GIỐNG HỆT nhau.
 return {
-  ["workshop-1530801499"]={
+
+  -- ── NewConstant (bản Việt hoá, Unlisted) ─────────────────────────────────
+  -- Thứ tự nạp do priority trong modinfo quyết định: Core(0) → Base(-512)
+  -- → Nightmare(-1024). Ba mod này KHÔNG khai báo mod_dependencies (khai báo đó
+  -- làm client sập ở GetModDependencies — xem tools/build.py của mod), nên phải
+  -- liệt kê đủ cả ba ở đây.
+  ["workshop-3778107626"]={          -- NewConstant Core
     configuration_options={
-      ArrowsignEnable=false,
-      CountdownEnable=false,
-      HungerCost=1,
-      Ownership=true,
-      SanityCost=1
+      ncvi_language="vi",            -- DST không có locale tiếng Việt → phải chọn tay
+      charge_control="KEY_X",
+      skill_control="KEY_V",
+      charge_mode=true
     },
     enabled=true
   },
-  ["workshop-1780476441"]={ configuration_options={  }, enabled=true },
-  ["workshop-1803285852"]={
+  ["workshop-3778108141"]={          -- NewConstant Base
+    configuration_options={
+      ruins=true, worldgen=true, firefall=true, poison=true, gestalt=true,
+      twin=true, alter=true, pig=true, rook=true, klaus=true, chess=true,
+      stalker=true, toad=true, portal=true, wardrobe=true, ruinsbat=true
+    },
+    enabled=true
+  },
+  ["workshop-3778108374"]={          -- NewConstant Nightmare (nội dung Vực Sâu)
+    configuration_options={ twin=true, ruins=true, worldgen=true },
+    enabled=true
+  },
+
+  -- ── Mod nội dung thêm ────────────────────────────────────────────────────
+  ["workshop-1392778117"]={          -- [DST] Legion
+    configuration_options={ Language="english" },
+    enabled=true
+  },
+
+  -- ── Tiện ích mới ─────────────────────────────────────────────────────────
+  ["workshop-3353852416"]={          -- Fast Travel (skined home sign)
+    configuration_options={
+      TeleportEnable=true, HomesignEnable=false, LightEnable=true,
+      ResurrectEnable=true, HungerCost=1, SanityCost=1,
+      CountdownEnable=false, TextEnable=false
+    },
+    enabled=true
+  },
+  ["workshop-1207269058"]={ configuration_options={  }, enabled=true },  -- Simple Health Bar
+  ["workshop-666155465"]={           -- Show Me (Origin)
+    configuration_options={ chestR=-1, chestG=-1, chestB=-1 },
+    enabled=true
+  },
+
+  -- ── Giữ nguyên từ world dang-tien ────────────────────────────────────────
+  ["workshop-3774466732"]={ configuration_options={  }, enabled=true },  -- Food Buff (tự viết)
+  ["workshop-1780476441"]={ configuration_options={  }, enabled=true },  -- Fast Pigking
+  ["workshop-375850593"]={  configuration_options={  }, enabled=true },  -- Extra Equip Slots
+  ["workshop-1803285852"]={          -- Auto Stack and Pick Up
     configuration_options={
       [""]=0,
       AutoPickupAsh=false,
@@ -37,28 +83,7 @@ return {
     },
     enabled=true
   },
-  ["workshop-3235319974"]={
-    configuration_options={
-      key_v=118,
-      key_x=120,
-      key_z=122,
-      set00=0,
-      set1=true,
-      set10=5,
-      set11=true,
-      set12=1,
-      set13=false,
-      set2=true,
-      set3=true,
-      set4=false,
-      set5=true,
-      set6=true,
-      set7=true,
-      wukongkey=114
-    },
-    enabled=true
-  },
-  ["workshop-374550642"]={
+  ["workshop-374550642"]={           -- Increased Stack size
     configuration_options={
       FORCE_STACKSIZES=false,
       STACK_SIZE_LARGEITEM=99,
@@ -69,8 +94,7 @@ return {
     },
     enabled=true
   },
-  ["workshop-375850593"]={ configuration_options={  }, enabled=true },
-  ["workshop-380423963"]={
+  ["workshop-380423963"]={           -- Mineable Gems
     configuration_options={
       [""]=0,
       boulder_blue=0.75,
@@ -111,7 +135,7 @@ return {
     },
     enabled=true
   },
-  ["workshop-501385076"]={
+  ["workshop-501385076"]={           -- Quick Pick
     configuration_options={
       quick_cook_on_fire=true,
       quick_harvest=true,
