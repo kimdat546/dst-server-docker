@@ -18,6 +18,29 @@ services:
       - ../data/Master:/var/lib/game
       - ../server/config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
       - ../server/config/Master/leveldataoverride.lua:/etc/dst-config/Master/leveldataoverride.lua:ro
+    # Mở stdin để `dst console` / `dst cleanup` gửi được lệnh Lua vào server đang
+    # chạy. Không có dòng này thì stdin trỏ /dev/null và không có đường nào gửi
+    # lệnh mà không khởi động lại. Chỉ có hiệu lực sau khi TẠO LẠI container
+    # (`dst restart --fresh`), không phải sau `dst restart` thường.
+    stdin_open: true
+    # DNS cố định, KHÔNG thừa hưởng từ host.
+    # Docker sao chép /etc/resolv.conf của host vào container tại thời điểm TẠO,
+    # rồi đóng băng. Ngày 2026-08-04, gỡ Tailscale khỏi host làm resolver
+    # 100.100.100.100 (MagicDNS) chết, nhưng container vẫn giữ nó → server không
+    # phân giải được lobby-v2.klei.com và login.kleientertainment.com, mọi người
+    # chơi bị đá ra với ID_DST_GAME_SESSION_AUTH_FAILED. Khai báo cứng ở đây thì
+    # thay đổi DNS trên host không thể làm hỏng server nữa.
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    # Xoay vòng log ngay tại service, KHÔNG dựa vào mặc định của daemon.
+    # /etc/docker/daemon.json có đặt max-size nhưng `systemctl reload docker`
+    # (SIGHUP) không áp dụng được log-opts — phải restart cả daemon, mà việc đó
+    # làm gián đoạn mọi container. Khai báo ở đây thì DST có xoay vòng ngay từ
+    # lần tạo container kế tiếp, không phiền tới các dịch vụ khác.
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "grep", "-q", "shard_enabled = true", "/var/lib/game/server/general/cluster.ini" ]
@@ -43,6 +66,13 @@ services:
       - ../data/Caves:/var/lib/game
       - ../server/config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
       - ../server/config/Caves/leveldataoverride.lua:/etc/dst-config/Caves/leveldataoverride.lua:ro
+    stdin_open: true   # xem chú thích ở service master
+    dns:               # xem chú thích ở service master
+      - 8.8.8.8
+      - 1.1.1.1
+    logging:           # xem chú thích ở service master
+      driver: json-file
+      options: { max-size: "20m", max-file: "3" }
     depends_on:
       master:
         condition: service_healthy

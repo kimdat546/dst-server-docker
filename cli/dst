@@ -651,6 +651,110 @@ cmd_destroy() {
   c_green "Done. Run 'dst start' to rebuild and run again."
 }
 
+LUA_DIR="$CLI/lua"
+PREFAB_FILE="$LUA_DIR/cleanup_prefabs.txt"
+
+# PID của TIẾN TRÌNH GAME bên trong container. Không dùng .State.Pid được vì đó
+# là tini (init của container), không phải server — ghi vào stdin của tini là vô ích.
+game_pid() { docker top "$1" -eo pid,comm 2>/dev/null | awk '/dontstarve/ {print $1; exit}'; }
+
+# Gửi một dòng Lua vào server đang chạy, qua stdin của tiến trình game.
+# Server dedicated đọc stdin và thực thi TỪNG DÒNG như một chunk Lua riêng —
+# nên payload bắt buộc phải nằm gọn trên một dòng.
+console_send() {
+  local container="$1" lua="$2"
+  docker inspect "$container" >/dev/null 2>&1 || { c_red "không có container $container"; return 1; }
+  if [ "$(docker inspect -f '{{.Config.OpenStdin}}' "$container")" != "true" ]; then
+    c_red "$container chưa mở stdin — không gửi lệnh vào được."
+    c_yellow "compose.yml đã bật stdin_open, nhưng phải TẠO LẠI container mới có hiệu lực:"
+    c_yellow "  dst restart --fresh     (dừng người chơi vài phút)"
+    return 1
+  fi
+  local pid; pid="$(game_pid "$container")"
+  [ -n "$pid" ] || { c_red "không thấy tiến trình game trong $container"; return 1; }
+  printf '%s\n' "$lua" > "/proc/$pid/fd/0"
+}
+
+cmd_console() {
+  in_repo
+  local b; b="$(current_state)"; [ -n "$b" ] || { c_red "no active world"; exit 1; }
+  local shard=master
+  [ "${1:-}" = "--caves" ] && { shard=caves; shift; }
+  local lua="${*:-}"
+  [ -n "$lua" ] || { c_red "cần đoạn Lua, ví dụ: dst console 'print(#AllPlayers)'"; exit 1; }
+  local container="dst-${shard}-${b}" since; since="$(date -Iseconds)"
+  console_send "$container" "$lua" || exit 1
+  sleep 2
+  docker logs --since "$since" "$container" 2>&1 | tail -20 | sed 's/^/  /'
+}
+
+# Dọn vật phẩm rác NẰM TRÊN MẶT ĐẤT. Mặc định chỉ ĐẾM THỬ, không xoá.
+# Đồ trong rương/balo/Chester và rương của mod Đăng Tiên không bao giờ bị đụng —
+# xem phần giải thích vị từ an toàn ở đầu cli/lua/cleanup_ground.lua.
+cmd_cleanup() {
+  in_repo
+  local b; b="$(current_state)"; [ -n "$b" ] || { c_red "no active world"; exit 1; }
+  local apply=0 shards="master" prefabs="" show=0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --apply)     apply=1 ;;
+      --caves)     shards="caves" ;;
+      --both)      shards="master caves" ;;
+      --list)      show=1 ;;
+      --prefabs=*) prefabs="${1#--prefabs=}" ;;
+      *) c_red "tuỳ chọn lạ: $1"; exit 1 ;;
+    esac
+    shift
+  done
+
+  # Danh sách lấy từ cli/lua/cleanup_prefabs.txt, trừ khi có --prefabs.
+  # Không có file thì rơi về danh sách mặc định nằm sẵn trong script Lua.
+  local src="mặc định trong script"
+  if [ -z "$prefabs" ] && [ -f "$PREFAB_FILE" ]; then
+    prefabs="$(sed 's/#.*//' "$PREFAB_FILE" | tr -d ' \t' | grep -vE '^$' | paste -sd, -)"
+    src="$PREFAB_FILE"
+  elif [ -n "$prefabs" ]; then
+    src="--prefabs trên dòng lệnh"
+  fi
+
+  if [ "$show" = 1 ]; then
+    c_blue "Nguồn danh sách: $src"
+    echo "${prefabs:-twigs,log,charcoal,cutgrass,petals,ash,spoiled_food}" | tr ',' '\n' | sed 's/^/  /'
+    return 0
+  fi
+
+  local script="$LUA_DIR/cleanup_ground.lua"
+  [ -f "$script" ] || { c_red "thiếu $script"; exit 1; }
+  # Gộp về một dòng: bỏ dòng chú thích + dòng trống rồi nối. An toàn vì mọi câu
+  # lệnh trong file đều kết thúc bằng ';' và không có '--' nào nằm trong chuỗi.
+  local body; body="$(grep -vE '^\s*--' "$script" | grep -vE '^\s*$' | tr '\n' ' ')"
+  local cfg="CLEANUP_APPLY=$([ $apply -eq 1 ] && echo true || echo false); "
+  [ -n "$prefabs" ] && cfg="${cfg}CLEANUP_PREFABS=\"$prefabs\"; "
+
+  if [ $apply -eq 1 ]; then
+    c_yellow "Sắp XOÁ VĨNH VIỄN vật phẩm trên mặt đất — world '$b', shard: $shards"
+    c_yellow "  danh sách (${src}):"
+    echo "${prefabs:-twigs,log,charcoal,cutgrass,petals,ash,spoiled_food}" | tr ',' '\n' | sed 's/^/      /'
+    c_yellow "  đồ trong rương/balo KHÔNG bị đụng. Lỡ tay thì 'dst rollback 1' lấy lại được."
+    local who; who="$(online_players "$b" || true)"
+    [ -n "$who" ] && c_yellow "  đang online: $(echo "$who" | tr '\n' ' ')"
+    printf "Gõ 'xoa' để xác nhận: "; local ans; read -r ans
+    [ "$ans" = "xoa" ] || { c_yellow "Đã huỷ, không xoá gì."; exit 0; }
+  fi
+
+  local s
+  for s in $shards; do
+    local container="dst-${s}-${b}" since; since="$(date -Iseconds)"
+    c_blue "→ $s"
+    console_send "$container" "do ${cfg}${body} end" || exit 1
+    sleep 2
+    docker logs --since "$since" "$container" 2>&1 | grep -a '\[CLEANUP\]' | sed 's/^/    /' \
+      || c_yellow "    (chưa thấy phản hồi — kiểm tra: docker logs $container)"
+  done
+  [ $apply -eq 0 ] && c_yellow "Đây mới là chạy thử. Thêm --apply để xoá thật."
+  return 0
+}
+
 cmd_help() {
   cat <<'EOF'
 dst — branch-as-world manager (git + Google Drive)
@@ -674,9 +778,17 @@ Commands:
   dst push   [branch]        compress & upload save to Drive
   dst pull   <branch>        download & extract save from Drive
   dst destroy                stop+push, remove containers/image/volumes, clear VPS
+  dst console [--caves] '<lua>'  run a Lua line on the live server, print the reply
+  dst cleanup [--apply] [--caves|--both] [--prefabs=a,b] [--list]
+                             dọn vật phẩm rác TRÊN MẶT ĐẤT; mặc định chỉ đếm thử.
+                             Đồ trong rương/balo/rương mod không bao giờ bị xoá.
+                             Danh sách prefab đọc từ cli/lua/cleanup_prefabs.txt
+                             (sửa file đó là đổi được, không cần sửa code).
+                             --list in ra danh sách đang dùng rồi thoát.
 
 Notes:
   • Lag in DST = single-thread CPU (mods/entities), NOT RAM — adding swap won't fix lag.
+  • console/cleanup cần stdin_open → chạy `dst restart --fresh` MỘT LẦN để tạo lại container.
   • Removing a world-content mod from a live world deletes its items/buildings — fresh world only.
 
 Env:
@@ -694,7 +806,9 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|unstick|mod|sync-mods)$'
+# cleanup sửa đổi thế giới → phải giữ lock, tránh chạy đè lên dst restart/switch.
+# console chỉ đọc trong đa số trường hợp nên không khoá, khỏi chặn lúc chẩn đoán.
+LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|unstick|mod|sync-mods|cleanup)$'
 LOCK_INFO="${LOCK_FILE}.info"
 cmd="${1:-help}"; shift || true
 
@@ -734,6 +848,8 @@ case "$cmd" in
   push)    cmd_push "$@" ;;
   pull)    cmd_pull "$@" ;;
   destroy) cmd_destroy ;;
+  console) cmd_console "$@" ;;
+  cleanup) cmd_cleanup "$@" ;;
   lock-info) [ -f "$LOCK_INFO" ] && cat "$LOCK_INFO" || echo "no lock held"; exit 0 ;;
   help|-h|--help) cmd_help ;;
   *) c_red "unknown: $cmd"; cmd_help; exit 1 ;;
