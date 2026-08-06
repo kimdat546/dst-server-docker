@@ -41,7 +41,8 @@ return {
   ["workshop-3353852416"]={          -- Fast Travel (skined home sign)
     configuration_options={
       TeleportEnable=true, HomesignEnable=false, LightEnable=true,
-      ResurrectEnable=true, HungerCost=1, SanityCost=1,
+      ResurrectEnable=true,
+      HungerCost=0, SanityCost=0,    -- dịch chuyển KHÔNG tốn đói/tinh thần
       CountdownEnable=false, TextEnable=false
     },
     enabled=true
