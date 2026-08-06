@@ -11,6 +11,11 @@ services:
       DST_GAMEPLAY_MAX_PLAYERS: "12"
       DST_GAMEPLAY_GAME_MODE: "endless"
       DST_NETWORK_SERVER_PORT: "11999"
+      # Mặc định của Klei là 15 — server chỉ gửi cập nhật 15 lần/giây, nên
+      # chuyển động của người chơi khác và quái được nội suy thưa hơn, cảm giác
+      # hơi khựng. Nâng lên 30 cho mượt; VPS thừa sức (đo lúc 3 người online:
+      # CPU master 15,6%, load 0.75/4 nhân). Đổi lại tốn thêm băng thông ra.
+      DST_NETWORK_TICK_RATE: "30"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "true"
       DST_SHARD_NAME: "Master"
