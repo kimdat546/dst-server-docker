@@ -117,7 +117,7 @@ return {
     trees="default",
     twiggytrees_regrowth="default",
     weather="default",
-    winters_feast="enabled",
+    winters_feast="disabled",
     world_size="small",
     wormattacks="default",
     wormattacks_boss="default",
