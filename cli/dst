@@ -179,6 +179,22 @@ token_value() {   # $1 = tên
   sed -n "s/^TOKEN_$1=//p" "$TOKENS_FILE" | tail -1
 }
 
+# Token THẬT SỰ được server đọc từ cluster_token.txt trong volume dữ liệu,
+# KHÔNG phải từ biến môi trường. Image chỉ tạo file đó lần đầu
+# (image/overlay/etc/container.d/15-files.sh dùng `[[ ! -f ]]` rồi thôi), nên
+# với world đã tồn tại thì đổi DST_CLUSTER_TOKEN xong restart vẫn chạy token
+# cũ. Phải ghi đè file thì mới thật sự đổi.
+write_token_files() {
+  local tval="$1" f n=0
+  for f in "$ROOT/data/Master/server/general/cluster_token.txt" \
+           "$ROOT/data/Caves/server/general/cluster_token.txt"; do
+    [ -d "${f%/*}" ] || continue          # world chưa chạy lần nào → để image tự tạo
+    printf '%s\n' "$tval" > "$f"
+    n=$((n+1))
+  done
+  [ "$n" -gt 0 ] && c_green "Ghi đè cluster_token.txt ($n file) — world sẵn có mới thật sự đổi token." || true
+}
+
 mask_token() {    # chỉ in đầu/đuôi, đủ để nhận ra mà không lộ
   local v="$1"
   [ ${#v} -gt 16 ] && printf '%s…%s' "${v:0:10}" "${v: -4}" || printf '%s' '(quá ngắn?)'
@@ -205,6 +221,7 @@ cmd_init() {
     sed -i '/^DST_CLUSTER_TOKEN=/d' "$ENV_FILE"
     printf 'DST_CLUSTER_TOKEN=%s\n' "$tval" >> "$ENV_FILE"
     c_green "Token: $tname ($(mask_token "$tval"))"
+    write_token_files "$tval"
   elif grep -q '^DST_CLUSTER_TOKEN=' "$ENV_FILE"; then
     c_yellow "Chưa có tokens.env — đang dùng token hardcode trong compose của nhánh."
     c_yellow "Chuyển sang kho token:  dst token add <tên> '<pds-...>'"
