@@ -1,6 +1,16 @@
 return {
   ["workshop-1111658995"]={ configuration_options={  }, enabled=true },
   ["workshop-1207269058"]={ configuration_options={  }, enabled=true },
+  ["workshop-1530801499"]={
+    configuration_options={
+      ArrowsignEnable=false,
+      CountdownEnable=false,
+      HungerCost=0,
+      Ownership=true,
+      SanityCost=0
+    },
+    enabled=true
+  },
   ["workshop-1595631294"]={
     configuration_options={
       BundleItems=false,
@@ -110,6 +120,7 @@ return {
     enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
+  ["workshop-3774466732"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
     configuration_options={
       [""]=0,
