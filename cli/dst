@@ -14,6 +14,10 @@ SERVER_COMPOSE="$ROOT/server/docker-compose.yml"
 BOT_DIR="$ROOT/bot"
 STATE_FILE="$ROOT/.dst-current"
 ENV_FILE="$ROOT/.world.env"
+# Kho token Klei. Nằm ở ROOT và bị .gitignore bỏ qua → KHÔNG bao giờ vào git
+# (repo này public), và sống sót qua mọi `git checkout` / `dst switch`, nên là
+# MỘT kho dùng chung cho tất cả world. Xem `dst token`.
+TOKENS_FILE="$ROOT/tokens.env"
 REMOTE="${DST_REMOTE:-dst-storage:dst-worlds}"
 
 NON_WORLD_BRANCHES_RE='^(main|master|HEAD)$'
@@ -156,14 +160,110 @@ clear_orphan_volumes() {
   fi
 }
 
+# ---- Kho token (tokens.env) ------------------------------------------------
+# Định dạng:  TOKEN_<TÊN>=pds-...      (một dòng mỗi token)
+#             ACTIVE_TOKEN=<TÊN>       (token đang dùng)
+
+token_names() {
+  [ -f "$TOKENS_FILE" ] || return 0
+  grep -oE '^TOKEN_[A-Za-z0-9_]+' "$TOKENS_FILE" | sed 's/^TOKEN_//'
+}
+
+active_token_name() {
+  [ -f "$TOKENS_FILE" ] || return 0
+  sed -n 's/^ACTIVE_TOKEN=//p' "$TOKENS_FILE" | tail -1
+}
+
+token_value() {   # $1 = tên
+  [ -f "$TOKENS_FILE" ] || return 0
+  sed -n "s/^TOKEN_$1=//p" "$TOKENS_FILE" | tail -1
+}
+
+mask_token() {    # chỉ in đầu/đuôi, đủ để nhận ra mà không lộ
+  local v="$1"
+  [ ${#v} -gt 16 ] && printf '%s…%s' "${v:0:10}" "${v: -4}" || printf '%s' '(quá ngắn?)'
+}
+
 cmd_init() {
   in_repo
   local branch; branch="$(current_branch)"
   [ -f "$SERVER_COMPOSE" ] || { c_red "No server/docker-compose.yml on branch $branch"; exit 1; }
   python3 "$EXTRACT" "$SERVER_COMPOSE" > "$ENV_FILE"
   echo "DST_BRANCH=$branch" >> "$ENV_FILE"
+
+  # Token lấy từ tokens.env và LUÔN thắng giá trị (nếu có) trong compose của
+  # nhánh. Nhờ vậy nhánh cũ còn hardcode token vẫn chạy đúng token đang chọn,
+  # không phải sửa từng nhánh.
+  local tname tval
+  tname="$(active_token_name)"
+  if [ -n "$tname" ]; then
+    tval="$(token_value "$tname")"
+    if [ -z "$tval" ]; then
+      c_red "tokens.env: ACTIVE_TOKEN=$tname nhưng không có dòng TOKEN_$tname="
+      exit 1
+    fi
+    sed -i '/^DST_CLUSTER_TOKEN=/d' "$ENV_FILE"
+    printf 'DST_CLUSTER_TOKEN=%s\n' "$tval" >> "$ENV_FILE"
+    c_green "Token: $tname ($(mask_token "$tval"))"
+  elif grep -q '^DST_CLUSTER_TOKEN=' "$ENV_FILE"; then
+    c_yellow "Chưa có tokens.env — đang dùng token hardcode trong compose của nhánh."
+    c_yellow "Chuyển sang kho token:  dst token add <tên> '<pds-...>'"
+  else
+    c_red "Không tìm thấy token ở đâu cả — server sẽ không khởi động được."
+    c_yellow "Thêm bằng:  dst token add <tên> '<pds-...>'"
+    exit 1
+  fi
   mkdir -p "$ROOT/data/Master" "$ROOT/data/Caves"
   c_green "Wrote $ENV_FILE for branch '$branch'."
+}
+
+cmd_token() {
+  in_repo
+  local action="${1:-list}" name="${2:-}" value="${3:-}"
+  case "$action" in
+    list|ls)
+      [ -f "$TOKENS_FILE" ] || { c_yellow "Chưa có $TOKENS_FILE."; c_yellow "Thêm:  dst token add <tên> '<pds-...>'"; return; }
+      local active n v; active="$(active_token_name)"
+      for n in $(token_names); do
+        v="$(token_value "$n")"
+        if [ "$n" = "$active" ]; then c_green "  * $n	$(mask_token "$v")	← đang dùng"
+        else                          echo   "    $n	$(mask_token "$v")"; fi
+      done
+      ;;
+    use)
+      [ -n "$name" ] || { c_red "usage: dst token use <tên>"; exit 1; }
+      [ -n "$(token_value "$name")" ] || { c_red "Không có token tên '$name'."; cmd_token list; exit 1; }
+      if grep -q '^ACTIVE_TOKEN=' "$TOKENS_FILE"; then
+        sed -i "s|^ACTIVE_TOKEN=.*|ACTIVE_TOKEN=$name|" "$TOKENS_FILE"
+      else
+        printf 'ACTIVE_TOKEN=%s\n' "$name" >> "$TOKENS_FILE"
+      fi
+      cmd_init
+      is_running && c_yellow "Áp dụng vào server đang chạy:  dst restart --fresh" || true
+      ;;
+    add)
+      [ -n "$name" ] && [ -n "$value" ] || { c_red "usage: dst token add <tên> '<pds-...>'"; exit 1; }
+      case "$name"  in *[!A-Za-z0-9_]*) c_red "Tên chỉ được gồm chữ, số, gạch dưới."; exit 1 ;; esac
+      case "$value" in pds-*) : ;; *) c_yellow "Cảnh báo: token Klei thường bắt đầu bằng 'pds-'." ;; esac
+      touch "$TOKENS_FILE"; chmod 600 "$TOKENS_FILE"
+      sed -i "/^TOKEN_$name=/d" "$TOKENS_FILE"
+      printf 'TOKEN_%s=%s\n' "$name" "$value" >> "$TOKENS_FILE"
+      c_green "Đã lưu token '$name' vào $TOKENS_FILE (nằm ngoài git)."
+      if [ -z "$(active_token_name)" ]; then
+        printf 'ACTIVE_TOKEN=%s\n' "$name" >> "$TOKENS_FILE"
+        c_green "Đây là token đầu tiên → đặt luôn làm token đang dùng."
+      else
+        c_yellow "Chuyển sang dùng nó:  dst token use $name"
+      fi
+      ;;
+    rm|remove)
+      [ -n "$name" ] || { c_red "usage: dst token rm <tên>"; exit 1; }
+      [ "$name" = "$(active_token_name)" ] && { c_red "'$name' đang được dùng — đổi sang token khác trước."; exit 1; }
+      sed -i "/^TOKEN_$name=/d" "$TOKENS_FILE"
+      c_green "Đã xoá token '$name'."
+      ;;
+    *) c_red "usage: dst token <list|use|add|rm> [tên] [giá trị]"; exit 1 ;;
+  esac
 }
 
 cmd_list() {
@@ -775,6 +875,11 @@ Commands:
   dst switch <branch>        stop+push current → checkout → pull → start
   dst mod add|remove|list [id]  edit enabled mods (both shards) + sync; guards world-content mods
   dst sync-mods              rewrite DST_SERVER_MOD_SETUP from modoverrides (single source of truth)
+  dst token list|use|add|rm  đổi token Klei dùng để host. Token nằm trong tokens.env
+                             ở gốc repo (KHÔNG vào git, dùng chung mọi world).
+                               dst token add cu  'pds-...'   lưu thêm một token
+                               dst token use cu              chuyển sang dùng nó
+                             Đổi xong phải: dst restart --fresh
   dst push   [branch]        compress & upload save to Drive
   dst pull   <branch>        download & extract save from Drive
   dst destroy                stop+push, remove containers/image/volumes, clear VPS
@@ -808,7 +913,7 @@ done
 
 # cleanup sửa đổi thế giới → phải giữ lock, tránh chạy đè lên dst restart/switch.
 # console chỉ đọc trong đa số trường hợp nên không khoá, khỏi chặn lúc chẩn đoán.
-LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|unstick|mod|sync-mods|cleanup)$'
+LOCKED_CMDS_RE='^(start|stop|restart|reset|switch|push|pull|init|destroy|rollback|unstick|mod|sync-mods|cleanup|token)$'
 LOCK_INFO="${LOCK_FILE}.info"
 cmd="${1:-help}"; shift || true
 
@@ -844,6 +949,7 @@ case "$cmd" in
   reset)   cmd_reset "$@" ;;
   switch)  cmd_switch "$@" ;;
   mod)     cmd_mod "$@" ;;
+  token)   cmd_token "$@" ;;
   sync-mods) cmd_sync_mods ;;
   push)    cmd_push "$@" ;;
   pull)    cmd_pull "$@" ;;

@@ -6,6 +6,9 @@ data/
 # Bot secrets
 bot/.bot.env
 
+# Kho token Klei — KHÔNG BAO GIỜ commit (repo public)
+tokens.env
+
 # Python venv
 bot/venv/
 
