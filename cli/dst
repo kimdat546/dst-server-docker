@@ -137,7 +137,14 @@ wait_for_ready() {
   local elapsed=0
   c_blue "Waiting for cross-shard sync (timeout ${timeout}s)…"
   while [ "$elapsed" -lt "$timeout" ]; do
-    if docker logs --since "$started_at" "$container" 2>&1 | grep -q '\[SyncWorldSettings\]'; then
+    # KHÔNG dùng `... | grep -q`: grep -q thoát ngay khi khớp, docker logs ăn
+    # SIGPIPE, và vì script bật `pipefail` nên cả pipeline trả 141 → điều kiện
+    # luôn sai, lần nào cũng chờ hết timeout rồi báo nhầm là chưa sẵn sàng.
+    # grep -c đọc hết luồng nên không có SIGPIPE; `|| true` nuốt exit 1 lúc
+    # chưa có dòng nào khớp.
+    local hits
+    hits="$(docker logs --since "$started_at" "$container" 2>&1 | grep -c '\[SyncWorldSettings\]' || true)"
+    if [ "${hits:-0}" -gt 0 ]; then
       c_green "Game is ready (${elapsed}s)."
       return 0
     fi
