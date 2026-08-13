@@ -48,6 +48,19 @@ git checkout myth-words   # or speedrun, or create your own branch
 - `server/config/Master/modoverrides.lua` + `leveldataoverride.lua`
 - `server/config/Caves/modoverrides.lua` + `leveldataoverride.lua`
 
+The Klei cluster token is **not** in any of those — this repo is public. Copy
+`tokens.env.example` to `tokens.env` (git-ignored) or run `dst token add`:
+
+```bash
+dst token add chinh 'pds-...'   # store a token
+dst token list                  # which tokens exist, which one is active
+dst token use chinh             # switch to it
+dst restart --fresh             # apply to a running server
+```
+
+`tokens.env` sits at the repo root, so `git checkout` / `dst switch` never
+touches it — one token store shared by every world.
+
 ### 4. Start
 
 ```bash
@@ -79,7 +92,23 @@ dst switch <branch>        stop+push current → git checkout → pull save → 
 dst push   [branch]        compress & upload save to Drive manually
 dst pull   <branch>        download & extract save from Drive
 dst destroy                stop+push, remove all Docker containers/image/volumes
+dst token list|use|add|rm  manage Klei cluster tokens (stored outside git)
 ```
+
+### Changing the cluster token
+
+`DST_CLUSTER_TOKEN` alone is **not** enough on an existing world: the server
+reads the token from `data/<shard>/server/general/cluster_token.txt` inside the
+data volume, and the image only creates that file when it is missing
+(`image/overlay/etc/container.d/15-files.sh`). `dst init` therefore rewrites
+both shards' token files from the active token — which `dst token use` calls
+for you. Verify the switch took effect with:
+
+```bash
+docker logs dst-master-<world> | grep "from TokenPurpose"   # shows the KU_ id now hosting
+```
+
+Swapping tokens does not touch the world, characters, or admin rights.
 
 ### How stop/start works (VPS storage)
 
