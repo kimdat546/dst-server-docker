@@ -608,10 +608,19 @@ cmd_mod() {
       fi
       for f in Master Caves; do
         local mo="$ROOT/server/config/$f/modoverrides.lua"
+        # Đếm ngoặc để biết khối của mod kết thúc ở đâu. Bản cũ dò dòng `^  },$`
+        # nên với entry gọn MỘT DÒNG (`["workshop-X"]={ ... },`) thì skip không
+        # bao giờ tắt tại dòng đó, và nó nuốt luôn cả khối mod đứng ngay sau —
+        # xoá 1 mod mất 2 mod, im lặng.
         awk -v id="$id" '
-          $0 ~ "\\[\"workshop-" id "\"\\]=\\{" {skip=1}
-          skip && /^  },$/ {skip=0; next}
-          !skip {print}
+          $0 ~ "\\[\"workshop-" id "\"\\]=\\{" { skip=1; depth=0 }
+          skip {
+            n = gsub(/{/, "{"); depth += n
+            n = gsub(/}/, "}"); depth -= n
+            if (depth <= 0) skip = 0
+            next
+          }
+          { print }
         ' "$mo" > "$mo.tmp" && mv "$mo.tmp" "$mo"
         c_green "$f: removed workshop-$id"
       done
