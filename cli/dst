@@ -805,7 +805,26 @@ console_send() {
   fi
   local pid; pid="$(game_pid "$container")"
   [ -n "$pid" ] || { c_red "không thấy tiến trình game trong $container"; return 1; }
-  printf '%s\n' "$lua" > "/proc/$pid/fd/0"
+
+  # Đường nhanh: ghi thẳng từ host. Chỉ được khi chạy bằng root — mở fd của một
+  # tiến trình khác uid cần CAP_SYS_PTRACE.
+  if printf '%s\n' "$lua" > "/proc/$pid/fd/0" 2>/dev/null; then
+    return 0
+  fi
+
+  # Không phải root (ví dụ host chạy bằng user thường trong group docker): nhờ
+  # docker ghi hộ. BẮT BUỘC --privileged: Docker bỏ CAP_SYS_PTRACE mặc định, mà
+  # thiếu cap đó thì root TRONG container cũng không mở nổi /proc/<pid>/fd/0 của
+  # tiến trình game (game chạy bằng uid steam, khác uid). PID ở đây là PID trong
+  # namespace của container, không phải PID host, nên phải dò lại.
+  docker exec --privileged -u root -e DST_LUA="$lua" "$container" sh -c '
+    for p in /proc/[0-9]*; do
+      c=$(cat "$p/comm" 2>/dev/null)
+      case "$c" in *dontstarve*) gp=${p#/proc/}; break;; esac
+    done
+    [ -n "$gp" ] || exit 1
+    printf "%s\n" "$DST_LUA" > "/proc/$gp/fd/0"
+  ' 2>/dev/null || { c_red "không gửi được lệnh vào $container"; return 1; }
 }
 
 cmd_console() {
