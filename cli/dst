@@ -62,7 +62,9 @@ c_yellow() { printf "\033[33m%s\033[0m\n" "$*"; }
 c_blue()   { printf "\033[34m%s\033[0m\n" "$*"; }
 
 git_q()   { git -C "$ROOT" "$@"; }
-in_repo() { [ -d "$ROOT/.git" ] || { c_red "Not a git repo: $ROOT"; exit 1; }; }
+# -e chứ không phải -d: trong git worktree, .git là FILE trỏ về repo chính,
+# không phải thư mục. Cần vậy để chạy world thứ hai song song từ worktree.
+in_repo() { [ -e "$ROOT/.git" ] || { c_red "Not a git repo: $ROOT"; exit 1; }; }
 
 current_branch() { git_q rev-parse --abbrev-ref HEAD 2>/dev/null; }
 current_state()  { [ -f "$STATE_FILE" ] && cat "$STATE_FILE" || echo ""; }
