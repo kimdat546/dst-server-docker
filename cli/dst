@@ -90,7 +90,7 @@ is_running() {
 
 compose() {
   local b="$1"; shift
-  ( cd "$CLI" && DST_BRANCH="$b" docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@" )
+  ( cd "$CLI" && DST_BRANCH="$b" docker compose -p "dst-$b" --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@" )
 }
 
 # Liệt kê người chơi đang online, đọc từ log của container master.
