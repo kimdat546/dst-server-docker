@@ -1,27 +1,32 @@
 services:
   master:
     image: kimdat546/dst-server:latest
-    container_name: dst-master-myth-words
+    container_name: dst-master-test-world
     network_mode: host
     environment:
       # DST_CLUSTER_TOKEN cố tình KHÔNG để ở đây — repo này public.
       # `dst init` bơm token vào .world.env từ tokens.env (xem `dst token`).
-      DST_NETWORK_CLUSTER_NAME: "Neverland - Myth Words"
-      DST_NETWORK_CLUSTER_DESCRIPTION: "Welcome to Neverland - Myth Words version"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - test"
+      DST_NETWORK_CLUSTER_DESCRIPTION: "Server test — Than Binh Phu An + NewConstant Viet hoa"
       DST_NETWORK_CLUSTER_PASSWORD: "haizz"
       DST_GAMEPLAY_MAX_PLAYERS: "12"
       DST_GAMEPLAY_GAME_MODE: "endless"
-      DST_NETWORK_SERVER_PORT: "11999"
+      DST_NETWORK_SERVER_PORT: "12999"
+      # cli/compose.yml lấy cổng Caves từ biến này, KHÔNG từ service caves bên dưới
+      DST_CAVES_PORT: "12998"
+      # mặc định 27017/8767 đang bị myth-words chiếm (network_mode: host)
+      DST_STEAM_MASTER_SERVER_PORT: "27019"
+      DST_STEAM_AUTHENTICATION_PORT: "8769"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "true"
       DST_SHARD_NAME: "Master"
       DST_SHARD_BIND_IP: "0.0.0.0"
       DST_SHARD_MASTER_IP: "127.0.0.1"
-      DST_SHARD_MASTER_PORT: "11888"
-      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1803285852,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1780476441,1595631294,1699194522,1991746508,3625940357,1530801499,3774466732"
+      DST_SHARD_MASTER_PORT: "12888"
+      DST_SHARD_CLUSTER_KEY: "neverland_test"
+      DST_SERVER_MOD_SETUP: "3792863569,1111658995,1207269058,1392778117,1780476441,1803285852,1909182187,1991746508,2039181790,3778108141,3353852416,3597024951,3625940357,3778107626,3778108374,374550642,375850593,380423963,501385076"
     volumes:
-      - dst-master-data-myth-words:/var/lib/game
+      - dst-master-data-test-world:/var/lib/game
       - ./config/Master/modoverrides.lua:/etc/dst-config/Master/modoverrides.lua:ro
       - ./config/Master/leveldataoverride.lua:/etc/dst-config/Master/leveldataoverride.lua:ro
     restart: unless-stopped
@@ -34,23 +39,23 @@ services:
 
   caves:
     image: kimdat546/dst-server:latest
-    container_name: dst-caves-myth-words
+    container_name: dst-caves-test-world
     network_mode: host
     environment:
       # DST_CLUSTER_TOKEN cố tình KHÔNG để ở đây — repo này public.
       # `dst init` bơm token vào .world.env từ tokens.env (xem `dst token`).
-      DST_NETWORK_CLUSTER_NAME: "Neverland - Myth Words"
-      DST_NETWORK_SERVER_PORT: "11998"
+      DST_NETWORK_CLUSTER_NAME: "Neverland - test"
+      DST_NETWORK_SERVER_PORT: "12998"
       DST_SHARD_ENABLED: "true"
       DST_SHARD_IS_MASTER: "false"
       DST_SHARD_NAME: "Caves"
       DST_SHARD_BIND_IP: "0.0.0.0"
       DST_SHARD_MASTER_IP: "127.0.0.1"
-      DST_SHARD_MASTER_PORT: "11888"
-      DST_SHARD_CLUSTER_KEY: "neverland_cluster"
-      DST_SERVER_MOD_SETUP: "1803285852,666155465,1207269058,375850593,380423963,374550642,1111658995,501385076,1780476441,1595631294,1699194522,1991746508,3625940357,1530801499,3774466732"
+      DST_SHARD_MASTER_PORT: "12888"
+      DST_SHARD_CLUSTER_KEY: "neverland_test"
+      DST_SERVER_MOD_SETUP: "3792863569,1111658995,1207269058,1392778117,1780476441,1803285852,1909182187,1991746508,2039181790,3778108141,3353852416,3597024951,3625940357,3778107626,3778108374,374550642,375850593,380423963,501385076"
     volumes:
-      - dst-caves-data-myth-words:/var/lib/game
+      - dst-caves-data-test-world:/var/lib/game
       - ./config/Caves/modoverrides.lua:/etc/dst-config/Caves/modoverrides.lua:ro
       - ./config/Caves/leveldataoverride.lua:/etc/dst-config/Caves/leveldataoverride.lua:ro
     depends_on:
@@ -59,5 +64,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  dst-master-data-myth-words:
-  dst-caves-data-myth-words:
+  dst-master-data-test-world:
+  dst-caves-data-test-world:
