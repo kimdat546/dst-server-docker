@@ -120,7 +120,6 @@ return {
     enabled=true 
   },
   ["workshop-375850593"]={ configuration_options={  }, enabled=true },
-  ["workshop-3774466732"]={ configuration_options={  }, enabled=true },
   ["workshop-380423963"]={
     configuration_options={
       [""]=0,
