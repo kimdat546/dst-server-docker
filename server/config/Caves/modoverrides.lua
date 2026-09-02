@@ -131,7 +131,7 @@ return {
       HomesignEnable=true,
       HungerCost=0,
       LightEnable=true,
-      ResurrectEnable=true,
+      ResurrectEnable=false,
       SanityCost=0,
       TeleportEnable=true,
       TextEnable=false 
